@@ -1,0 +1,579 @@
+<html lang="en" class="overflow-hidden overscroll-none relative">
+<head>
+  <meta charset="UTF-8">
+
+  <!--Makes viewport on iOS devices not have a black bar-->
+  <meta name='viewport' content='viewport-fit=cover, width=device-width, initial-scale=1.0'>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Social Media</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="apple-touch-icon" href="icons/manifest-icon-512.png">
+  <link rel="icon" href="icons/apple-icon-180.png">
+  <link rel="manifest" href="/manifest.json">
+</head>
+<body class="flex flex-col bg-gray-100 dark:bg-gray-900 h-full overflow-hidden overscroll-none relative user-select-none">
+  <!--Navigation-->
+  <div class="top-nav flex-none bg-gradient-to-br from-green-300 to-green-400 dark:from-green-400 dark:to-green-500 border-b-2 dark:border-gray-600">
+    <a href="#" id="sidenav-trigger" class="flex justify-center items-center h-16 w-16">
+      <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </a>
+
+    <a href="#" id="page-back-trigger" class="flex justify-center items-center h-16 w-16 hidden">
+      <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </a>
+  </div>
+
+  <!--Main Content-->
+  <div class="flex-grow relative overflow-hidden">
+
+    <!--Home Tab-->
+    <div id="home" class="tab-screen active">
+
+      <!--Post Container-->
+      <div class="tab-screen-body selected">
+        
+        <div class="flex flex-col">
+          <div class="pt-1 px-2 text-gray-800 border-b dark:border-gray-800 flex flex-row justify-between flex-shrink-0 h-14">
+            <a href="#" onclick="app.dom.loadHomeFeed()" class="flex-shrink-0 h-full p-2 flex items-center dark:text-gray-200">
+              <svg class="w-6 h-6 pr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <p class="font-semibold">Reload</p>
+            </a>
+            <a href="#" class="flex-shrink-0 p-2 flex items-center text-black">
+              <div>
+                <svg class="w-8 h-8 pr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M20 13H3c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h17c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm0-10H3c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h17c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"/></svg>
+                <svg class="w-8 h-8 pr-2 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"/></svg>
+                <svg class="w-8 h-8 pr-2 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+              </div>
+              <div>
+                <svg class="w-4 h-4 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </a>
+          </div>
+  
+          <div class="p-2">
+            <a href="#" id="compose-post" class="flex items-center bg-white dark:bg-gray-700 text-gray-400 h-10 w-full rounded-xl px-4">
+              Say something...
+            </a>
+          </div>
+  
+          <div id="home-feed">
+  
+          </div>
+        </div>
+
+
+      </div>
+
+
+    </div>
+
+    <!--Explore Tab-->
+    <div id="explore" class="tab-screen">
+      <div class="tab-screen-body selected">
+
+        <!--Search Bar-->
+        <div class="h-12 m-4 rounded ring-2 ring-gray-300 dark:ring-gray-700">
+          <input class="w-full h-full bg-none rounded outline-none bg-gray-100 dark:bg-gray-900 focus:bg-white dark:focus:bg-gray-800 dark:text-white px-4 transition" type="search" placeholder="Search...">
+        </div>
+
+        <!--Recently Viewed Cards-->
+        <div class="mx-4 my-6">
+          <h1 class="font-semibold text-xl dark:text-white">Recently Viewed</h1>
+          <div class="flex flex-row overflow-auto space-x-2 mt-2 mb-4">
+            <a href="#" class="flex-none border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded p-4 w-48">
+              <img class="w-12 h-12 rounded-full mb-2" src="https://yt3.ggpht.com/ytc/AAUvwng6RtXYgVu8-mhuebOJmmeWNZ7Xp05scIQBWkuPGg=s900-c-k-c0x00ffffff-no-rj">
+              <h1 class="dark:text-white font-semibold truncate">Gavin Hernandez</h1>
+              <p class="text-gray-600 dark:text-gray-400 truncate">@GavHern</p>
+            </a>
+
+            <a href="#" class="flex-none border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded p-4 w-48">
+              <img class="w-12 h-12 rounded-full mb-2" src="https://picsum.photos/138">
+              <h1 class="dark:text-white font-semibold truncate">Liam</h1>
+              <p class="text-gray-600 dark:text-gray-400 truncate">@basketball11</p>
+            </a>
+
+            <a href="#" class="flex-none border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded p-4 w-48">
+              <img class="w-12 h-12 rounded-full mb-2" src="https://picsum.photos/200">
+              <h1 class="dark:text-white font-semibold truncate">Jane Wilson</h1>
+              <p class="text-gray-600 dark:text-gray-400 truncate">@iamjane_</p>
+            </a>
+          </div>
+        </div>
+
+        <!--Following List-->
+        <div class="mx-4 my-6">
+          <h1 class="font-semibold text-xl dark:text-white">Following</h1>
+          <div class="flex flex-col overflow-auto space-y-2 mt-2 mb-4">
+
+            <div class="flex items-center border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded p-4 w-full shadow-md">
+              <a href="#" class="flex flex-grow">
+                <img class="w-12 h-12 rounded-full mr-3" src="https://yt3.ggpht.com/ytc/AAUvwng6RtXYgVu8-mhuebOJmmeWNZ7Xp05scIQBWkuPGg=s900-c-k-c0x00ffffff-no-rj">
+                <div class="flex-grow">
+                  <h1 class="dark:text-white font-semibold truncate">Gavin Hernandez</h1>
+                  <p class="text-gray-600 dark:text-gray-400 truncate">@GavHern</p>
+                </div>
+              </a>
+              <a href="#">
+                <svg class="text-red-400 w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </a>
+            </div>
+            
+            <div class="flex items-center border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded p-4 w-full shadow-md">
+              <a href="#" class="flex flex-grow">
+                <img class="w-12 h-12 rounded-full mr-3" src="https://picsum.photos/84">
+                <div class="flex-grow">
+                  <h1 class="dark:text-white font-semibold truncate">Ricky M.</h1>
+                  <p class="text-gray-600 dark:text-gray-400 truncate">@rjm04</p>
+                </div>
+              </a>
+              <a href="#">
+                <svg class="text-red-400 w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </a>
+            </div>
+
+            <div class="flex items-center border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded p-4 w-full shadow-md">
+              <a href="#" class="flex flex-grow">
+                <img class="w-12 h-12 rounded-full mr-3" src="https://picsum.photos/120">
+                <div class="flex-grow">
+                  <h1 class="dark:text-white font-semibold truncate">Emily Johnson</h1>
+                  <p class="text-gray-600 dark:text-gray-400 truncate">@em123</p>
+                </div>
+              </a>
+              <a href="#">
+                <svg class="text-red-400 w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </a>
+            </div>
+
+            <div class="flex items-center border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded p-4 w-full shadow-md">
+              <a href="#" class="flex flex-grow">
+                <img class="w-12 h-12 rounded-full mr-3" src="https://picsum.photos/100">
+                <div class="flex-grow">
+                  <h1 class="dark:text-white font-semibold truncate">Patrik Yu</h1>
+                  <p class="text-gray-600 dark:text-gray-400 truncate">@aligator10</p>
+                </div>
+              </a>
+              <a href="#">
+                <svg class="text-red-400 w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!--Activity Tab-->
+    <div id="activity" class="tab-screen">
+      <div class="tab-screen-body selected">
+        <div class="my-3 mx-4">
+
+          <div class="mb-6">
+            <h1 class="font-semibold text-2xl dark:text-white">Today</h1>
+            <div class="bg-gray-200 dark:bg-gray-700 flex flex-col space-y-0.5 rounded-xl w-full shadow-md mt-4 overflow-hidden">
+              <a href="#" class="bg-white dark:bg-gray-800 p-3 flex">
+                <div class="mr-4">
+                  <svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+                <div class="flex-grow w-full dark:text-gray-200">
+                  <div>
+                    <span class="font-semibold mr-0.5">Gavin Hernandez</span>
+                    <span>liked your post.</span>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </a>
+
+              <a href="#" class="bg-white dark:bg-gray-800 p-3 flex">
+                <div class="mr-4">
+                  <svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                  </svg>
+                </div>
+                <div class="flex-grow w-full dark:text-gray-200">
+                  <div>
+                    <span class="font-semibold mr-0.5">Brett Blaustein</span>
+                    <span>commented on your post.</span>
+                    <p class="text-gray-600 dark:text-gray-400 mt-2">Sapien et ligula ullamcorper blub malesuada proin libero nunc consequat interdum varius sit</p>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </a>
+
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h1 class="font-semibold text-2xl dark:text-white">This Week</h1>
+            <div class="bg-gray-200 dark:bg-gray-700 flex flex-col space-y-0.5 rounded-xl w-full shadow-md mt-4 overflow-hidden">
+
+              <a href="#" class="bg-white dark:bg-gray-800 p-3 flex">
+                <div class="mr-4">
+                  <svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+                <div class="flex-grow w-full dark:text-gray-200">
+                  <div>
+                    <span class="font-semibold mr-0.5">Brett Blaustein</span>
+                    <span>liked your comment.</span>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </a>
+              
+              <a href="#" class="bg-white dark:bg-gray-800 p-3 flex">
+                <div class="mr-4">
+                  <svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                  </svg>
+                </div>
+                <div class="flex-grow w-full dark:text-gray-200">
+                  <div>
+                    <span class="font-semibold mr-0.5">Miles Jones</span>
+                    <span>mentioned you in a comment.</span>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </a>
+              
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h1 class="font-semibold text-2xl dark:text-white">All Activity</h1>
+            <div class="bg-gray-200 dark:bg-gray-700 flex flex-col space-y-0.5 rounded-xl w-full shadow-md mt-4 overflow-hidden">
+
+              <a href="#" class="bg-white dark:bg-gray-800 p-3 flex">
+                <div class="mr-4">
+                  <svg class="w-6 h-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                  </svg>
+                </div>
+                <div class="flex-grow w-full dark:text-gray-200">
+                  <div>
+                    <span class="font-semibold mr-0.5">Miles Jones</span>
+                    <span>started following you.</span>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </a>
+
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <!--Profile Tab-->
+    <div id="profile" class="tab-screen">
+      <div class="tab-screen-body selected">
+        
+        <!--Profile Header-->
+        <div class="border-b-2 border-gray-200 dark:border-gray-700 pb-4 bg-white dark:bg-gray-800">
+          <div class="flex flex-col justify-center relative mb-16">
+            <div class="w-full h-36 bg-gradient-to-br from-red-300 to-purple-300 shadow-lg"></div>
+            <div class="w-32 h-32 border-white border-4 rounded-full shadow-2xl z-10 absolute -bottom-16 left-1/2 transform -translate-x-16">
+              <img class="w-full h-full rounded-full" src="https://yt3.ggpht.com/ytc/AAUvwng6RtXYgVu8-mhuebOJmmeWNZ7Xp05scIQBWkuPGg=s900-c-k-c0x00ffffff-no-rj">
+            </div>
+
+            <a href="#" class="absolute top-0 right-0 m-2 w-12 h-12 rounded-full bg-black bg-opacity-30 flex justify-center items-center">
+              <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="text-center pt-3">
+            <h1 class="font-semibold text-3xl dark:text-white">Gavin Hernandez</h1>
+            <p class="text-gray-800 dark:text-gray-200 text-xl pt-1">@GavHern</p>
+            <p class="text-gray-600 dark:text-gray-400 text-md mx-4 pt-1.5">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Feugiat in ante metus dictum at tempor commodo ullamcorper a.</p>
+          </div>
+
+          <div class="bg-gray-200 dark:bg-gray-900 h-12 mx-2 mt-4 px-1 rounded-xl shadow-lg flex flex-row">
+            <a href="#" class="bg-white dark:bg-gray-700 dark:text-white w-full mx-1 my-1.5 p-2 rounded-lg flex justify-center items-center">Mutual<span class="text-gray-400 pl-2">9</span></a>
+            <a href="#" class="bg-white dark:bg-gray-700 dark:text-white w-full mx-1 my-1.5 p-2 rounded-lg flex justify-center items-center">Followers<span class="text-gray-400 pl-2">22</span></a>
+            <a href="#" class="bg-white dark:bg-gray-700 dark:text-white w-full mx-1 my-1.5 p-2 rounded-lg flex justify-center items-center">Following<span class="text-gray-400 pl-2">72</span></a>
+          </div>
+        </div>
+
+        <!--Posts-->
+        <div>
+
+          <div class="bg-white dark:bg-gray-800 flex flex-col mb-4">
+            <a href="#" class="flex-shrink-0 flex flex-row p-4">
+              <img src="https://yt3.ggpht.com/ytc/AAUvwng6RtXYgVu8-mhuebOJmmeWNZ7Xp05scIQBWkuPGg=s900-c-k-c0x00ffffff-no-rj" class="w-12 h-12 rounded-full mr-4">
+              <div class="h-12">
+                <p class="font-semibold dark:text-white">Gavin Hernandez</p>
+                <p class="text-gray-600 dark:text-gray-400">@GavHern</p>
+              </div>
+            </a>
+  
+            <a href="#" class="flex-shrink-0 dark:text-gray-200 px-4 text-xl font-semibold pb-2">Image of a desk</a>
+  
+            <a href="#" class="flex-shrink-0 projector-trigger">
+              <img class="bg-black w-full max-h-96 object-contain" src="https://materializecss.com/images/office.jpg">
+            </a>
+  
+            <div class="flex-shrink-0 flex justify-between items-center dark:text-gray-200">
+              <a href="#" class="flex justify-center items-center w-full py-2">
+                <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <p>Like</p>
+              </a>
+              <a href="#" class="flex justify-center items-center w-full py-2">
+                <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                </svg>
+                <p>Comment</p>
+              </a>
+              <a href="#" class="flex justify-center items-center w-full py-2">
+                <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                </svg>
+                <p>Save</p>
+              </a>
+            </div>
+          </div>
+  
+          <div class="bg-white dark:bg-gray-800 flex flex-col mb-4">
+            <a href="#" class="flex-shrink-0 flex flex-row p-4">
+              <img src="https://yt3.ggpht.com/ytc/AAUvwng6RtXYgVu8-mhuebOJmmeWNZ7Xp05scIQBWkuPGg=s900-c-k-c0x00ffffff-no-rj" class="w-12 h-12 rounded-full mr-4">
+              <div class="h-12">
+                <p class="font-semibold dark:text-white">Gavin Hernandez</p>
+                <p class="text-gray-600 dark:text-gray-400">@GavHern</p>
+              </div>
+            </a>
+  
+            <a href="#" class="flex-shrink-0 dark:text-gray-200 px-4 text-xl font-semibold pb-2">Example text post</a>
+  
+            <a href="#" class="flex-shrink-0 dark:text-gray-300 w-full px-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</a>
+  
+            <div class="flex-shrink-0 flex justify-between items-center dark:text-gray-200">
+              <a href="#" class="flex justify-center items-center w-full py-2">
+                <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <p>Like</p>
+              </a>
+              <a href="#" class="flex justify-center items-center w-full py-2">
+                <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                </svg>
+                <p>Comment</p>
+              </a>
+              <a href="#" class="flex justify-center items-center w-full py-2">
+                <svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                </svg>
+                <p>Save</p>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!--Footer Navigation-->
+  <div class="footer bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700">
+    <div class="flex flex-row justify-evenly w-full flex-none h-16 dark:text-white">
+      <a href="#" class="bottom-nav-item active" data-page="home">
+        <div>
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+        </div>
+      </a>
+      <a href="#" class="bottom-nav-item" data-page="explore">
+        <div>
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+          </svg>
+        </div>
+      </a>
+      <a href="#" class="bottom-nav-item" data-page="activity">
+        <div>
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+        </div>
+      </a>
+      <a href="#" class="bottom-nav-item" data-page="profile">
+        <div>
+          <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div id="projector">
+    <img id="projector-img" class="w-full h-full object-contain py-16">
+    <div class="projector-options">
+      <a class="mx-2" id="projector-close">
+        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </a>
+      <a class="mx-2" id="projector-share">
+        <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!--Sidenav-->
+  <div class="sidenav">
+    <div class="flex flex-col h-full w-full relative">
+      <div href="#" class="p-6 w-full border-b dark:border-gray-700 sidenav-button">
+        Settings
+      </div>
+      <div href="#" onclick="app.dom.page.create('saved','')" class="p-6 w-full border-b dark:border-gray-700 sidenav-button">
+        Saved
+      </div>
+      
+      <div href="#" onclick="app.methods.signOut()" class="p-6 w-full border-t dark:border-gray-700 absolute bottom-0 text-red-500 dark:text-red-400 sidenav-button">
+        Sign Out
+      </div>
+    </div>
+  </div>
+
+  <!--Film Overlay-->
+  <div class="film"></div>
+
+  
+  <!--Floating Action Button & Post modal-->
+  <div id="fab-container">
+    <div id="fab" class="overflow-hidden transform">
+
+      <!--Add Icon-->
+      <div class="icon absolute w-full h-full flex justify-center items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+      </div>
+
+      <!--Post form-->
+      <div class="post-form-container absolute w-full h-full flex flex-col justify-between">
+        <div class="h-full p-6 overflow-auto">
+          <h1 class="dark:text-white font-bold text-3xl mb-4">Post</h1>
+
+          <div class="mb-2">
+            <h1 class="dark:text-gray-200 text-lg font-semibold mb-2">Title</h1>
+            <input id="post-form-title" name="title" class="dark:bg-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-700 focus:border-white dark:focus:border-gray-800 ring-0 focus:ring-2 focus:ring-green-400 rounded shadow-sm px-3 py-2 w-full outline-none transition-all" type="text" autocomplete="off" placeholder="An interesting title.">
+          </div>
+
+          <div id="post-type" class="border dark:border-gray-700 h-12 w-auto mt-4 p-0.5 rounded-full flex flex-row mb-2">
+            <div trigger="post-body-text" data-post-type="text" class="dark:text-gray-200 post-body-type-select active">Text</div>
+            <div trigger="post-body-image" data-post-type="image" class="dark:text-gray-200 post-body-type-select">Image</div>
+          </div>
+
+
+          <div class="w-full relative">
+
+            <div id="post-body-text" class="post-body active absolute w-full mb-2">
+              <h1 class="dark:text-gray-200 text-lg font-semibold mb-1">Body</h1>
+              <textarea id="post-form-text-body" name="body" class="dark:bg-gray-800 dark:text-gray-200 h-40 border border-gray-300 dark:border-gray-700 focus:border-white dark:focus:border-gray-800 ring-0 focus:ring-2 ring-green-400 rounded shadow-sm px-3 py-2 w-full focus:outline-none transition-all" data-gramm_editor="false" type="text"></textarea>
+            </div>
+  
+            <div id="post-body-image" class="post-body absolute w-full mb-2">
+              <h1 class="dark:text-gray-200 text-lg font-semibold mb-1">Image</h1>
+              <div class="mt-2 flex justify-center px-6 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed rounded-md relative">
+                <div class="space-y-1 text-center pt-5 text-glow">
+                  <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <div class="flex text-sm text-gray-600">
+                    <label for="file-upload" class="relative w-full text-center cursor-pointer font-medium text-green-500 hover:text-green-400 focus-within:outline-none">
+                      <span>Choose a photo</span>
+                      <input id="file-upload" name="image" type="file" class="sr-only" accept="image/*, .jpg,.png,.bmp,.gif,.tif,.webp,.heic,.pdf,.jpeg,.tiff,.heif">
+                    </label>
+                  </div>
+                  <p class="text-xs text-gray-500">
+                    Any image file up to 32MB
+                  </p>
+                </div>
+                <div class="absolute top-0 left-0 w-full h-full z-behind pointer-events-none">
+                  <img id="image-upload-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=" class="w-full h-full object-cover opacity-20 brighter">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!--Modal Footer-->
+        <div class="h-auto border-t dark:border-gray-700 p-4 flex flex-row justify-between items-center">
+          <button type="button" class="py-2 px-4 ring-2 ring-gray-200 dark:ring-gray-700 dark:text-gray-300 rounded post-form-button post-form-cancel">Cancel</button>
+          <button type="submit" name="submit" class="py-2 px-4 bg-green-400 dark:bg-green-500 text-white rounded post-form-button post-form-submit">
+            <div class="label h-6">Post</div>
+            <div class="loader h-6 hidden justify-center items-center">
+              <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" display="block"><circle cx="50" cy="50" r="24" stroke-width="4" stroke="#fff" stroke-dasharray="37.69911184307752 37.69911184307752" fill="none" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" dur="1.282051282051282s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;360 50 50"/></circle><circle cx="50" cy="50" r="19" stroke-width="4" stroke="rgba(255, 255, 255, 0.6320967741935484)" stroke-dasharray="29.845130209103033 29.845130209103033" stroke-dashoffset="29.845" fill="none" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" dur="1.282051282051282s" repeatCount="indefinite" keyTimes="0;1" values="0 50 50;-360 50 50"/></circle></svg>
+            </div>
+          </button>
+        </div>
+        
+
+      </div>
+    </div>
+  </div>
+
+  <div id="dialogue-container">
+
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="/lib/elembuilder.js"></script>
+  <script src="/lib/hammer.js"></script>
+  <script src="/script.js"></script>
+</body>
+</html>

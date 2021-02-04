@@ -1,0 +1,278 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  --safe-area-top: env(safe-area-inset-top);
+  --safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+* {
+  -webkit-tap-highlight-color: unset !important;
+}
+
+/*Set the height of the document equal to the height of the viewport*/
+html, body {
+  height: 100vh;
+  touch-action: none;
+  -ms-touch-action: none;
+}
+
+/*Tab Screens*/
+.tab-screen {
+  @apply absolute h-full w-full pointer-events-none transition duration-300 opacity-0 transform translate-y-16;
+}
+
+.tab-screen.active {
+  @apply pointer-events-auto opacity-100 translate-y-0;
+}
+
+
+
+.tab-screen-body {
+  @apply absolute bg-gray-100 dark:bg-gray-900 h-full w-full overflow-auto shadow-2xl pb-24 transform -translate-x-1/2 transition-all duration-500;
+}
+
+.tab-screen-body.selected {
+  @apply translate-x-0;
+}
+
+.tab-screen-body.offscreen {
+  @apply translate-x-full;
+}
+
+
+
+
+.bottom-nav-item {
+  @apply flex justify-center items-center h-full w-full;
+}
+
+.bottom-nav-item.active svg {
+  @apply text-green-500;
+}
+
+.bottom-nav-item.active svg path {
+  @apply stroke-2;
+}
+
+/*Image Projector*/
+#projector {
+  @apply absolute z-40 w-screen h-screen bg-black transition-opacity duration-300 opacity-0 pointer-events-none;
+}
+
+#projector.active {
+  @apply opacity-100 pointer-events-auto;
+}
+
+/*iOS safe area padding*/
+.footer, .sidenav {
+  padding-bottom: var(--safe-area-bottom);
+}
+
+.top-nav, .sidenav {
+  padding-top: var(--safe-area-top);
+}
+
+.projector-options {
+  @apply absolute px-4 py-8 top-0 right-0 shadow-xl flex flex-row-reverse items-center;
+  padding-top: calc(1.5rem + var(--safe-area-top));
+}
+
+
+/*Translucent film for popup element focus*/
+.film {
+  @apply absolute w-full h-full bg-black bg-opacity-0 transition-all duration-300 z-30 pointer-events-none;
+}
+
+.film.active {
+  @apply bg-opacity-40 pointer-events-auto;
+}
+
+/*Side navigation*/
+.sidenav {
+  @apply absolute w-10/12 h-full z-50 bg-white dark:bg-gray-800 dark:text-white transition-all duration-500 shadow-none transform;
+  left: -83.333333%;
+}
+
+.sidenav.active {
+  @apply left-0 shadow-xl;
+}
+
+/*Floating action button & Post menu*/
+#fab-container {
+  @apply z-50 absolute w-full h-full right-0 bottom-0 px-6 pt-16 pointer-events-none flex justify-end items-end;
+}
+
+#fab {
+  @apply w-16 h-16 bg-green-500 shadow-lg opacity-100 relative;
+  margin-bottom: calc(5.5rem + var(--safe-area-bottom));
+  border-radius: 50vw;
+  pointer-events: all;
+  transition: all 400ms, opacity 250ms;
+}
+
+#fab.active {
+  @apply bg-white dark:bg-gray-800 rounded-xl shadow-xl mb-16;
+  width: 100%;
+  height: calc(100% - 4rem);
+}
+
+#fab .icon svg {
+  @apply w-12 h-12 pointer-events-auto text-white transition-opacity duration-300;
+}
+
+#fab .icon {
+  @apply opacity-100 transition-opacity duration-200;
+}
+
+#fab.active .icon {
+  @apply opacity-0;
+}
+
+#fab .post-form-container {
+  @apply opacity-0 pointer-events-none transition-opacity duration-200;
+}
+
+#fab.active .post-form-container {
+  @apply opacity-100 pointer-events-auto duration-500;
+}
+
+/*Post form body tabs*/
+.post-body {
+  @apply opacity-0 transform translate-y-8 pointer-events-none transition-all duration-300;
+}
+
+.post-body.active {
+  @apply opacity-100 transform translate-y-0 pointer-events-auto;
+}
+
+.post-body-type-select {
+  @apply w-full m-1 flex justify-center items-center rounded-full bg-white dark:bg-gray-800 transition duration-300;
+}
+
+.post-body-type-select.active {
+  @apply bg-gray-100 dark:bg-gray-700;
+}
+
+.post-action {
+  @apply flex justify-center items-center w-full py-2;
+}
+
+.post-action.like.active {
+  @apply text-red-500;
+}
+
+.post-action.save.active {
+  @apply text-green-500;
+}
+
+.post-action.like.active svg, .post-action.save.active svg {
+  @apply fill-current;
+}
+
+#dialogue-container {
+  @apply z-60 absolute top-0 right-0 pointer-events-none h-auto p-2 ml-16;
+  padding-top: calc(0.5rem + var(--safe-area-top))
+}
+
+#dialogue-container .dialogue {
+  @apply flex bg-gray-800 text-white items-center p-4 rounded-full shadow-xl mb-2 transform scale-50 opacity-0 transition-all duration-200;
+}
+
+#dialogue-container .dialogue.active {
+  @apply scale-100 opacity-100;
+}
+
+
+/*Preloader*/
+.lds-ellipsis-container{
+  @apply w-full flex flex-row justify-center;
+}
+.lds-ellipsis {
+  @apply inline-block relative opacity-70;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  @apply absolute rounded-full bg-black dark:bg-white;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+  -webkit-animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+  -webkit-animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+  -webkit-animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+  -webkit-animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+.post-form-button.post-form-submit.loading {
+  @apply pointer-events-none bg-green-300 dark:bg-green-600;
+}
+
+.post-form-button.post-form-submit.loading .label{
+  @apply hidden;
+}
+
+.post-form-button.post-form-submit.loading .loader{
+  @apply flex;
+}
+
+.text-glow {
+  text-shadow: 0px 0px 13px #FFFFFF;
+}
+
+@media (prefers-color-scheme: dark) {
+  .text-glow {
+    text-shadow: 0px 0px 13px #000000;
+  }
+}
+
+.brighter {
+  filter: brightness(1.5);
+  -webkit-filter: brightness(1.5);
+}

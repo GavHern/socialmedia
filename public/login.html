@@ -1,0 +1,115 @@
+<html lang="en" class="overflow-hidden overscroll-none relative">
+<head>
+  <meta charset="UTF-8">
+
+  <!--Makes viewport on iOS devices not have a black bar-->
+  <meta name='viewport' content='viewport-fit=cover, width=device-width, initial-scale=1.0'>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Social Media</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="apple-touch-icon" href="icons/manifest-icon-512.png">
+  <link rel="icon" href="icons/apple-icon-180.png">
+  <link rel="manifest" href="/manifest.json">
+</head>
+<body class="flex flex-col bg-gray-100 dark:bg-gray-900 h-full overflow-hidden overscroll-none relative">
+  
+  <main class="flex justify-center items-center w-full h-full">
+    <div class="bg-white dark:bg-gray-800 relative rounded-2xl shadow-md w-4/5 pt-12 pb-4 -mb-12">
+      <div class="flex justify-center items-center absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full shadow-lg bg-white dark:bg-gray-700 border-4 border-green-500 overflow-hidden">
+        <svg class="w-16 h-16 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      </div>
+
+
+
+      <!--Sign Up Part 1-->
+      <div id="signup1" class="mx-auto w-4/5 form-section">
+        <h1 class="dark:text-white text-3xl font-bold text-center mt-2 mb-6">Sign Up</h1>
+
+        <label class="text-gray-500 dark:text-gray-300">Display Name</label>
+        <input id="signup-name" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="text">
+
+        <label class="text-gray-500 dark:text-gray-300">Username</label>
+        <input id="signup-username" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="text">
+        
+        <label class="text-gray-500 dark:text-gray-300">Email</label>
+        <input id="signup-email" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="email">
+      
+        <button onclick="navigate('signup2')" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-green-400 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Next</button>
+        
+        <p class="w-full text-center text-gray-600 dark:text-gray-500 mt-2">Already have an account? <a href="#" onclick="navigate('login')" class="text-green-500">Log in</a>.</p>
+      </div>
+
+      <!--Sign Up Part 2-->
+      <div id="signup2" class="mx-auto w-4/5 hidden form-section">
+        <h1 class="dark:text-white text-3xl font-bold text-center mt-2 mb-6">Sign Up</h1>
+
+        <label class="text-gray-500 dark:text-gray-300">Password</label>
+        <input id="signup-password" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="password">
+
+        <label class="text-gray-500 dark:text-gray-300">Confirm Password</label>
+        <input id="signup-confirm" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="password">
+        
+        <div class="flex justify-between space-x-2">
+          <button onclick="navigate('signup1')" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-gray-300 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Back</button>
+          <button onclick="signup()" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-green-400 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Sign Up</button>
+        </div>
+
+      </div>
+
+
+      <!--Log In-->
+      <div id="login" class="mx-auto w-4/5 hidden form-section">
+        <h1 class="dark:text-white text-3xl font-bold text-center mt-2 mb-6">Log In</h1>
+
+        <label class="text-gray-500 dark:text-gray-300">Username or Email</label>
+        <input id="login-login" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="text">
+        
+        <label class="text-gray-500 dark:text-gray-300">Password</label>
+        <input id="login-password" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="password">
+      
+        <button onclick="login()" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-green-400 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Log In</button>
+        
+        <p class="w-full text-center text-gray-600 dark:text-gray-500 mt-2">Need an account? <a href="#" onclick="navigate('signup1')" class="text-green-500">Sign Up</a>.</p>
+      </div>
+
+
+
+
+    </div>
+  </main>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    function navigate(page){
+      $('.form-section').addClass('hidden');
+      $('#'+page).removeClass('hidden');
+    }
+
+    async function login(){
+      let response = await fetch(`https://socialmedia.gavhern.com/api/login.php?login=${document.getElementById('login-login').value}&password=${document.getElementById('login-password').value}`);
+      let res = await response.json();
+      if(res.success){
+        window.localStorage.setItem("session", res['session_token']);
+        window.location.href = "/#";
+      } else {
+        alert(res.message)
+      }
+    }
+
+    async function signup(){
+      let response = await fetch(`https://socialmedia.gavhern.com/api/register.php?name=${encodeURIComponent(document.getElementById('signup-name').value)}&username=${document.getElementById('signup-username').value}&email=${encodeURIComponent(document.getElementById('signup-email').value)}&password=${encodeURIComponent(document.getElementById('signup-password').value)}&confirm=${encodeURIComponent(document.getElementById('signup-confirm').value)}`);
+      let res = await response.json();
+      if(res.success){
+        window.localStorage.setItem("session", res['session_token']);
+        window.location.href = "/#";
+      } else {
+        alert(res.message)
+      }
+    }
+  </script>
+</body>
+</html>
