@@ -18,6 +18,10 @@ html, body {
   -ms-touch-action: none;
 }
 
+.safe-area-bottom {
+  padding-bottom: var(--safe-area-bottom);
+}
+
 /*Tab Screens*/
 .tab-screen {
   @apply absolute h-full w-full pointer-events-none transition duration-300 opacity-0 transform translate-y-16;
@@ -275,4 +279,21 @@ html, body {
 .brighter {
   filter: brightness(1.5);
   -webkit-filter: brightness(1.5);
+}
+
+.action-sheet-container .action-sheet {
+  @apply absolute w-full left-0 bottom-0 bg-white shadow-none rounded-t-3xl transition duration-300 transform translate-y-full safe-area-bottom;
+}
+
+.action-sheet-container.active .action-sheet {
+  @apply translate-y-0 shadow-xl;
+}
+
+.action-sheet-container .action-sheet-film {
+  @apply absolute w-full h-full bg-black opacity-0 transition duration-300;
+}
+
+
+.action-sheet-container.active .action-sheet-film {
+  @apply opacity-60;
 }

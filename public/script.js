@@ -501,6 +501,115 @@ const app = {
       $('#image-upload-preview').attr('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=');
     },
 
+    // Sheet modals
+    sheet: {
+      templates: {
+        confirm(data){
+          return [
+            {
+              tag: 'div',
+              classes: ["mx-4"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["text-2xl","font-semibold","my-1"],
+                  text: data.text
+                },
+                {
+                  tag: 'p',
+                  text: data.subtext
+                },
+                {
+                  tag: 'div',
+                  classes: ["flex","space-x-2","mt-6","mb-4"],
+                  children: [
+                    {
+                      tag: 'button',
+                      classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","ring-2","ring-gray-200","ring-inset"],
+                      text: "Cancel",
+                      eventListeners:{
+                        click: function(){ // Close the sheet
+                          $(this).parents().eq(4).removeClass('active');
+
+                          setTimeout(_=>{
+                            $(this).parents().eq(4).remove();
+                          },300)
+                        }
+                      }
+                    },
+                    {
+                      tag: 'button',
+                      classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl",data.color,"text-white"],
+                      text: data.actionText,
+                      eventListeners: {
+                        click: function(){ // Close the sheet and perform the action
+                          data.action();
+
+                          $(this).parents().eq(4).removeClass('active');
+
+                          setTimeout(_=>{
+                            $(this).parents().eq(4).remove();
+                          },300)
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+
+      },
+      create(sheet, data){
+        let element = elem.create({
+          tag: 'div',
+          classes: ["z-70", "absolute", "w-full", "h-full", "left-0", "top-0", "action-sheet-container"],
+          children: [
+            {
+              tag: 'div',
+              classes: ["action-sheet-film"],
+              eventListeners: {
+                click: function(){
+                  $(this).parent().removeClass('active');
+
+                  setTimeout(_=>{
+                    $(this).parent().remove();
+                  },300)
+                }
+              }
+            },
+            {
+              tag: 'div',
+              classes: ["action-sheet"],
+              children: [
+                {
+                  tag: 'div',
+                  classes: ["flex","justify-center","w-full","pt-4","pb-1"],
+                  children: [
+                    {
+                      tag: 'div',
+                      classes: ["h-1","w-16","bg-gray-300","rounded-full"]
+                    }
+                  ]
+                },
+                {
+                  tag: 'div',
+                  classes: ["pb-2"],
+                  children: app.dom.sheet.templates[sheet](data)
+                }
+              ]
+            }
+          ]
+        })
+
+        $("body").append(element);
+
+        setTimeout(_=>{
+          $(element).addClass('active');
+        },10)
+      }
+    },
 
 
     // Page element system
