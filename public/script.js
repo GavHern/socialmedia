@@ -221,30 +221,55 @@ const app = {
           },
           children: [
             {
-              tag: "a",
-              href: "#",
-              classes: ["flex-shrink-0","flex","flex-row","p-4"],
+              tag: "div",
+              classes: ["flex-shrink-0","flex","flex-row"],
               children: [
                 {
-                  tag: "img",
-                  src: (data.profile_picture == "") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb" : "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+data.profile_picture, // Author pfp
-                  classes: ["w-12","h-12","rounded-full","mr-4"]
-                },
-                {
-                  tag: "div",
-                  classes: ["h-12"],
+                  tag: 'a',
+                  href: '#',
+                  classes: ["flex","flex-row","p-4","w-full"],
                   children: [
                     {
-                      tag: "p",
-                      classes: ["font-semibold", "dark:text-white"],
-                      text: data.username // Author's name
+                      tag: "img",
+                      src: (data.profile_picture == "") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb" : "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+data.profile_picture, // Author pfp
+                      classes: ["w-12","h-12","rounded-full","mr-4"]
                     },
                     {
-                      tag: "p",
-                      classes: ["text-gray-600", "dark:text-gray-400"],
-                      text: "@"+data.username // Author's Username
+                      tag: "div",
+                      classes: ["h-12"],
+                      children: [
+                        {
+                          tag: "p",
+                          classes: ["font-semibold", "dark:text-white"],
+                          text: data.username // Author's name
+                        },
+                        {
+                          tag: "p",
+                          classes: ["text-gray-600", "dark:text-gray-400"],
+                          text: "@"+data.username // Author's Username
+                        }
+                      ]
                     }
                   ]
+                },
+                {
+                  tag: 'a',
+                  href: '#',
+                  classes: ["flex-shrink-0","flex","justify-center","items-center","px-4"],
+                  eventListeners: {
+                    click: function(){
+                      app.dom.sheet.create('options', (data.is_author != 1) ? {
+                        "Report": _=>{alert('Reporting coming soon')},
+                        "Cancel": _=>{}
+                      } : {
+                        "Edit": _=>{alert('Editing coming soon')},
+                        "Delete": _=>{alert('Deleting coming soon')},
+                        "Report": _=>{alert('Reporting coming soon')},
+                        "Cancel": _=>{}
+                      })
+                    }
+                  },
+                  html: '<svg class="w-6 h-6 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>'
                 }
               ]
             },
@@ -558,6 +583,32 @@ const app = {
               ]
             }
           ]
+        },
+
+        options(data){
+          opt = [];
+
+          for(const i in data){
+            opt.push({
+              tag: 'a',
+              href: '#',
+              classes: ["py-4","px-6","w-full","block"],
+              text: i,
+              eventListeners: {
+                click: function(){
+                  data[i]();
+
+                  $(this).parents().eq(2).removeClass('active');
+
+                  setTimeout(_=>{
+                    $(this).parents().eq(2).remove();
+                  },300)
+                }
+              }
+            });
+          }
+
+          return opt;
         }
 
       },
