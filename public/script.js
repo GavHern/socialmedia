@@ -397,6 +397,19 @@ const app = {
                 {
                   tag: 'a',
                   href: '#',
+                  eventListeners: {
+                    "click": _=>{
+                      app.dom.sheet.create('options', (data.is_author != 1) ? {
+                        "Report": _=>{alert('Reporting coming soon')},
+                        "Cancel": _=>{}
+                      } : {
+                        "Edit": _=>{alert('Editing coming soon')},
+                        "Delete": _=>{alert('Deleting coming soon')},
+                        "Report": _=>{alert('Reporting coming soon')},
+                        "Cancel": _=>{}
+                      })
+                    }
+                  },
                   html: '<svg class="w-6 h-6 text-gray-700 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>'
                 }
               ]
