@@ -385,6 +385,10 @@ const app = {
         return elem.create({
           tag: 'div',
           classes: ["bg-white","dark:bg-gray-800","dark:text-gray-200","mb-2","px-4","py-2","flex","flex-col"],
+          attributes: {
+            "data-comment-id": data.id,
+            "data-comment-likes": data.likes
+          },
           children: [
             {
               tag: 'div',
@@ -428,7 +432,19 @@ const app = {
                         "Cancel": _=>{}
                       } : {
                         "Edit": _=>{alert('Editing coming soon')},
-                        "Delete": _=>{alert('Deleting coming soon')},
+                        "Delete": _=>{app.dom.sheet.create('confirm', {
+                          text: "Are you sure you want to delete this comment?",
+                          subtext: "This action cannot be undone",
+                          color: "bg-red-500",
+                          actionText: "Delete Forever",
+                          action: async _=>{
+                            let res = await app.api.delete(data.id, true);
+                            if(res.success){
+                              app.methods.dialogue('Comment successfully deleted', true);
+                              $(`div[data-comment-id=${data.id}]`).remove();
+                            }
+                          }
+                        })},
                         "Report": _=>{alert('Reporting coming soon')},
                         "Cancel": _=>{}
                       })
