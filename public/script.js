@@ -281,6 +281,10 @@ const app = {
                             let res = await app.api.delete(data.id, false);
                             if(res.success){
                               app.methods.dialogue('Post successfully deleted', true);
+                              if(!isInFeed){
+                                app.dom.page.back();
+                              }
+                              $(`div[data-post-id=${data.id}]`).remove();
                             }
                           }
                         })},
