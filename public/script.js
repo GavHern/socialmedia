@@ -85,6 +85,15 @@ const app = {
 
       return res;
     },
+    async delete(id, isComment){ // Delete a post or comment
+      if(isComment){isComment=1}else{isComment=0}
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/delete.php?id=${id}&is_comment=${isComment}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
+    },
     async getPostInformation(id){ // Get the details of a post
       let res = await makeRequest(`https://socialmedia.gavhern.com/api/postinfo.php?post=${id}`, {
         method: 'GET',
@@ -263,7 +272,18 @@ const app = {
                         "Cancel": _=>{}
                       } : {
                         "Edit": _=>{alert('Editing coming soon')},
-                        "Delete": _=>{alert('Deleting coming soon')},
+                        "Delete": _=>{app.dom.sheet.create('confirm', {
+                          text: "Are you sure you want to delete this post?",
+                          subtext: "This action cannot be undone",
+                          color: "bg-red-500",
+                          actionText: "Delete Forever",
+                          action: async _=>{
+                            let res = await app.api.delete(data.id, false);
+                            if(res.success){
+                              app.methods.dialogue('Post successfully deleted', true);
+                            }
+                          }
+                        })},
                         "Report": _=>{alert('Reporting coming soon')},
                         "Cancel": _=>{}
                       })
