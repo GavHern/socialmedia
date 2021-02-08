@@ -101,6 +101,14 @@ const app = {
       });
 
       return res;
+    },
+    async getUser(id){ // Get the info and posts of a user
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/profile.php?user=${id}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
     }
   },
 
@@ -236,6 +244,11 @@ const app = {
                 {
                   tag: 'a',
                   href: '#',
+                  eventListeners: {
+                    click: _=>{
+                      app.dom.page.create('profile', data.author)
+                    }
+                  },
                   classes: ["flex","flex-row","p-4","w-full"],
                   children: [
                     {
@@ -496,6 +509,150 @@ const app = {
                   tag: "div"
                 }
               ]
+            }
+          ]
+        });
+      },
+      profilePage(data){
+        let posts = [];
+
+        if(data.posts.length != 0) {
+          for(const i of data.posts){ // Iterate JSON and append a post element
+            posts.push(app.dom.components.postElement(i, true))
+          }
+        } else { // Fallback if feed is empty
+          posts.push(elem.create({
+            tag: "div",
+            classes: ["w-full","flex","justify-center"],
+            html: '<div class="flex flex-col justify-center"><div class="flex justify-center mt-4 mb-1"><svg class="w-24 h-24 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div class="font-semibold text-xl text-gray-400 text-center mb-2">This user has no posts.</div></div>'
+          }));
+        }
+
+        return elem.create({
+          tag: 'div',
+          children: [
+            {
+              tag: 'div',
+              classes: ["border-b-2","border-gray-200","dark:border-gray-700","pb-4","bg-white","dark:bg-gray-800"],
+              children: [
+                {
+                  tag: 'div',
+                  classes: ["flex","flex-col","justify-center","relative","mb-16"],
+                  children: [
+                    {
+                      tag: 'div',
+                      classes: ["w-full","h-36","shadow-lg"],
+                      children: [
+                        (data.info.banner!="") ? {
+                          tag: 'img',
+                          classes: ["w-full","h-full","object-cover"],
+                          src: "https://socialmedia.gavhern.com/api/cdn.php?f=" + data.info.banner
+                        } : {
+                          tag: 'div',
+                          classes: ["w-full","h-full","bg-gradient-to-br","from-red-300","to-purple-300"]
+                        }
+                      ]
+                    },
+                    {
+                      tag: 'div',
+                      classes: ["w-32","h-32","border-white","border-4","rounded-full","shadow-2xl","z-10","absolute","-bottom-16","left-1/2","transform","-translate-x-16"],
+                      children: [
+                        {
+                          tag: 'img',
+                          classes: ["w-full","h-full","rounded-full"],
+                          src: (data.info.profile_picture=="") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default" : "https://socialmedia.gavhern.com/api/cdn.php?f="+data.info.profile_picture
+                        }
+                      ]
+                    },
+                    {
+                      tag: 'a',
+                      href: '#',
+                      classes: ["absolute","top-0","right-0","m-2","w-12","h-12","rounded-full","bg-black","bg-opacity-30","flex","justify-center","items-center"],
+                      html: '<svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>'
+                    }
+                  ]
+                },
+                {
+                  tag: 'div',
+                  classes: ["text-center","pt-3"],
+                  children: [
+                    {
+                      tag: 'h1',
+                      classes: ["font-semibold","text-3xl","dark:text-white"],
+                      text: data.info.name
+                    },
+                    {
+                      tag: 'p',
+                      classes: ["text-gray-800","dark:text-gray-200","text-xl","pt-1"],
+                      text: '@'+data.info.username
+                    },
+                    {
+                      tag: 'p',
+                      classes: ["text-gray-600","dark:text-gray-400","text-md","mx-4","pt-1.5"],
+                      text: data.info.bio
+                    }
+                  ]
+                },
+                {
+                  tag: 'div',
+                  classes: ["bg-gray-200","dark:bg-gray-900","h-12","mx-2","mt-4","px-1","rounded-xl","shadow-lg","flex","flex-row"],
+                  children: [
+                    {
+                      tag: 'a',
+                      href: '#',
+                      classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","flex","justify-center","items-center"],
+                      children: [
+                        {
+                          tag: 'span',
+                          text: "Mutual"
+                        },
+                        {
+                          tag: 'span',
+                          classes: ["text-gray-400","pl-2"],
+                          text: data.info.mutual
+                        }
+                      ]
+                    },
+                    {
+                      tag: 'a',
+                      href: '#',
+                      classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","flex","justify-center","items-center"],
+                      children: [
+                        {
+                          tag: 'span',
+                          text: "Followers"
+                        },
+                        {
+                          tag: 'span',
+                          classes: ["text-gray-400","pl-2"],
+                          text: data.info.followers
+                        }
+                      ]
+                    },
+                    {
+                      tag: 'a',
+                      href: '#',
+                      classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","flex","justify-center","items-center"],
+                      children: [
+                        {
+                          tag: 'span',
+                          text: "Following"
+                        },
+                        {
+                          tag: 'span',
+                          classes: ["text-gray-400","pl-2"],
+                          text: data.info.following
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              tag: 'div',
+              classes: ["bg-gray-100","dark:bg-gray-900","flex","flex-col","mb-4"],
+              children: posts
             }
           ]
         });
@@ -763,9 +920,7 @@ const app = {
         "profile": {
           uri(user){return `https://socialmedia.gavhern.com/api/profile.php?user=${user}`},
           domElement(data){
-            return elem.create({
-
-            });
+            return app.dom.components.profilePage(data);
           }
         },
         "saved": {
@@ -981,6 +1136,11 @@ for(const i of $('.tab-screen-body')){
 }
 
 
-$(document).ready(function(){
-  app.dom.loadHomeFeed();
+$(document).ready(app.dom.loadHomeFeed);
+
+$(".bottom-nav-item[data-page='profile']").one("click", async function(){
+  $('#profile .tab-screen-body.selected').append(app.dom.components.preloader);
+  let data = await app.api.getUser(window.localStorage.getItem('session').split('-')[0]);
+  $('#profile .tab-screen-body.selected').html('');
+  $('#profile .tab-screen-body.selected').append(app.dom.components.profilePage(data))
 });
