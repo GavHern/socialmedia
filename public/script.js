@@ -263,7 +263,7 @@ const app = {
                         {
                           tag: "p",
                           classes: ["font-semibold", "dark:text-white"],
-                          text: data.username // Author's name
+                          text: data.name // Author's name
                         },
                         {
                           tag: "p",
@@ -555,7 +555,7 @@ const app = {
                     },
                     {
                       tag: 'div',
-                      classes: ["w-32","h-32","border-white","border-4","rounded-full","shadow-2xl","z-10","absolute","-bottom-16","left-1/2","transform","-translate-x-16"],
+                      classes: ["w-32","h-32","bg-gray-200","border-white","border-4","rounded-full","shadow-2xl","z-10","absolute","-bottom-16","left-1/2","transform","-translate-x-16"],
                       children: [
                         {
                           tag: 'img',
