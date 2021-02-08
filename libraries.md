@@ -15,7 +15,3 @@
 ## APIs used
 
 - imgbb
-
-## Libraries for future use
-
-- VueJS
