@@ -22,6 +22,7 @@ module.exports = {
       width: ['compact'],
       flexDirection: ['compact'],
       justifyContent: ['compact'],
+      flexShrink: ['compact'],
       objectFit: ['compact'],
       borderRadius: ['compact'],
       display: ['compact']

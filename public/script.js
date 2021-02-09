@@ -183,6 +183,17 @@ const app = {
       }
 
       $('.post-form-button.post-form-submit').removeClass('loading');
+    },
+    homeLayoutSelect(){
+      app.dom.sheet.create('options', {
+        "Normal": _=>{
+          app.dom.changeHomeLayout(0)
+        },
+        "Compact": _=>{
+          app.dom.changeHomeLayout(1)
+        },
+        "Gallary": _=>{alert('Layouts coming soon')},
+      })
     }
   },
 
@@ -698,8 +709,22 @@ const app = {
       }
     },
 
-    menu(){
-      let elemData = {}
+    changeHomeLayout(layout){
+      switch(layout) {
+        case 0:
+          $('#home-feed').removeClass('compact');
+          $('.home-layout').addClass('hidden');
+          $('.home-layout.layout-normal').removeClass('hidden');
+          break;
+        case 1:
+          $('#home-feed').addClass('compact');
+          $('.home-layout').addClass('hidden');
+          $('.home-layout.layout-compact').removeClass('hidden');
+          break;
+        case 1:
+          // code block
+          break;
+      }
     },
 
     async loadHomeFeed(){
