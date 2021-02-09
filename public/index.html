@@ -18,17 +18,21 @@
 <body class="flex flex-col bg-gray-100 dark:bg-gray-900 h-full overflow-hidden overscroll-none relative user-select-none">
   <!--Navigation-->
   <div class="top-nav flex-none bg-gradient-to-br from-green-300 to-green-400 dark:from-green-400 dark:to-green-500 border-b-2 dark:border-gray-600">
-    <a href="#" id="sidenav-trigger" class="flex justify-center items-center h-16 w-16">
-      <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </a>
+    <div href="#" id="sidenav-trigger">
+      <a class="flex justify-center items-center h-16 w-16">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </a>
+    </div>
 
-    <a href="#" id="page-back-trigger" class="flex justify-center items-center h-16 w-16 hidden">
-      <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-    </a>
+    <div href="#" id="page-back-trigger" class="hidden">
+      <a class="flex justify-center items-center h-16 w-16">
+        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </a>
+    </div>
   </div>
 
   <!--Main Content-->
