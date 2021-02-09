@@ -200,7 +200,7 @@ const app = {
           body = {
             tag: isInFeed ? "a" : "p", // If the post is in a feed, make the body a link.
             href: "#",
-            classes: ["flex-shrink-0","dark:text-gray-300","w-full","px-4"],
+            classes: ["flex-shrink-0","dark:text-gray-300","w-full","px-4","compact:hidden"],
             text: data.body, // Body text
             eventListeners: isInFeed ? { // Adds event listener for posts in a feed
               click: function(e){
@@ -216,7 +216,7 @@ const app = {
             children: [
               {
                 tag: "img",
-                classes: ["bg-black","w-full","max-h-144","object-contain"],
+                classes: ["bg-black","w-full","max-h-144","compact:w-32","compact:h-24","object-contain","compact:object-cover","compact:mr-2","compact:rounded-xl"],
                 src: "https://socialmedia.gavhern.com/api/cdn.php?f="+data.body, // Body image
                 eventListeners: {
                   click: ()=>{app.dom.openProjector("https://socialmedia.gavhern.com/api/cdn.php?f="+data.body)} // Body image
@@ -254,15 +254,15 @@ const app = {
                     {
                       tag: "img",
                       src: (data.profile_picture == "") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb" : "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+data.profile_picture, // Author pfp
-                      classes: ["w-12","h-12","rounded-full","mr-4"]
+                      classes: ["w-12","h-12","compact:w-6","compact:h-6","rounded-full","mr-4","compact:mr-3"]
                     },
                     {
                       tag: "div",
-                      classes: ["h-12"],
+                      classes: ["h-12","compact:h-6"],
                       children: [
                         {
                           tag: "p",
-                          classes: ["font-semibold", "dark:text-white"],
+                          classes: ["font-semibold", "dark:text-white", "compact:hidden"],
                           text: data.name // Author's name
                         },
                         {
@@ -311,17 +311,23 @@ const app = {
               ]
             },
             {
-              tag: isInFeed ? "a" : "p",
-              href: "#",
-              classes: ["flex-shrink-0","dark:text-gray-200","px-4","text-xl","font-semibold","pb-2"],
-              text: data.title, // Post title
-              eventListeners: isInFeed ? {
-                click: function(e){
-                  app.dom.page.create('post', data.id);
-                }
-              } : {}
+              tag: 'div',
+              classes: ['flex', 'flex-col', 'compact:flex-row', 'compact:justify-between'],
+              children:[
+                {
+                  tag: isInFeed ? "a" : "p",
+                  href: "#",
+                  classes: ["flex-shrink-0","compact:flex-shrink","dark:text-gray-200","px-4","text-xl","font-semibold","pb-2"],
+                  text: data.title, // Post title
+                  eventListeners: isInFeed ? {
+                    click: function(e){
+                      app.dom.page.create('post', data.id);
+                    }
+                  } : {}
+                },
+                body,
+              ]
             },
-            body,
             {
               tag: "div",
               classes: ["flex-shrink-0","flex","justify-between","items-center","dark:text-gray-200"],

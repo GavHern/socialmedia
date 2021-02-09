@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
   purge: [],
   darkMode: 'class', // or 'media' or 'class'
@@ -14,7 +16,22 @@ module.exports = {
     }
   },
   variants: {
-    extend: {},
+    extend: {
+      margin: ['compact'],
+      height: ['compact'],
+      width: ['compact'],
+      flexDirection: ['compact'],
+      justifyContent: ['compact'],
+      objectFit: ['compact'],
+      borderRadius: ['compact'],
+      display: ['compact']
+    },
   },
-  plugins: [],
+  plugins: [plugin(function({ addVariant, e }) {
+    addVariant('compact', ({ modifySelectors, separator }) => {
+      modifySelectors(({ className }) => {
+        return `.${e(`compact`)} .compact${e(separator)}${e(className)}`
+      })
+    })
+  })],
 }
