@@ -11,8 +11,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build-css": "tailwindcss build src/style.css -o public/style.css",
-    "minify-css": "css-minify -f public/style.css"
+    "build-css": "tailwindcss build src/style.css -o public/style.css"
   },
   "author": "Gavin Hernandez",
   "license": "ISC"
