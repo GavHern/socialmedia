@@ -327,7 +327,7 @@ const app = {
                 {
                   tag: isInFeed ? "a" : "p",
                   href: "#",
-                  classes: ["flex-shrink-0","compact:flex-shrink","dark:text-gray-200","px-4","text-xl","font-semibold","pb-2"],
+                  classes: ["flex-shrink-0","compact:flex-shrink","compact:w-full","dark:text-gray-200","px-4","text-xl","font-semibold","pb-2"],
                   text: data.title, // Post title
                   eventListeners: isInFeed ? {
                     click: function(e){
@@ -723,8 +723,6 @@ const app = {
                       }
 
                       let nextPage = await makeRequest(uri);
-
-                      console.log(nextPage[postObj])
 
                       $(preloader).remove()
 

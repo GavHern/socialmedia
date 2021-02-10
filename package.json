@@ -5,12 +5,14 @@
   "main": "index.js",
   "dependencies": {
     "autoprefixer": "^10.1.0",
+    "css-minify": "^1.1.0",
     "postcss": "^8.2.2",
     "tailwindcss": "^2.0.2"
   },
   "devDependencies": {},
   "scripts": {
-    "build-css": "tailwindcss build src/style.css -o public/style.css"
+    "build-css": "tailwindcss build src/style.css -o public/style.css",
+    "minify-css": "css-minify -f public/style.css"
   },
   "author": "Gavin Hernandez",
   "license": "ISC"
