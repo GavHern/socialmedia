@@ -85,6 +85,14 @@ const app = {
 
       return res;
     },
+    async comment(parent, text){ // Create a post
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/comment.php?parent=${parent}&body=${text}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
+    },
     async delete(id, isComment){ // Delete a post or comment
       if(isComment){isComment=1}else{isComment=0}
       let res = await makeRequest(`https://socialmedia.gavhern.com/api/delete.php?id=${id}&is_comment=${isComment}`, {
@@ -390,7 +398,7 @@ const app = {
                     click: isInFeed ? (e) => {
                       app.dom.page.create('post', data.id);
                     } : (e) => {
-                      alert('Commenting coming soon.')
+                      app.dom.sheet.create('comment',{parent:data.id})
                     }
                   },
                   html: '<svg class="w-4 h-4 mr-1.5" xmlns="http:\/\/www.w3.org\/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg><p>Comment</p>'
@@ -1045,6 +1053,76 @@ const app = {
               ]
             }
           ]
+        },
+
+        comment(data){
+          return [
+            {
+              tag: 'div',
+              classes: ["mx-4"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["text-2xl","font-semibold","my-1"],
+                  text: "Comment"
+                },
+                {
+                  tag: 'textarea',
+                  classes: ['w-full','h-36','border-2','border-gray-200','rounded-xl','focus:border-green-400','outline-none','px-3','py-2','mt-2','transition'],
+                  attributes:{
+                    'placeholder': 'Your comment...',
+                    'autofocus': ''
+                  }
+                },
+                {
+                  tag: 'div',
+                  classes: ["flex","space-x-2","mt-6","mb-4"],
+                  children: [
+                    {
+                      tag: 'button',
+                      classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","ring-2","ring-gray-200","dark:ring-gray-700","ring-inset"],
+                      text: "Cancel",
+                      eventListeners:{
+                        click: function(){ // Close the sheet
+                          $(this).parents().eq(4).removeClass('active');
+
+                          setTimeout(_=>{
+                            $(this).parents().eq(4).remove();
+                          },300)
+                        }
+                      }
+                    },
+                    {
+                      tag: 'button',
+                      classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","bg-green-400","text-white"],
+                      text: "Post",
+                      eventListeners: {
+                        click: async function(){ // Close the sheet and perform the action
+                          let text = $(this).parents().eq(1).find('textarea').val();
+
+                          let res = await app.api.comment(data.parent,text);
+
+                          if(res.success){
+
+                            app.methods.dialogue('Comment created!', true);
+
+                            app.dom.page.back();
+                            app.dom.page.create('post', data.parent);
+
+                            $(this).parents().eq(4).removeClass('active');
+  
+                            setTimeout(_=>{
+                              $(this).parents().eq(4).remove();
+                            },300)
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
 
       },
@@ -1105,6 +1183,7 @@ const app = {
         "post": {
           uri(id){return `https://socialmedia.gavhern.com/api/postinfo.php?post=${id}`},
           domElement(data){
+            console.log(data)
             let commentArray=[];
 
             if(data.comments.length < 1){
@@ -1130,6 +1209,11 @@ const app = {
                     {
                       tag: 'a',
                       href: '#',
+                      eventListeners: {
+                        click: _=>{
+                          app.dom.sheet.create('comment',{parent:data.data.id});
+                        }
+                      },
                       classes: ["flex","items-center","bg-white","dark:bg-gray-700","text-gray-400","h-10","w-full","rounded-xl","px-4"],
                       text: "Write comment..."
                     }
