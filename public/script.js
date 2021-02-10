@@ -738,7 +738,7 @@ const app = {
 
                     }
                   },
-                  classes: ['w-full','text-center','p-2', 'rounded-xl', 'bg-white', 'ring-2', 'ring-gray-200'],
+                  classes: ['w-full','text-center','p-2', 'rounded-xl', 'bg-white', 'ring-2', 'ring-gray-200', (postData.length >= 25) ? 'block' : 'hidden'],
                   text: 'Load more'
                 }
               ]
