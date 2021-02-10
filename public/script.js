@@ -678,7 +678,6 @@ const app = {
           postarray.push(app.dom.components.postElement(i, true))
         }
 
-        console.log(feedInfo)
 
         return elem.create({
           tag: 'div',
@@ -1027,7 +1026,7 @@ const app = {
           domElement(data){
             let postArray=[];
 
-            postArray.push(app.dom.components.postFeed(data.data, {page:'saved',checkpoint}));
+            postArray.push(app.dom.components.postFeed(data.data, {page:'saved', checkpoint: data.checkpoint}));
 
             return elem.create({
               tag: 'div',
