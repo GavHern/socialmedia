@@ -191,8 +191,7 @@ const app = {
         },
         "Compact": _=>{
           app.dom.changeHomeLayout(1)
-        },
-        "Gallary": _=>{alert('Layouts coming soon')},
+        }
       })
     }
   },
@@ -531,12 +530,10 @@ const app = {
         });
       },
       profilePage(data){
-        let posts = [];
+        let posts;
 
         if(data.posts.length != 0) {
-          for(const i of data.posts){ // Iterate JSON and append a post element
-            posts.push(app.dom.components.postElement(i, true))
-          }
+          posts = app.dom.components.postFeed(data.posts,{page:'profile',checkpoint:data.checkpoint,user:data.info.id})
         } else { // Fallback if feed is empty
           posts.push(elem.create({
             tag: "div",
@@ -669,7 +666,83 @@ const app = {
             {
               tag: 'div',
               classes: ["bg-gray-100","dark:bg-gray-900","flex","flex-col","mb-4"],
-              children: posts
+              children: [posts]
+            }
+          ]
+        });
+      },
+      postFeed(postData, feedInfo){
+        let postarray = [];
+
+        for(const i of postData){ // Iterate JSON and append a post element
+          postarray.push(app.dom.components.postElement(i, true))
+        }
+
+        console.log(feedInfo)
+
+        return elem.create({
+          tag: 'div',
+          children: [
+            {
+              tag: 'div',
+              classes: ['feed'],
+              attributes: {
+                "data-checkpoint": feedInfo.checkpoint 
+              },
+              children: postarray
+            },
+            {
+              tag: 'div',
+              classes: ['m-4'],
+              children: [
+                {
+                  tag: 'button',
+                  eventListeners: {
+                    click: async function(){
+                      let postContainer = $(this).parents().eq(1).find('.feed');
+                      let preloader = app.dom.components.preloader();
+                      $(postContainer).append(preloader);
+                      $(this).addClass('hidden');
+
+                      let uri
+                      let postObj;
+                      let checkpoint = $(postContainer).attr('data-checkpoint');
+
+                      switch(feedInfo.page) {
+                        case 'home':
+                          uri = `https://socialmedia.gavhern.com/api/feed.php?checkpoint=${checkpoint}`;
+                          postObj = 'data';
+                          break;
+                        case 'saved':
+                          uri = `https://socialmedia.gavhern.com/api/savedfeed.php?checkpoint=${checkpoint}`;
+                          postObj = 'data';
+                          break;
+                        case 'profile':
+                          uri = `https://socialmedia.gavhern.com/api/savedfeed.php?user=${feedInfo.user}&checkpoint=${checkpoint}`;
+                          postObj = 'posts';
+                          break;
+                      }
+
+                      let nextPage = await makeRequest(uri);
+
+                      console.log(nextPage[postObj])
+
+                      $(preloader).remove()
+
+                      for(const i of nextPage[postObj]){ // Iterate JSON and append a post element
+                        $(postContainer).append(app.dom.components.postElement(i, true))
+                      }
+
+                      if(nextPage[postObj].length >= 25){
+                        $(this).removeClass('hidden');
+                      }
+
+                    }
+                  },
+                  classes: ['w-full','text-center','p-2', 'rounded-xl', 'bg-white', 'ring-2', 'ring-gray-200'],
+                  text: 'Load more'
+                }
+              ]
             }
           ]
         });
@@ -721,9 +794,6 @@ const app = {
           $('.home-layout').addClass('hidden');
           $('.home-layout.layout-compact').removeClass('hidden');
           break;
-        case 1:
-          // code block
-          break;
       }
     },
 
@@ -736,9 +806,7 @@ const app = {
       
       // Check if feed is empty
       if(feedData.data.length != 0) {
-        for(const i of feedData.data){ // Iterate JSON and append a post element
-          $('#home-feed').append(app.dom.components.postElement(i, true))
-        }
+        $('#home-feed').append(app.dom.components.postFeed(feedData.data, {page:'home',checkpoint:feedData.checkpoint}))
       } else { // Fallback if feed is empty
         $('#home-feed').append(elem.create({
           tag: "div",
@@ -959,9 +1027,7 @@ const app = {
           domElement(data){
             let postArray=[];
 
-            for(const i of data.data){
-              postArray.push(app.dom.components.postElement(i, true));
-            }
+            postArray.push(app.dom.components.postFeed(data.data, {page:'saved',checkpoint}));
 
             return elem.create({
               tag: 'div',
