@@ -109,6 +109,14 @@ const app = {
       });
 
       return res;
+    },
+    async report(id, isComment, reason, message){ // Get the info and posts of a user
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/report.php?id=${id}&comment=${isComment}&reason=${reason}&message=${message}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
     }
   },
 
@@ -291,7 +299,9 @@ const app = {
                   eventListeners: {
                     click: function(){
                       app.dom.sheet.create('options', (data.is_author != 1) ? {
-                        "Report": _=>{alert('Reporting coming soon')},
+                        "Report": _=>{
+                          app.dom.sheet.create('report', {id:data.id,isComment:0})
+                        },
                         "Cancel": _=>{}
                       } : {
                         "Edit": _=>{alert('Editing coming soon')},
@@ -311,7 +321,9 @@ const app = {
                             }
                           }
                         })},
-                        "Report": _=>{alert('Reporting coming soon')},
+                        "Report": _=>{
+                          app.dom.sheet.create('report', {id:data.id,isComment:0})
+                        },
                         "Cancel": _=>{}
                       })
                     }
@@ -457,7 +469,9 @@ const app = {
                   eventListeners: {
                     "click": _=>{
                       app.dom.sheet.create('options', (data.is_author != 1) ? {
-                        "Report": _=>{alert('Reporting coming soon')},
+                        "Report": _=>{
+                          app.dom.sheet.create('report', {id:data.id,isComment:1})
+                        },
                         "Cancel": _=>{}
                       } : {
                         "Edit": _=>{alert('Editing coming soon')},
@@ -474,7 +488,9 @@ const app = {
                             }
                           }
                         })},
-                        "Report": _=>{alert('Reporting coming soon')},
+                        "Report": _=>{
+                          app.dom.sheet.create('report', {id:data.id,isComment:1})
+                        },
                         "Cancel": _=>{}
                       })
                     }
@@ -915,13 +931,127 @@ const app = {
           }
 
           return opt;
+        },
+
+        report(data){
+          return [
+            {
+              tag: 'div',
+              classes: ["mx-4"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["text-2xl","font-semibold","my-1"],
+                  text: "Report Post"
+                },
+                {
+                  tag: 'select',
+                  classes: ["w-full","bg-gray-100","rounded-xl","p-4","my-2"],
+                  children: [
+                    {
+                      tag: 'option',
+                      attributes: {
+                        value: ''
+                      },
+                      html: '---'
+                    },
+                    {
+                      tag: 'option',
+                      attributes: {
+                        value: 'inappropriate'
+                      },
+                      html: 'Innapropriate content'
+                    },
+                    {
+                      tag: 'option',
+                      attributes: {
+                        value: 'hate'
+                      },
+                      html: 'Hateful or abusive content'
+                    },
+                    {
+                      tag: 'option',
+                      attributes: {
+                        value: 'spam'
+                      },
+                      html: 'Spam or unwanted content'
+                    },
+                    {
+                      tag: 'option',
+                      attributes: {
+                        value: 'impersonation'
+                      },
+                      html: 'Impersonation'
+                    },
+                    {
+                      tag: 'option',
+                      attributes: {
+                        value: 'other'
+                      },
+                      html: 'Other'
+                    }
+                  ]
+                },
+                {
+                  tag: 'textarea',
+                  classes: ['w-full','h-36','border-2','border-gray-200','rounded-xl','focus:border-green-400','outline-none','px-3','py-2','transition'],
+                  attributes:{
+                    'placeholder': 'Describe your issue...'
+                  }
+                },
+                {
+                  tag: 'div',
+                  classes: ["flex","space-x-2","mt-6","mb-4"],
+                  children: [
+                    {
+                      tag: 'button',
+                      classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","ring-2","ring-gray-200","dark:ring-gray-700","ring-inset"],
+                      text: "Cancel",
+                      eventListeners:{
+                        click: function(){ // Close the sheet
+                          $(this).parents().eq(4).removeClass('active');
+
+                          setTimeout(_=>{
+                            $(this).parents().eq(4).remove();
+                          },300)
+                        }
+                      }
+                    },
+                    {
+                      tag: 'button',
+                      classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","bg-red-500","text-white"],
+                      text: "Report",
+                      eventListeners: {
+                        click: async function(){ // Close the sheet and perform the action
+                          let reason = $(this).parents().eq(1).find('select').val();
+                          let message = $(this).parents().eq(1).find('textarea').val();
+
+                          let res = await app.api.report(data.id,data.isComment,reason,message);
+
+                          if(res.success){
+                            app.methods.dialogue('Report successful. Thanks for your feedback.', true);
+
+                            $(this).parents().eq(4).removeClass('active');
+  
+                            setTimeout(_=>{
+                              $(this).parents().eq(4).remove();
+                            },300)
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
 
       },
       create(sheet, data){
         let element = elem.create({
           tag: 'div',
-          classes: ["z-70", "absolute", "w-full", "h-full", "left-0", "top-0", "action-sheet-container"],
+          classes: ["z-60", "absolute", "w-full", "h-full", "left-0", "top-0", "action-sheet-container"],
           children: [
             {
               tag: 'div',
