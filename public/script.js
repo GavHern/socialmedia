@@ -447,6 +447,11 @@ const app = {
                 {
                   tag: 'a',
                   href: '#',
+                  eventListeners:{
+                    click: _=> {
+                      app.dom.page.create('profile', data.author)
+                    }
+                  },
                   classes: ["flex", "items-center"],
                   children: [
                     {
@@ -528,14 +533,14 @@ const app = {
 
                       
                       if(res.success){ // If request was successful
-                        if(likeComment){ // Like post
-                          $(`div[data-comment-id=${data.id}] .comment-like`).addClass('active'); // Find all instances of the post
+                        if(likeComment){ // Like comment
+                          $(`div[data-comment-id=${data.id}] .comment-like`).addClass('active'); // Find all instances of the comment
                           let numLikes = $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes'); // Find the attribute 'data-likes'
                           numLikes++; // Increment like number
                           $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes', numLikes); // Assign mutated value to the attribute
                           $(`div[data-comment-id=${data.id}] .comment-like p`).text(parseInt(numLikes)); // Make the innertext of the like counter reflect the attribute
-                        } else { // Unlike post
-                          $(`div[data-comment-id=${data.id}] .comment-like`).removeClass('active'); // Find all instances of the post
+                        } else { // Unlike comment
+                          $(`div[data-comment-id=${data.id}] .comment-like`).removeClass('active'); // Find all instances of the comment
                           let numLikes = $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes'); // Find the attribute 'data-likes'
                           numLikes--; // Decrement like number
                           $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes', numLikes); // Assign mutated value to the attribute
