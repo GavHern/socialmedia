@@ -33,7 +33,7 @@ async function makeRequest(uri, data){
 }
 
 
-
+var currentUser = window.localStorage.getItem('session').split('-')[0];
 
 
 
@@ -586,7 +586,7 @@ const app = {
         let posts;
 
         if(data.posts.length != 0) {
-          posts = app.dom.components.postFeed(data.posts,{page:'profile',checkpoint:data.checkpoint,user:data.info.id})
+          posts = app.dom.components.postFeed(data.posts,{page:'profile', checkpoint:data.checkpoint, user:data.info.id})
         } else { // Fallback if feed is empty
           posts.push(elem.create({
             tag: "div",
@@ -667,7 +667,7 @@ const app = {
                     {
                       tag: 'a',
                       href: '#',
-                      classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","flex","justify-center","items-center"],
+                      classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","justify-center","items-center", (data.info.id != currentUser) ? "flex" : "hidden"],
                       children: [
                         {
                           tag: 'span',
@@ -1477,7 +1477,7 @@ $(document).ready(app.dom.loadHomeFeed);
 
 $(".bottom-nav-item[data-page='profile']").one("click", async function(){
   $('#profile .tab-screen-body.selected').append(app.dom.components.preloader);
-  let data = await app.api.getUser(window.localStorage.getItem('session').split('-')[0]);
+  let data = await app.api.getUser(currentUser);
   $('#profile .tab-screen-body.selected').html('');
   $('#profile .tab-screen-body.selected').append(app.dom.components.profilePage(data))
 });
