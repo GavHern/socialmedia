@@ -85,7 +85,7 @@ const app = {
 
       return res;
     },
-    async comment(parent, text){ // Create a post
+    async comment(parent, text){ // Create a comment
       let res = await makeRequest(`https://socialmedia.gavhern.com/api/comment.php?parent=${parent}&body=${text}`, {
         method: 'GET',
         redirect: 'follow'
@@ -118,7 +118,7 @@ const app = {
 
       return res;
     },
-    async report(id, isComment, reason, message){ // Get the info and posts of a user
+    async report(id, isComment, reason, message){ // Report a post or comment
       let res = await makeRequest(`https://socialmedia.gavhern.com/api/report.php?id=${id}&comment=${isComment}&reason=${reason}&message=${message}`, {
         method: 'GET',
         redirect: 'follow'
@@ -133,12 +133,12 @@ const app = {
 
   // Various methods
   methods: {
-    signOut(){
+    signOut(){ // Sign the user out of thier account
       window.localStorage.removeItem("session");
       document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); // Clear cookies
-      window.location.href="/login.html#";
+      window.location.href="/login.html#"; // Redirect to the login screen
     },
-    dialogue(msg, success){
+    dialogue(msg, success){ // Build a dialogue message
       let elem = app.dom.components.buildDialogue(msg, success);
       $('#dialogue-container').append(elem);
 
@@ -161,10 +161,11 @@ const app = {
       reader.onload = () => resolve(reader.result); // Resolve the promise if successful
       reader.onerror = error => reject(error); // Reject the promise if unsuccessful
     }),
-    async submitForm(){
-      $('.post-form-button.post-form-submit').addClass('loading');
+    async submitForm(){ // Submits the post form (to avoid using a form tag)
+      $('.post-form-button.post-form-submit').addClass('loading'); // Set the submit button state to "loading"
 
-      let postTitle = $('#post-form-title').val();
+      // Grab values
+      let postTitle = $('#post-form-title').val(); 
       let postType = $('#post-type div.active').attr('data-post-type');
       let postBody;
 
@@ -200,7 +201,7 @@ const app = {
 
       $('.post-form-button.post-form-submit').removeClass('loading');
     },
-    homeLayoutSelect(){
+    homeLayoutSelect(){ // Change the layout of the home screen (normal or compact)
       app.dom.sheet.create('options', {
         "Normal": _=>{
           app.dom.changeHomeLayout(0)
@@ -258,7 +259,7 @@ const app = {
         return elem.create({
           tag: "div",
           classes: ["bg-white","dark:bg-gray-800","flex","flex-col","mb-4"],
-          attributes: {
+          attributes: { // Add post id and like count as attributes so liking/ saving can update all post element across the app
             'data-post-id': data.id,
             'data-likes': data.likes
           },
@@ -305,8 +306,8 @@ const app = {
                   href: '#',
                   classes: ["flex-shrink-0","flex","justify-center","items-center","px-4"],
                   eventListeners: {
-                    click: function(){
-                      app.dom.sheet.create('options', (data.is_author != 1) ? {
+                    click: function(){ // 3 dot options menu
+                      app.dom.sheet.create('options', (data.is_author != 1) ? { // Two variations for if the user owns the parent or not
                         "Report": _=>{
                           app.dom.sheet.create('report', {id:data.id,isComment:0})
                         },
@@ -519,7 +520,30 @@ const app = {
                 {
                   tag: 'a',
                   href: '#',
-                  classes: ['flex', 'items-center'],
+                  classes: (data.liked==1) ? ['flex', 'items-center', 'comment-like', 'active'] : ['flex', 'items-center', 'comment-like'],
+                  eventListeners:{
+                    click: async function(){
+                      let likeComment = !$(this).hasClass('active');
+                      let res = await app.api.like(data.id, likeComment, true); // Like the comment with the ID
+
+                      
+                      if(res.success){ // If request was successful
+                        if(likeComment){ // Like post
+                          $(`div[data-comment-id=${data.id}] .comment-like`).addClass('active'); // Find all instances of the post
+                          let numLikes = $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes'); // Find the attribute 'data-likes'
+                          numLikes++; // Increment like number
+                          $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes', numLikes); // Assign mutated value to the attribute
+                          $(`div[data-comment-id=${data.id}] .comment-like p`).text(parseInt(numLikes)); // Make the innertext of the like counter reflect the attribute
+                        } else { // Unlike post
+                          $(`div[data-comment-id=${data.id}] .comment-like`).removeClass('active'); // Find all instances of the post
+                          let numLikes = $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes'); // Find the attribute 'data-likes'
+                          numLikes--; // Decrement like number
+                          $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes', numLikes); // Assign mutated value to the attribute
+                          $(`div[data-comment-id=${data.id}] .comment-like p`).text(parseInt(numLikes)); // Make the innertext of the like counter reflect the attribute
+                        }
+                      }
+                    }
+                  },
                   html: `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg><p>${data.likes}</p>`
                 }
               ]

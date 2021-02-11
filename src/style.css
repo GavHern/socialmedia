@@ -174,14 +174,18 @@ html, body {
 .post-action.like.active {
   @apply text-red-500;
 }
+.comment-like.active {
+  @apply text-red-500;
+}
 
 .post-action.save.active {
   @apply text-green-500;
 }
 
-.post-action.like.active svg, .post-action.save.active svg {
+.post-action.like.active svg, .post-action.save.active svg, .comment-like.active svg {
   @apply fill-current;
 }
+
 
 #dialogue-container {
   @apply z-70 absolute top-0 right-0 pointer-events-none h-auto p-2 ml-16;
