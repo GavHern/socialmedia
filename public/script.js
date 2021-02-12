@@ -93,6 +93,15 @@ const app = {
 
       return res;
     },
+    async edit(id, isComment, body){ // Delete a post or comment
+      if(isComment){isComment=1}else{isComment=0}
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/edit.php?id=${id}&is_comment=${isComment}&body=${body}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
+    },
     async delete(id, isComment){ // Delete a post or comment
       if(isComment){isComment=1}else{isComment=0}
       let res = await makeRequest(`https://socialmedia.gavhern.com/api/delete.php?id=${id}&is_comment=${isComment}`, {
@@ -227,7 +236,7 @@ const app = {
           body = {
             tag: isInFeed ? "a" : "p", // If the post is in a feed, make the body a link.
             href: "#",
-            classes: ["flex-shrink-0","dark:text-gray-300","w-full","px-4","compact:hidden"],
+            classes: ["flex-shrink-0","dark:text-gray-300","w-full","px-4","compact:hidden","post-body-text"],
             text: data.body, // Body text
             eventListeners: isInFeed ? { // Adds event listener for posts in a feed
               click: function(e){
@@ -307,14 +316,16 @@ const app = {
                   classes: ["flex-shrink-0","flex","justify-center","items-center","px-4"],
                   eventListeners: {
                     click: function(){ // 3 dot options menu
-                      app.dom.sheet.create('options', (data.is_author != 1) ? { // Two variations for if the user owns the parent or not
-                        "Report": _=>{
-                          app.dom.sheet.create('report', {id:data.id,isComment:0})
-                        },
-                        "Cancel": _=>{}
-                      } : {
-                        "Edit": _=>{alert('Editing coming soon')},
-                        "Delete": _=>{app.dom.sheet.create('confirm', {
+                      let optionList = {};
+
+                      if(data.is_author == 1){
+                        if(data.type == 'text'){
+                          optionList["Edit"] = _=>{app.dom.sheet.create('edit', {
+                            id: data.id,
+                            isComment: false
+                          })}
+                        }
+                        optionList["Delete"] = _=>{app.dom.sheet.create('confirm', {
                           text: "Are you sure you want to delete this post?",
                           subtext: "This action cannot be undone",
                           color: "bg-red-500",
@@ -329,12 +340,16 @@ const app = {
                               $(`div[data-post-id=${data.id}]`).remove();
                             }
                           }
-                        })},
-                        "Report": _=>{
-                          app.dom.sheet.create('report', {id:data.id,isComment:0})
-                        },
-                        "Cancel": _=>{}
-                      })
+                        })}
+                      }
+
+                      optionList["Report"] = _=>{
+                        app.dom.sheet.create('report', {id:data.id,isComment:0})
+                      }
+
+                      optionList["Cancel"] = _=>{}
+
+                      app.dom.sheet.create('options', optionList)
                     }
                   },
                   html: '<svg class="w-6 h-6 text-gray-700 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>'
@@ -488,7 +503,10 @@ const app = {
                         },
                         "Cancel": _=>{}
                       } : {
-                        "Edit": _=>{alert('Editing coming soon')},
+                        "Edit": _=>{app.dom.sheet.create('edit', {
+                          id: data.id,
+                          isComment: true
+                        })},
                         "Delete": _=>{app.dom.sheet.create('confirm', {
                           text: "Are you sure you want to delete this comment?",
                           subtext: "This action cannot be undone",
@@ -515,7 +533,7 @@ const app = {
             },
             {
               tag: 'div',
-              classes: ["mt-2","text-gray-800","dark:text-gray-300"],
+              classes: ["mt-2","text-gray-800","dark:text-gray-300","comment-body-text"],
               text: data.body
             },
             {
@@ -1152,6 +1170,79 @@ const app = {
               ]
             }
           ]
+        },
+
+        edit(data){
+          return [
+            {
+              tag: 'div',
+              classes: ["mx-4"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["text-2xl","font-semibold","my-1"],
+                  text: "Edit"
+                },
+                {
+                  tag: 'textarea',
+                  classes: ['w-full','h-36','border-2','border-gray-200','rounded-xl','focus:border-green-400','outline-none','px-3','py-2','mt-2','transition'],
+                  attributes:{
+                    'placeholder': 'New text...',
+                    'autofocus': ''
+                  }
+                },
+                {
+                  tag: 'div',
+                  classes: ["flex","space-x-2","mt-6","mb-4"],
+                  children: [
+                    {
+                      tag: 'button',
+                      classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","ring-2","ring-gray-200","dark:ring-gray-700","ring-inset"],
+                      text: "Cancel",
+                      eventListeners:{
+                        click: function(){ // Close the sheet
+                          $(this).parents().eq(4).removeClass('active');
+
+                          setTimeout(_=>{
+                            $(this).parents().eq(4).remove();
+                          },300)
+                        }
+                      }
+                    },
+                    {
+                      tag: 'button',
+                      classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","bg-green-400","text-white"],
+                      text: "Edit",
+                      eventListeners: {
+                        click: async function(){ // Close the sheet and perform the action
+                          let text = $(this).parents().eq(1).find('textarea').val();
+
+                          let res = await app.api.edit(data.id,data.isComment,text);
+
+                          if(res.success){
+
+                            app.methods.dialogue(((data.isComment) ? 'Comment' : 'Post') + ' was successfully edited!', true);
+
+                            if(!data.isComment){
+                              $(`div[data-post-id=${data.id}] .post-body-text`).text(text);
+                            } else {
+                              $(`div[data-comment-id=${data.id}] .comment-body-text`).text(text);
+                            }
+
+                            $(this).parents().eq(4).removeClass('active');
+  
+                            setTimeout(_=>{
+                              $(this).parents().eq(4).remove();
+                            },300)
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
 
       },
@@ -1212,7 +1303,6 @@ const app = {
         "post": {
           uri(id){return `https://socialmedia.gavhern.com/api/postinfo.php?post=${id}`},
           domElement(data){
-            console.log(data)
             let commentArray=[];
 
             if(data.comments.length < 1){
