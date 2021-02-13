@@ -127,6 +127,14 @@ const app = {
 
       return res;
     },
+    async getFollowers(user, feed){ // Get the info and posts of a user
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/followers.php?user=${user}&feed=${feed}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
+    },
     async report(id, isComment, reason, message){ // Report a post or comment
       let res = await makeRequest(`https://socialmedia.gavhern.com/api/report.php?id=${id}&comment=${isComment}&reason=${reason}&message=${message}`, {
         method: 'GET',
@@ -685,7 +693,12 @@ const app = {
                     {
                       tag: 'a',
                       href: '#',
-                      classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","justify-center","items-center", (data.info.id != currentUser) ? "flex" : "hidden"],
+                      eventListeners:{
+                        click: _=>{
+                          app.dom.page.create('follows', {user: data.info.id, feed: 'mutual'})
+                        }
+                      },
+                      classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","justify-center","items-center", "flex"],
                       children: [
                         {
                           tag: 'span',
@@ -701,6 +714,11 @@ const app = {
                     {
                       tag: 'a',
                       href: '#',
+                      eventListeners:{
+                        click: _=>{
+                          app.dom.page.create('follows', {user: data.info.id, feed: 'followers'})
+                        }
+                      },
                       classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","flex","justify-center","items-center"],
                       children: [
                         {
@@ -717,6 +735,11 @@ const app = {
                     {
                       tag: 'a',
                       href: '#',
+                      eventListeners:{
+                        click: _=>{
+                          app.dom.page.create('follows', {user: data.info.id, feed: 'following'})
+                        }
+                      },
                       classes: ["bg-white","dark:bg-gray-700","dark:text-white","w-full","mx-1","my-1.5","p-2","rounded-lg","flex","justify-center","items-center"],
                       children: [
                         {
@@ -811,6 +834,53 @@ const app = {
                   text: 'Load more'
                 }
               ]
+            }
+          ]
+        });
+      },
+      userCard(data){
+        return elem.create({
+          tag: 'div',
+          classes: ["flex","items-center","border","border-gray-200","dark:border-gray-700","bg-white","dark:bg-gray-800","rounded","w-full","shadow-md"],
+          children: [
+            {
+              tag: 'a',
+              href: '#',
+              eventListeners: {
+                click: _=>{
+                  app.dom.page.create('profile', data.id)
+                }
+              },
+              classes: ['flex', 'flex-grow', 'p-4'],
+              children: [
+                {
+                  tag: 'img',
+                  classes: ["w-12","h-12","rounded-full","mr-3"],
+                  src: (data.profile_picture == "") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb" : "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+data.profile_picture
+                },
+                {
+                  tag: 'div',
+                  classes: ["flex-grow"],
+                  children: [
+                    {
+                      tag: 'h1',
+                      classes: ["dark:text-white","font-semibold","truncate"],
+                      text: data.name
+                    },
+                    {
+                      tag: 'p',
+                      classes: ["text-gray-600","dark:text-gray-400","truncate"],
+                      text: '@'+data.username
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              tag: 'a',
+              href: '#',
+              classes: ["p-4"],
+              html: '<svg class="text-red-400 w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>'
             }
           ]
         });
@@ -1350,6 +1420,43 @@ const app = {
           uri(user){return `https://socialmedia.gavhern.com/api/profile.php?user=${user}`},
           domElement(data){
             return app.dom.components.profilePage(data);
+          }
+        },
+        "follows": {
+          uri(data){return `https://socialmedia.gavhern.com/api/followers.php?user=${data.user}&feed=${data.feed}`},
+          domElement(data){
+            let userCards=[];
+
+            if(data.data.length != 0 && data.data != null){
+              for(const i of data.data){
+                userCards.push(app.dom.components.userCard(i))
+              }
+            } else {
+              userCards = [
+                {
+                  tag: "div",
+                  classes: ["w-full","flex","justify-center"],
+                  html: '<div class="flex flex-col justify-center"><div class="flex justify-center mt-4 mb-1"><svg class="w-24 h-24 text-gray-300 dark:text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div class="font-semibold text-xl text-gray-400 dark:text-gray-500 text-center mb-2">Feels a bit empty here</div></div>'
+                }
+              ]
+            }
+
+            return elem.create({
+              tag: 'div',
+              classes: ["p-4"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["text-xl","font-semibold","dark:text-white","mb-4"],
+                  text: data.feed.charAt(0).toUpperCase() + data.feed.slice(1)
+                },
+                {
+                  tag: 'div',
+                  classes: ["flex","flex-col","overflow-auto","space-y-2","mt-2","mb-4"],
+                  children: userCards
+                }
+              ]
+            });
           }
         },
         "saved": {
