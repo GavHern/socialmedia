@@ -1570,7 +1570,7 @@ const app = {
           $('#page-back-trigger').addClass('hidden');
         }
 
-        if($(activeTab).find('.tab-screen-body').length > 1){ // Ensure there is still at least 1 page left
+        if($(activeTab).find('.tab-screen-body:not(.offscreen)').length > 1){ // Ensure there is still at least 1 page left
           let discardedPage = $(activeTab).find('.tab-screen-body.selected'); // Get the page that is being discarded 
           $(discardedPage).addClass('offscreen'); // Make the page slide off screen
           $(activeTab).find('.tab-screen-body:not(.offscreen)').last().addClass('selected'); // Make the next-to-last page the new active
