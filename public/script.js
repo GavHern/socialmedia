@@ -70,6 +70,15 @@ const app = {
 
       return res;
     },
+    async follow(user, value){ // Follow a user
+      if(value){value=1}else{value=0}
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/follow.php?value=${value}&account=${user}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
+    },
     async post(data){ // Create a post
       let formdata = new FormData();
 
@@ -657,11 +666,33 @@ const app = {
                         }
                       ]
                     },
-                    {
+                    (data.info.is_owner == 1) ? {
                       tag: 'a',
                       href: '#',
-                      classes: ["absolute","top-0","right-0","m-2","w-12","h-12","rounded-full","bg-black","bg-opacity-30","flex","justify-center","items-center"],
+                      classes: ["absolute","top-0","right-0","m-2","w-12","h-12","rounded-full","bg-black","bg-opacity-30","flex","justify-center","items-center","ring-2","ring-white","shadow-xl"],
                       html: '<svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>'
+                    } : {
+                      tag: 'a',
+                      href: '#',
+                      attributes:{
+                        "data-user-id-follow": data.info.id
+                      },
+                      eventListeners: {
+                        click: async function(){
+                          let follow = !$(this).hasClass('active');
+
+                          let res = await app.api.follow(data.info.id, follow);
+
+                          if(res.success){
+                            if(follow){
+                              $(`a[data-user-id-follow=${data.info.id}]`).addClass('active');
+                            } else {
+                              $(`a[data-user-id-follow=${data.info.id}]`).removeClass('active');
+                            }
+                          }
+                        }
+                      },
+                      classes: (data.info.is_following == 1) ? ["follow-button", "active"] : ["follow-button"]
                     }
                   ]
                 },
