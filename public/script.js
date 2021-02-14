@@ -339,7 +339,8 @@ const app = {
                         if(data.type == 'text'){
                           optionList["Edit"] = _=>{app.dom.sheet.create('edit', {
                             id: data.id,
-                            isComment: false
+                            isComment: false,
+                            text: data.body
                           })}
                         }
                         optionList["Delete"] = _=>{app.dom.sheet.create('confirm', {
@@ -522,7 +523,8 @@ const app = {
                       } : {
                         "Edit": _=>{app.dom.sheet.create('edit', {
                           id: data.id,
-                          isComment: true
+                          isComment: true,
+                          text: data.body
                         })},
                         "Delete": _=>{app.dom.sheet.create('confirm', {
                           text: "Are you sure you want to delete this comment?",
@@ -1274,6 +1276,7 @@ const app = {
         },
 
         edit(data){
+          console.log(data)
           return [
             {
               tag: 'div',
@@ -1290,7 +1293,8 @@ const app = {
                   attributes:{
                     'placeholder': 'New text...',
                     'autofocus': ''
-                  }
+                  },
+                  text: data.text
                 },
                 {
                   tag: 'div',
