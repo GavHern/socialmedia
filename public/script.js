@@ -1441,7 +1441,43 @@ const app = {
                 },
                 {
                   tag: 'div',
-                  children: commentArray
+                  children: [
+                    {
+                      tag: 'div',
+                      attributes: {
+                        "data-comment-feed": data.checkpoint
+                      },
+                      classes: ['comment-feed'],
+                      children: commentArray
+                    },
+                    {
+                      tag: 'div',
+                      classes: ["m-4"],
+                      children: [
+                        {
+                          tag: "button",
+                          eventListeners: {
+                            click: async function(){
+                              let res = await makeRequest(`https://socialmedia.gavhern.com/api/postinfo.php?post=${data.data.id}&checkpoint=${data.checkpoint}`);
+                              let commentContainer = $(this).parents().eq(1).find('.comment-feed');
+
+                              for(const i of res.comments){
+                                $(commentContainer).append(app.dom.components.commentElement(i))
+                              }
+
+                              $(commentContainer).attr('data-comment-feed',res.checkpoint);
+
+                              if(res.comments.length < 25){
+                                $(this).addClass('hidden')
+                              }
+                            }
+                          },
+                          classes: ["w-full","text-center","p-2","rounded-xl","dark:text-white","bg-white","dark:bg-gray-900","ring-2","ring-gray-200","dark:ring-gray-700", (data.comments.length >= 25) ? "block" : "hidden"],
+                          text: 'Load more'
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             })
