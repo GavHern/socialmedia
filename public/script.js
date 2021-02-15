@@ -912,8 +912,33 @@ const app = {
             {
               tag: 'a',
               href: '#',
-              classes: ["p-4"],
-              html: '<svg class="text-red-400 w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>'
+              classes: ["p-4","user-card-follow","active"],
+              eventListeners: {
+                click: async function(){
+                  let follow = !$(this).hasClass('active')
+                  if(follow){
+                    let res = await app.api.follow(data.id, true);
+                        
+                    if(res.success) {
+                      $(this).addClass('active');
+                    }
+                  } else {
+                    app.dom.sheet.create('confirm', app.dom.sheet.create('confirm', {
+                      text: `Are you sure you want to unfollow ${data.name}?`,
+                      color: "bg-red-500",
+                      actionText: "Unfollow",
+                      action: async _=>{
+                        let res = await app.api.follow(data.id, false);
+                        
+                        if(res.success) {
+                          $(this).removeClass('active');
+                        }
+                      }
+                    }))
+                  }
+                }
+              },
+              html: '<svg class="text-gray-700 dark:text-gray-300 w-6 h-6" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>'
             }
           ]
         });

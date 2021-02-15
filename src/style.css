@@ -318,3 +318,7 @@ html, body {
 .follow-button.active::before {
   content: "Followed"
 }
+
+.user-card-follow.active svg {
+  @apply text-red-400 fill-current;
+}
