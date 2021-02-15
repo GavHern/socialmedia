@@ -188,6 +188,11 @@ const app = {
       reader.onerror = error => reject(error); // Reject the promise if unsuccessful
     }),
     async submitForm(){ // Submits the post form (to avoid using a form tag)
+      if(document.getElementById('file-upload').files.length==0){
+        app.methods.dialogue('Please provide an image', false);
+        return;
+      }
+
       $('.post-form-button.post-form-submit').addClass('loading'); // Set the submit button state to "loading"
 
       // Grab values

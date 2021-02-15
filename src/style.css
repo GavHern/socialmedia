@@ -332,7 +332,7 @@ html, body {
 }
 
 .edit-profile-modal-container .edit-profile-modal {
-  @apply w-10/12 h-5/6 bg-white dark:bg-gray-800 rounded-xl flex flex-col overflow-hidden transform scale-90 transition duration-300;
+  @apply w-10/12 h-4/5 bg-white dark:bg-gray-800 rounded-xl flex flex-col overflow-hidden transform scale-90 transition duration-300;
 }
 
 .edit-profile-modal-container.active .edit-profile-modal {
