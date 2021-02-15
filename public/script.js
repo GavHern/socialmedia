@@ -1069,6 +1069,22 @@ const app = {
 
     },
 
+    async submitProfileEdit(){
+      $('.edit-profile-modal .edit-profile-submit .label').addClass('hidden');
+      $('.edit-profile-modal .edit-profile-submit .loader').removeClass('hidden');
+      $('.edit-profile-modal .edit-profile-submit .loader').addClass('flex');
+
+      let values = {
+        banner: document.getElementById('banner-upload').files[0],
+        profilePicture: document.getElementById('profile-picture-upload').files[0],
+        name: $('.edit-profile-modal-container .edit-profile-name').val(),
+        username: $('.edit-profile-modal-container .edit-profile-username').val(),
+        bio: $('.edit-profile-modal-container .edit-profile-bio').val()
+      }
+
+      console.log(values);
+    },
+
     closeProfileEdit(){
       let elems = {
         banner: $('.edit-profile-modal-container .edit-profile-banner'),
@@ -1083,6 +1099,10 @@ const app = {
       $(elems.name).val('');
       $(elems.username).val('');
       $(elems.bio).text('');
+
+      $('.edit-profile-modal .edit-profile-submit .label').removeClass('hidden');
+      $('.edit-profile-modal .edit-profile-submit .loader').addClass('hidden');
+      $('.edit-profile-modal .edit-profile-submit .loader').removeClass('flex');
     },
 
     // Sheet modals
@@ -1786,6 +1806,10 @@ $('.post-form-button.post-form-submit').click(e=>{
   app.methods.submitForm();
 });
 
+$('.edit-profile-modal .edit-profile-submit').click(e=>{
+  app.dom.submitProfileEdit();
+});
+
 
 $('.post-body-type-select').click(function(e){
   $('.post-body-type-select').removeClass('active');
@@ -1803,6 +1827,20 @@ $('#file-upload').change(async function(e){
   }
 })
 
+$('#banner-upload').change(async function(e){
+  const result = await app.methods.toBase64(this.files[0]);
+  if(!(result instanceof Error)){ // Error catching
+    $('.edit-profile-banner').attr('src', result);
+    $('.edit-profile-banner').removeClass('hidden');
+  }
+})
+
+$('#profile-picture-upload').change(async function(e){
+  const result = await app.methods.toBase64(this.files[0]);
+  if(!(result instanceof Error)){ // Error catching
+    $('.edit-profile-profile-picture').attr('src', result);
+  }
+})
 
 for(const i of $('.tab-screen-body')){
   new Hammer(i).on('swiperight', function(ev) {
