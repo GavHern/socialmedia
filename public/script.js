@@ -1245,8 +1245,7 @@ const app = {
                   tag: 'textarea',
                   classes: ['w-full','h-36','bg-white','dark:bg-gray-800','border-2','border-gray-200','dark:border-gray-700','rounded-xl','focus:border-green-400','dark:focus:border-green-400','rounded-xl','focus:border-green-400','outline-none','px-3','py-2','mt-2','transition'],
                   attributes:{
-                    'placeholder': 'Your comment...',
-                    'autofocus': ''
+                    'placeholder': 'Your comment...'
                   }
                 },
                 {
@@ -1316,8 +1315,7 @@ const app = {
                   tag: 'textarea',
                   classes: ['w-full','h-36','bg-white','dark:bg-gray-800','border-2','border-gray-200','dark:border-gray-700','rounded-xl','focus:border-green-400','dark:focus:border-green-400','outline-none','px-3','py-2','mt-2','transition'],
                   attributes:{
-                    'placeholder': 'New text...',
-                    'autofocus': ''
+                    'placeholder': 'New text...'
                   },
                   text: data.text
                 },
