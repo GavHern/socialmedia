@@ -671,6 +671,11 @@ const app = {
                     (data.info.is_owner == 1) ? {
                       tag: 'a',
                       href: '#',
+                      eventListeners: {
+                        click: _=>{
+                          app.dom.editProfileModal(data.info)
+                        }
+                      },
                       classes: ["absolute","top-0","right-0","m-2","w-12","h-12","rounded-full","bg-black","bg-opacity-30","flex","justify-center","items-center","ring-2","ring-white","shadow-xl"],
                       html: '<svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>'
                     } : {
@@ -1029,6 +1034,50 @@ const app = {
 
       // Clear image upload background
       $('#image-upload-preview').attr('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=');
+    },
+
+    editProfileModal(data){
+      let elems = {
+        banner: $('.edit-profile-modal-container .edit-profile-banner'),
+        profilePicture: $('.edit-profile-modal-container .edit-profile-profile-picture'),
+        name: $('.edit-profile-modal-container .edit-profile-name'),
+        username: $('.edit-profile-modal-container .edit-profile-username'),
+        bio: $('.edit-profile-modal-container .edit-profile-bio')
+      }
+
+      if(data.banner != ""){
+        $(elems.banner).attr('src', "https://socialmedia.gavhern.com/api/cdn.php?f="+data.banner);
+        $(elems.banner).removeClass('hidden');
+      }
+
+      if(data.profile_picture != ""){
+        $(elems.profilePicture).attr('src', "https://socialmedia.gavhern.com/api/cdn.php?f="+data.profile_picture);
+      } else {
+        $(elems.profilePicture).attr('src', "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb");
+      }
+
+      $(elems.name).val(data.name);
+      $(elems.username).val(data.username);
+      $(elems.bio).text(data.bio);
+
+      $('.edit-profile-modal-container').addClass('active');
+
+    },
+
+    closeProfileEdit(){
+      let elems = {
+        banner: $('.edit-profile-modal-container .edit-profile-banner'),
+        profilePicture: $('.edit-profile-modal-container .edit-profile-profile-picture'),
+        name: $('.edit-profile-modal-container .edit-profile-name'),
+        username: $('.edit-profile-modal-container .edit-profile-username'),
+        bio: $('.edit-profile-modal-container .edit-profile-bio')
+      }
+
+      $('.edit-profile-modal-container').removeClass('active');
+      $(elems.banner).addClass('hidden')
+      $(elems.name).val('');
+      $(elems.username).val('');
+      $(elems.bio).text('');
     },
 
     // Sheet modals

@@ -322,3 +322,19 @@ html, body {
 .user-card-follow.active svg {
   @apply text-red-400 fill-current;
 }
+
+.edit-profile-modal-container {
+  @apply z-60 absolute w-full h-full bg-black bg-opacity-50 flex justify-center items-center opacity-0 pointer-events-none transition duration-300;
+}
+
+.edit-profile-modal-container.active {
+  @apply opacity-100 pointer-events-auto;
+}
+
+.edit-profile-modal-container .edit-profile-modal {
+  @apply w-10/12 h-5/6 bg-white dark:bg-gray-800 rounded-xl flex flex-col overflow-hidden transform scale-90 transition duration-300;
+}
+
+.edit-profile-modal-container.active .edit-profile-modal {
+  @apply scale-100;
+}
