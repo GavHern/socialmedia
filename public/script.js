@@ -79,6 +79,21 @@ const app = {
 
       return res;
     },
+    async updateProfile(data){ // Update user profile info
+      let formdata = new FormData();
+
+      for(const i in data){
+        formdata.append(i,data[i])
+      }
+
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/editprofile.php`, {
+        method: 'POST',
+        body: formdata,
+        redirect: 'follow'
+      });
+
+      return res;
+    },
     async post(data){ // Create a post
       let formdata = new FormData();
 
@@ -1042,6 +1057,8 @@ const app = {
     },
 
     editProfileModal(data){
+      $('.edit-profile-modal').attr('data-user', JSON.stringify(data));
+
       let elems = {
         banner: $('.edit-profile-modal-container .edit-profile-banner'),
         profilePicture: $('.edit-profile-modal-container .edit-profile-profile-picture'),
@@ -1070,19 +1087,53 @@ const app = {
     },
 
     async submitProfileEdit(){
+      let oldData = JSON.parse($('.edit-profile-modal').attr('data-user'));
+
       $('.edit-profile-modal .edit-profile-submit .label').addClass('hidden');
       $('.edit-profile-modal .edit-profile-submit .loader').removeClass('hidden');
       $('.edit-profile-modal .edit-profile-submit .loader').addClass('flex');
 
       let values = {
         banner: document.getElementById('banner-upload').files[0],
-        profilePicture: document.getElementById('profile-picture-upload').files[0],
+        profile_picture: document.getElementById('profile-picture-upload').files[0],
         name: $('.edit-profile-modal-container .edit-profile-name').val(),
         username: $('.edit-profile-modal-container .edit-profile-username').val(),
         bio: $('.edit-profile-modal-container .edit-profile-bio').val()
       }
 
-      console.log(values);
+      let valuesUpdated = {}; // Only send changed values
+
+      if(values.banner != undefined){
+        valuesUpdated.banner = (await app.methods.toBase64(values.banner)).split(',')[1];
+      }
+
+      if(values.profile_picture != undefined){
+        valuesUpdated.profile_picture = (await app.methods.toBase64(values.profile_picture)).split(',')[1];
+      }
+
+      if(values.name != oldData.name){
+        valuesUpdated.name = values.name;
+      }
+
+      if(values.username != oldData.username){
+        valuesUpdated.username = values.username;
+      }
+
+      if(values.bio != oldData.bio){
+        valuesUpdated.bio = values.bio;
+      }
+
+      let res = await app.api.updateProfile(valuesUpdated);
+
+
+      if(res.success){
+        app.dom.closeProfileEdit();
+        app.methods.dialogue('Profile updated successfully!', true);
+      } else {
+        $('.edit-profile-modal .edit-profile-submit .label').removeClass('hidden');
+        $('.edit-profile-modal .edit-profile-submit .loader').addClass('hidden');
+        $('.edit-profile-modal .edit-profile-submit .loader').removeClass('flex');
+      }
     },
 
     closeProfileEdit(){
