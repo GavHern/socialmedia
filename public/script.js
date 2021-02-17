@@ -1135,7 +1135,7 @@ const app = {
       }
 
       let valuesUpdated = {}; // Only send changed values
-      let conditions = {
+      let altered = {
         banner: [values.banner != undefined,'image'],
         profile_picture: [values.profile_picture != undefined,'image'],
         name: [values.name != oldData.name,'text'],
@@ -1143,12 +1143,12 @@ const app = {
         bio: [values.bio != oldData.bio,'text']
       };
 
-      for(const i in conditions){ // Loop through conditions
-        if(conditions[i][0]){ // Check if the value was changed
+      for(const i in altered){ // Loop through conditions
+        if(altered[i][0]){ // Check if the value was changed
 
-          if(conditions[i][1]=='text') // Case for text alterations
+          if(altered[i][1]=='text') // Case for text alterations
             valuesUpdated[i] = values[i];
-          else if(conditions[i][1]=='image') // Case for image alterations
+          else if(altered[i][1]=='image') // Case for image alterations
             valuesUpdated[i] = (await app.methods.toBase64(values[i])).split(',')[1];
             
         }
@@ -1161,27 +1161,6 @@ const app = {
       if(res.success){
         app.dom.closeProfileEdit();
         app.methods.dialogue('Profile updated successfully!', true);
-
-        if(values.banner != undefined){
-          valuesUpdated.banner = (await app.methods.toBase64(values.banner)).split(',')[1];
-        }
-  
-        if(values.profile_picture != undefined){
-          valuesUpdated.profile_picture = (await app.methods.toBase64(values.profile_picture)).split(',')[1];
-        }
-  
-        if(values.name != oldData.name){
-          valuesUpdated.name = values.name;
-        }
-  
-        if(values.username != oldData.username){
-          valuesUpdated.username = values.username;
-        }
-  
-        if(values.bio != oldData.bio){
-          valuesUpdated.bio = values.bio;
-        }
-
       } else {
         $('.edit-profile-modal .edit-profile-submit .label').removeClass('hidden');
         $('.edit-profile-modal .edit-profile-submit .loader').addClass('hidden');
