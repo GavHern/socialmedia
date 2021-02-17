@@ -326,6 +326,9 @@ const app = {
                   children: [
                     {
                       tag: "img",
+                      attributes: {
+                        "data-user-info-profile-picture": data.author
+                      },
                       src: (data.profile_picture == "") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb" : "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+data.profile_picture, // Author pfp
                       classes: ["w-12","h-12","compact:w-6","compact:h-6","rounded-full","mr-4","compact:mr-3"]
                     },
@@ -335,11 +338,17 @@ const app = {
                       children: [
                         {
                           tag: "p",
+                          attributes: {
+                            "data-user-info-name": data.author
+                          },
                           classes: ["font-semibold", "dark:text-white", "compact:hidden"],
                           text: data.name // Author's name
                         },
                         {
                           tag: "p",
+                          attributes: {
+                            "data-user-info-username": data.author
+                          },
                           classes: ["text-gray-600", "dark:text-gray-400"],
                           text: "@"+data.username // Author's Username
                         }
@@ -665,6 +674,9 @@ const app = {
                   children: [
                     {
                       tag: 'div',
+                      attributes: {
+                        "data-user-info-banner": data.info.id
+                      },
                       classes: ["w-full","h-36","shadow-lg"],
                       children: [
                         (data.info.banner!="") ? {
@@ -683,6 +695,9 @@ const app = {
                       children: [
                         {
                           tag: 'img',
+                          attributes: {
+                            "data-user-info-profile-picture": data.info.id
+                          },
                           classes: ["w-full","h-full","rounded-full"],
                           src: (data.info.profile_picture=="") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default" : "https://socialmedia.gavhern.com/api/cdn.php?f="+data.info.profile_picture
                         }
@@ -729,16 +744,25 @@ const app = {
                   children: [
                     {
                       tag: 'h1',
+                      attributes: {
+                        "data-user-info-name": data.info.id
+                      },
                       classes: ["font-semibold","text-3xl","dark:text-white"],
                       text: data.info.name
                     },
                     {
                       tag: 'p',
+                      attributes: {
+                        "data-user-info-username": data.info.id
+                      },
                       classes: ["text-gray-800","dark:text-gray-200","text-xl","pt-1"],
                       text: '@'+data.info.username
                     },
                     {
                       tag: 'p',
+                      attributes: {
+                        "data-user-info-bio": data.info.id
+                      },
                       classes: ["text-gray-600","dark:text-gray-400","text-md","mx-4","pt-1.5"],
                       text: data.info.bio
                     }
@@ -913,6 +937,9 @@ const app = {
               children: [
                 {
                   tag: 'img',
+                  attributes: {
+                    "data-user-info-profile-picture": data.id
+                  },
                   classes: ["w-12","h-12","rounded-full","mr-3"],
                   src: (data.profile_picture == "") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb" : "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+data.profile_picture
                 },
@@ -922,11 +949,17 @@ const app = {
                   children: [
                     {
                       tag: 'h1',
+                      attributes: {
+                        "data-user-info-name": data.id
+                      },
                       classes: ["dark:text-white","font-semibold","truncate"],
                       text: data.name
                     },
                     {
                       tag: 'p',
+                      attributes: {
+                        "data-user-info-username": data.id
+                      },
                       classes: ["text-gray-600","dark:text-gray-400","truncate"],
                       text: '@'+data.username
                     }
@@ -1102,26 +1135,25 @@ const app = {
       }
 
       let valuesUpdated = {}; // Only send changed values
+      let conditions = {
+        banner: [values.banner != undefined,'image'],
+        profile_picture: [values.profile_picture != undefined,'image'],
+        name: [values.name != oldData.name,'text'],
+        username: [values.username != oldData.username,'text'],
+        bio: [values.bio != oldData.bio,'text']
+      };
 
-      if(values.banner != undefined){
-        valuesUpdated.banner = (await app.methods.toBase64(values.banner)).split(',')[1];
+      for(const i in conditions){ // Loop through conditions
+        if(conditions[i][0]){ // Check if the value was changed
+
+          if(conditions[i][1]=='text') // Case for text alterations
+            valuesUpdated[i] = values[i];
+          else if(conditions[i][1]=='image') // Case for image alterations
+            valuesUpdated[i] = (await app.methods.toBase64(values[i])).split(',')[1];
+            
+        }
       }
 
-      if(values.profile_picture != undefined){
-        valuesUpdated.profile_picture = (await app.methods.toBase64(values.profile_picture)).split(',')[1];
-      }
-
-      if(values.name != oldData.name){
-        valuesUpdated.name = values.name;
-      }
-
-      if(values.username != oldData.username){
-        valuesUpdated.username = values.username;
-      }
-
-      if(values.bio != oldData.bio){
-        valuesUpdated.bio = values.bio;
-      }
 
       let res = await app.api.updateProfile(valuesUpdated);
 
@@ -1129,6 +1161,27 @@ const app = {
       if(res.success){
         app.dom.closeProfileEdit();
         app.methods.dialogue('Profile updated successfully!', true);
+
+        if(values.banner != undefined){
+          valuesUpdated.banner = (await app.methods.toBase64(values.banner)).split(',')[1];
+        }
+  
+        if(values.profile_picture != undefined){
+          valuesUpdated.profile_picture = (await app.methods.toBase64(values.profile_picture)).split(',')[1];
+        }
+  
+        if(values.name != oldData.name){
+          valuesUpdated.name = values.name;
+        }
+  
+        if(values.username != oldData.username){
+          valuesUpdated.username = values.username;
+        }
+  
+        if(values.bio != oldData.bio){
+          valuesUpdated.bio = values.bio;
+        }
+
       } else {
         $('.edit-profile-modal .edit-profile-submit .label').removeClass('hidden');
         $('.edit-profile-modal .edit-profile-submit .loader').addClass('hidden');
