@@ -34,6 +34,7 @@ async function makeRequest(uri, data){
 
 
 var currentUser = window.localStorage.getItem('session').split('-')[0];
+var profileEdited = false;
 
 
 
@@ -1090,7 +1091,14 @@ const app = {
     },
 
     editProfileModal(data){
-      $('.edit-profile-modal').attr('data-user', JSON.stringify(data));
+      let info; 
+      if(!profileEdited){
+        $('.edit-profile-modal').attr('data-user', JSON.stringify(data));
+        info = data;
+      } else {
+        info = JSON.parse($('.edit-profile-modal').attr('data-user'));
+      }
+
 
       let elems = {
         banner: $('.edit-profile-modal-container .edit-profile-banner'),
@@ -1101,19 +1109,19 @@ const app = {
       }
 
       if(data.banner != ""){
-        $(elems.banner).attr('src', "https://socialmedia.gavhern.com/api/cdn.php?f="+data.banner);
+        $(elems.banner).attr('src', "https://socialmedia.gavhern.com/api/cdn.php?f="+info.banner);
         $(elems.banner).removeClass('hidden');
       }
 
       if(data.profile_picture != ""){
-        $(elems.profilePicture).attr('src', "https://socialmedia.gavhern.com/api/cdn.php?f="+data.profile_picture);
+        $(elems.profilePicture).attr('src', "https://socialmedia.gavhern.com/api/cdn.php?f="+info.profile_picture);
       } else {
         $(elems.profilePicture).attr('src', "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb");
       }
 
-      $(elems.name).val(data.name);
-      $(elems.username).val(data.username);
-      $(elems.bio).text(data.bio);
+      $(elems.name).val(info.name);
+      $(elems.username).val(info.username);
+      $(elems.bio).text(info.bio);
 
       $('.edit-profile-modal-container').addClass('active');
 
@@ -1161,6 +1169,15 @@ const app = {
       if(res.success){
         app.dom.closeProfileEdit();
         app.methods.dialogue('Profile updated successfully!', true);
+
+        if(altered.banner[0]){                                                            $(`*[data-user-info-banner="${currentUser}"]`).attr('src', 'https://socialmedia.gavhern.com/api/cdn.php?thumb&f='+await app.methods.toBase64(values['banner']))};
+        if(altered.profile_picture[0]){                                                   $(`*[data-user-info-profile-picture="${currentUser}"]`).attr('src', 'https://socialmedia.gavhern.com/api/cdn.php?thumb&f='+await app.methods.toBase64(values['profile_picture']))};
+        if(altered.name[0]){             oldData['name'] = valuesUpdated['name'];         $(`*[data-user-info-name="${currentUser}"]`).text(values['name'])};
+        if(altered.username[0]){         oldData['username'] = valuesUpdated['username']; $(`*[data-user-info-username="${currentUser}"]`).text('@'+values['username'])};
+        if(altered.bio[0]){              oldData['bio'] = valuesUpdated['bio'];           $(`*[data-user-info-bio="${currentUser}"]`).text(values['bio'])};
+
+        $('.edit-profile-modal').attr('data-user', JSON.stringify(oldData));
+        profileEdited = true;
       } else {
         $('.edit-profile-modal .edit-profile-submit .label').removeClass('hidden');
         $('.edit-profile-modal .edit-profile-submit .loader').addClass('hidden');
