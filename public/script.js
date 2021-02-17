@@ -1170,11 +1170,11 @@ const app = {
         app.dom.closeProfileEdit();
         app.methods.dialogue('Profile updated successfully!', true);
 
-        if(altered.banner[0]){                                                            $(`*[data-user-info-banner="${currentUser}"]`).attr('src', 'https://socialmedia.gavhern.com/api/cdn.php?thumb&f='+await app.methods.toBase64(values['banner']))};
-        if(altered.profile_picture[0]){                                                   $(`*[data-user-info-profile-picture="${currentUser}"]`).attr('src', 'https://socialmedia.gavhern.com/api/cdn.php?thumb&f='+await app.methods.toBase64(values['profile_picture']))};
-        if(altered.name[0]){             oldData['name'] = valuesUpdated['name'];         $(`*[data-user-info-name="${currentUser}"]`).text(values['name'])};
-        if(altered.username[0]){         oldData['username'] = valuesUpdated['username']; $(`*[data-user-info-username="${currentUser}"]`).text('@'+values['username'])};
-        if(altered.bio[0]){              oldData['bio'] = valuesUpdated['bio'];           $(`*[data-user-info-bio="${currentUser}"]`).text(values['bio'])};
+        if(altered.banner[0]){           oldData['banner'] = res.info['banner'];                   $(`*[data-user-info-banner="${currentUser}"]`).html(`<img class="w-full h-full object-cover" src="https://socialmedia.gavhern.com/api/cdn.php?f=${res.info.banner}">`)};
+        if(altered.profile_picture[0]){  oldData['profile_picture'] = res.info['profile_picture']; $(`*[data-user-info-profile-picture="${currentUser}"]`).html('src', 'https://socialmedia.gavhern.com/api/cdn.php?thumb&f='+res.info['profile_picture'])};
+        if(altered.name[0]){             oldData['name'] = res.info['name'];                       $(`*[data-user-info-name="${currentUser}"]`).text(res.info['name'])};
+        if(altered.username[0]){         oldData['username'] = res.info['username'];               $(`*[data-user-info-username="${currentUser}"]`).text('@'+res.info['username'])};
+        if(altered.bio[0]){              oldData['bio'] = res.info['bio'];                         $(`*[data-user-info-bio="${currentUser}"]`).text(res.info['bio'])};
 
         $('.edit-profile-modal').attr('data-user', JSON.stringify(oldData));
         profileEdited = true;
