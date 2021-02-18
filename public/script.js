@@ -167,6 +167,14 @@ const app = {
       });
 
       return res;
+    },
+    async getActivity(){ // Get the activity page
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/activity.php`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
     }
   },
 
@@ -204,7 +212,7 @@ const app = {
       reader.onerror = error => reject(error); // Reject the promise if unsuccessful
     }),
     async submitForm(){ // Submits the post form (to avoid using a form tag)
-      if(document.getElementById('file-upload').files.length==0){
+      if(document.getElementById('file-upload').files.length==0 && $('#post-type div.active').attr('data-post-type') == 'image'){
         app.methods.dialogue('Please provide an image', false);
         return;
       }
@@ -1000,6 +1008,138 @@ const app = {
               html: '<svg class="text-gray-700 dark:text-gray-300 w-6 h-6" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>'
             }
           ]
+        });
+      },
+      activityItems(data){
+        let items = [];
+        
+        for(const i of data){
+          let icon;
+          let messageSuffix;
+          let action;
+
+          switch(i.type){
+            case 'post_like':
+              icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
+              messageSuffix = "liked your post.";
+              action = _=>{
+                console.log(i.link)
+                app.dom.page.create('post', i.link);
+              };
+              break;
+            case 'comment_like':
+              icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
+              messageSuffix = "liked your comment.";
+              action = _=>{
+                console.log(i.link)
+                app.dom.page.create('post', i.link);
+              };
+              break;
+            case 'follow':
+              icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>`;
+              messageSuffix = "followed you.";
+              action = _=>{
+                app.dom.page.create('profile', i.link);
+              };
+              break;
+            case 'comment':
+              icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>`;
+              messageSuffix = "commented on your post.";
+              action = _=>{
+                app.dom.page.create('post', i.link);
+              };
+              break;
+          }
+
+          items.push({
+            tag: 'a',
+            href: '#',
+            eventListeners: {
+              click: action
+            },
+            classes: ["bg-white","dark:bg-gray-800","p-3","flex"],
+            children: [
+              {
+                tag: 'div',
+                classes: ['mr-4'],
+                html: icon
+              },
+              {
+                tag: 'div',
+                classes: ["flex-grow","w-full","dark:text-gray-200"],
+                children: [
+                  {
+                    tag: 'div',
+                    children: [
+                      {
+                        tag: 'span',
+                        classes: ["font-semibold","mr-0.5"],
+                        text: i.data
+                      },
+                      {
+                        tag: 'span',
+                        text: messageSuffix
+                      },
+                      {
+                        tag: 'p',
+                        classes: ["text-gray-600","dark:text-gray-400","mt-2", (i.meta.length == 0) ? 'hidden' : 'block'],
+                        text: i.meta 
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                tag: 'div',
+                classes: ["flex","justify-center","items-center"],
+                html: `<svg class="w-4 h-4 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>`
+              }
+            ]
+          });
+        }
+
+        return {
+          tag: 'div',
+          classes: ["bg-gray-200","dark:bg-gray-700","flex","flex-col","space-y-0.5","rounded-xl","w-full","shadow-md","mt-4","overflow-hidden"],
+          children: items
+        }
+      },
+      activityPage(data){
+        let elements = [];
+        for(const i in data.data){
+          let heading;
+
+          switch(i){
+            case 'day':
+              heading = 'Today';
+              break;
+            case 'week':
+              heading = 'This Week';
+              break;
+            case 'all':
+              heading = 'All Activity';
+              break;
+          }
+
+          if(data.data[i].length != 0){
+            elements.push({
+              tag: 'div',
+              classes: ["mb-6"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["font-semibold","text-2xl","dark:text-white"],
+                  text: heading
+                },
+                app.dom.components.activityItems(data.data[i])
+              ]
+            })
+          }
+        }
+        return elem.create({
+          tag: 'div',
+          classes: ["my-3","mx-4"],
+          children: elements
         });
       },
       buildDialogue(msg, success){
@@ -1963,4 +2103,11 @@ $(".bottom-nav-item[data-page='profile']").one("click", async function(){
   let data = await app.api.getUser(currentUser);
   $('#profile .tab-screen-body.selected').html('');
   $('#profile .tab-screen-body.selected').append(app.dom.components.profilePage(data))
+});
+
+$(".bottom-nav-item[data-page='activity']").one("click", async function(){
+  $('#activity .tab-screen-body.selected').append(app.dom.components.preloader);
+  let data = await app.api.getActivity();
+  $('#activity .tab-screen-body.selected').html('');
+  $('#activity .tab-screen-body.selected').append(app.dom.components.activityPage(data))
 });
