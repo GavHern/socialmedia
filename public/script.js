@@ -1106,36 +1106,46 @@ const app = {
       },
       activityPage(data){
         let elements = [];
-        for(const i in data.data){
-          let heading;
 
-          switch(i){
-            case 'day':
-              heading = 'Today';
-              break;
-            case 'week':
-              heading = 'This Week';
-              break;
-            case 'all':
-              heading = 'All Activity';
-              break;
-          }
-
-          if(data.data[i].length != 0){
-            elements.push({
-              tag: 'div',
-              classes: ["mb-6"],
-              children: [
-                {
-                  tag: 'h1',
-                  classes: ["font-semibold","text-2xl","dark:text-white"],
-                  text: heading
-                },
-                app.dom.components.activityItems(data.data[i])
-              ]
-            })
+        if(data.data.length == 0){
+          elements.push({
+            tag: "div",
+            classes: ["w-full","flex","justify-center"],
+            html: '<div class="flex flex-col justify-center"><div class="flex justify-center mt-4 mb-1"><svg class="w-24 h-24 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg></div><div class="font-semibold text-xl text-gray-400 text-center mb-2">You have no notifications.</div></div>'
+          })
+        } else {
+          for(const i in data.data){
+            let heading;
+  
+            switch(i){
+              case 'day':
+                heading = 'Today';
+                break;
+              case 'week':
+                heading = 'This Week';
+                break;
+              case 'all':
+                heading = 'All Activity';
+                break;
+            }
+  
+            if(data.data[i].length != 0){
+              elements.push({
+                tag: 'div',
+                classes: ["mb-6"],
+                children: [
+                  {
+                    tag: 'h1',
+                    classes: ["font-semibold","text-2xl","dark:text-white"],
+                    text: heading
+                  },
+                  app.dom.components.activityItems(data.data[i])
+                ]
+              })
+            }
           }
         }
+
         return elem.create({
           tag: 'div',
           classes: ["my-3","mx-4"],
