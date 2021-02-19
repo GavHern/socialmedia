@@ -338,3 +338,11 @@ html, body {
 .edit-profile-modal-container.active .edit-profile-modal {
   @apply scale-100;
 }
+
+input[type="search"].my-search {
+  -webkit-appearance: searchfield;
+}
+
+input[type="search"].my-search::-webkit-search-cancel-button {
+  -webkit-appearance: searchfield-cancel-button;
+}
