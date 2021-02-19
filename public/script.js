@@ -3,6 +3,15 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/sw.js')
 }
 
+
+// Enable developer environment. Disable for production
+var dev = true;
+
+
+if(!window.matchMedia('(display-mode: standalone)').matches && !dev){
+  // User is not using the progressive web application...
+}
+
 // Gets a cookie from its name
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -154,6 +163,14 @@ const app = {
     },
     async getFollowers(user, feed){ // Get the info and posts of a user
       let res = await makeRequest(`https://socialmedia.gavhern.com/api/followers.php?user=${user}&feed=${feed}`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
+    },
+    async search(query){ // Search the database
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/search.php?q=${query}`, {
         method: 'GET',
         redirect: 'follow'
       });
@@ -663,11 +680,11 @@ const app = {
         if(data.posts.length != 0) {
           posts = app.dom.components.postFeed(data.posts,{page:'profile', checkpoint:data.checkpoint, user:data.info.id})
         } else { // Fallback if feed is empty
-          posts.push(elem.create({
+          posts = elem.create({
             tag: "div",
             classes: ["w-full","flex","justify-center"],
             html: '<div class="flex flex-col justify-center"><div class="flex justify-center mt-4 mb-1"><svg class="w-24 h-24 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div class="font-semibold text-xl text-gray-400 text-center mb-2">This user has no posts.</div></div>'
-          }));
+          });
         }
 
         return elem.create({
@@ -979,7 +996,7 @@ const app = {
             {
               tag: 'a',
               href: '#',
-              classes: ["p-4","user-card-follow","active"],
+              classes: ["p-4","user-card-follow"].concat((data.is_following == 1) ? ["active"] : []),
               eventListeners: {
                 click: async function(){
                   let follow = !$(this).hasClass('active')
@@ -1870,7 +1887,7 @@ const app = {
                 },
                 {
                   tag: 'div',
-                  classes: ["flex","flex-col","overflow-auto","space-y-2","mt-2","mb-4"],
+                  classes: ["flex","flex-col","space-y-2","mt-2","mb-4"],
                   children: userCards
                 }
               ]
@@ -1896,6 +1913,37 @@ const app = {
                   tag: 'div',
                   children: postArray
                 }
+              ]
+            });
+          }
+        },
+        "search": {
+          uri(data){return `https://socialmedia.gavhern.com/api/search.php?q=${data}`},
+          domElement(data){
+            let userCards = [];
+
+            for(const i of data.users){
+              userCards.push(app.dom.components.userCard(i));
+            }
+
+            return elem.create({
+              tag: 'div',
+              children: [
+                {
+                  tag: 'div',
+                  children: [
+                    {
+                      tag: 'h1',
+                      classes: ["text-xl","font-semibold","p-4","dark:text-white"],
+                      text: `Results for "${data.query}"`
+                    },
+                    {
+                      tag: 'div',
+                      classes: ["flex","flex-col","space-y-2","mb-4","p-4","pt-0"],
+                      children: userCards
+                    }
+                  ]
+                },
               ]
             });
           }
@@ -2125,5 +2173,7 @@ $(".bottom-nav-item[data-page='activity']").one("click", async function(){
 $('#search-form').submit(function(e){
   e.preventDefault();
   let value = $(this).find('input').val();
-  alert(value)
+  if(value.length != 0){
+    app.dom.page.create('search', value)
+  }
 });
