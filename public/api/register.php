@@ -42,6 +42,11 @@ if(strlen($values["name"]) > 64){
     throw_error("Your name is restricted to 64 characters. Sorry about that.");
 }
 
+// Validate email
+if (!filter_var($values["email"], FILTER_VALIDATE_EMAIL)) {
+    throw_error("Please enter a valid email address.");
+}
+
 // Report error if the password and confirm dont match
 if($values["password"] != $values["confirm"]){
     throw_error("Passwords do not match.");
