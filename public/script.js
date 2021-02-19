@@ -2121,3 +2121,9 @@ $(".bottom-nav-item[data-page='activity']").one("click", async function(){
   $('#activity .tab-screen-body.selected').html('');
   $('#activity .tab-screen-body.selected').append(app.dom.components.activityPage(data))
 });
+
+$('#search-form').submit(function(e){
+  e.preventDefault();
+  let value = $(this).find('input').val();
+  alert(value)
+});
