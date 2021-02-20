@@ -1040,6 +1040,38 @@ const app = {
           ]
         });
       },
+      userShelfCard(data){
+        return elem.create({
+          tag: 'a',
+          attributes: {
+            "data-recent-card": data.id
+          },
+          href: '#',
+          eventListeners: {
+            click: _=> {
+              app.dom.page.create('profile', data.id)
+            }
+          },
+          classes: ["flex-none","border","border-gray-200","dark:border-gray-700","bg-white","dark:bg-gray-800","rounded","p-4","w-48"],
+          children: [
+            {
+              tag: 'img',
+              src: (data.profile_picture=="") ? `https://socialmedia.gavhern.com/api/cdn.php?thumb&f=default` : `https://socialmedia.gavhern.com/api/cdn.php?thumb&f=${data.profile_picture}`,
+              classes: ["w-12","h-12","rounded-full","mb-2"]
+            },
+            {
+              tag: 'h1',
+              classes: ["dark:text-white","font-semibold","truncate"],
+              text: data.name
+            },
+            {
+              tag: 'h1',
+              classes: ["text-gray-600","dark:text-gray-400","truncate"],
+              text: '@' + data.username
+            }
+          ]
+        });
+      },
       explorePage(data){
         let recentlyViewed = [];
         let userCards = [];
@@ -1057,33 +1089,7 @@ const app = {
         }
 
         for(const i of data.recent){
-          recentlyViewed.push({
-            tag: 'a',
-            href: '#',
-            eventListeners: {
-              click: _=> {
-                app.dom.page.create('profile', i.id)
-              }
-            },
-            classes: ["flex-none","border","border-gray-200","dark:border-gray-700","bg-white","dark:bg-gray-800","rounded","p-4","w-48"],
-            children: [
-              {
-                tag: 'img',
-                src: (i.profile_picture=="") ? `https://socialmedia.gavhern.com/api/cdn.php?thumb&f=default` : `https://socialmedia.gavhern.com/api/cdn.php?thumb&f=${i.profile_picture}`,
-                classes: ["w-12","h-12","rounded-full","mb-2"]
-              },
-              {
-                tag: 'h1',
-                classes: ["dark:text-white","font-semibold","truncate"],
-                text: i.name
-              },
-              {
-                tag: 'h1',
-                classes: ["text-gray-600","dark:text-gray-400","truncate"],
-                text: '@' + i.username
-              }
-            ]
-          });
+          recentlyViewed.push(app.dom.components.userShelfCard(i));
         }
 
         return elem.create({
@@ -1148,7 +1154,7 @@ const app = {
                       children: [
                         {
                           tag: 'div',
-                          classes: ["flex","flex-row","space-x-2","w-min"],
+                          classes: ["flex","flex-row","space-x-2","w-min","recently-viewed-shelf"],
                           children: recentlyViewed
                         }
                       ]
@@ -2006,6 +2012,9 @@ const app = {
         "profile": {
           uri(user){return `https://socialmedia.gavhern.com/api/profile.php?user=${user}`},
           domElement(data){
+            $(`.recently-viewed-shelf a[data-recent-card=${data.info.id}]`).remove();
+            $(`.recently-viewed-shelf`).prepend(app.dom.components.userShelfCard(data.info));
+
             return app.dom.components.profilePage(data);
           }
         },
@@ -2027,6 +2036,7 @@ const app = {
                 }
               ]
             }
+
 
             return elem.create({
               tag: 'div',
