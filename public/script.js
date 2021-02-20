@@ -4,11 +4,10 @@ if('serviceWorker' in navigator){
 }
 
 
-// Enable developer environment. Disable for production
-var dev = false;
+const dev = (new URL(window.location.href)).searchParams.get("dev") !== null;
 
 
-if(!window.matchMedia('(display-mode: standalone)').matches && !dev){
+if((!window.matchMedia('(display-mode: standalone)').matches) && (!dev)){
   window.location.href = "install.html"
 }
 
