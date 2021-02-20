@@ -1083,6 +1083,10 @@ video {
   line-height: 2.25rem;
 }
 
+.list-decimal {
+  list-style-type: decimal;
+}
+
 .m-1 {
   margin: 0.25rem;
 }
@@ -1387,6 +1391,10 @@ video {
 
 .pb-4 {
   padding-bottom: 1rem;
+}
+
+.pl-4 {
+  padding-left: 1rem;
 }
 
 .pt-5 {

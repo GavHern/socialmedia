@@ -5,11 +5,11 @@ if('serviceWorker' in navigator){
 
 
 // Enable developer environment. Disable for production
-var dev = true;
+var dev = false;
 
 
 if(!window.matchMedia('(display-mode: standalone)').matches && !dev){
-  // User is not using the progressive web application...
+  window.location.href = "install.html"
 }
 
 // Gets a cookie from its name

@@ -1,0 +1,87 @@
+<html lang="en" class="overflow-hidden overscroll-none relative">
+<head>
+  <meta charset="UTF-8">
+
+  <!--Makes viewport on iOS devices not have a black bar-->
+  <meta name='viewport' content='viewport-fit=cover, width=device-width, initial-scale=1.0'>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <title>Social Media</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="apple-touch-icon" href="icons/manifest-icon-512.png">
+  <link rel="icon" href="icons/apple-icon-180.png">
+  <link rel="manifest" href="/manifest.json">
+</head>
+<body class="flex flex-col bg-gray-100 dark:bg-gray-900 h-full overflow-hidden overscroll-none relative">
+  
+  <main class="flex justify-center items-center w-full h-full">
+    <div class="bg-white dark:bg-gray-800 relative rounded-2xl shadow-md w-4/5 pt-12 pb-4 -mb-12">
+      <div class="flex justify-center items-center absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full shadow-lg bg-white dark:bg-gray-700 border-4 border-green-500 overflow-hidden">
+        <svg class="w-16 h-16 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+      </div>
+
+      <h1 class="text-center text-2xl font-semibold">Installation Instructions</h1>
+
+      <div class="p-4" onchange="changeView($('select').val())">
+        <select class="w-full h-12 bg-gray-100 rounded-lg px-2">
+          <option value="ios">iOS</option>
+          <option value="android">Android</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div id="ios" class="view p-6 py-2">
+        <ol class="list-decimal pl-4">
+          <li>Make sure you're using Safari!</li>
+          <li>Press <span class="font-semibold">Share</span> at the bottom of your screen.</li>
+          <li>Select <span class="font-semibold">Add to Home Screen</span></li>
+          <li>Confirm by pressing "<span class="font-semibold">Add</span>" at the top of the screen</li>
+          <li>Find the app on your home screen!</li>
+        </ol>
+      </div>
+
+      <div id="android" class="view px-6 py-2">
+        <ol class="list-decimal pl-4">
+          <li>Open chrome</li>
+          <li>Press the <span class="font-semibold">three dots</span> in the top-right of your screen.</li>
+          <li>Select <span class="font-semibold">Add to Home Screen</span></li>
+          <li>Confirm by pressing "<span class="font-semibold">Add</span>" in the popup</li>
+          <li>Find the app on your home screen!</li>
+        </ol>
+      </div>
+
+      <div id="other" class="view px-6 py-2">
+        <div>
+          This app is currently exclusive to <span class="font-semibold">mobile devices</span>. If you are running a different mobile operating system, search how to install a <span class="font-semibold">progressive web aplication</span> on it.
+        </div>
+      </div>
+
+      
+    </div>
+  </main>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    function changeView(device){
+      $('.view').addClass('hidden');
+      $('#'+device).removeClass('hidden');
+    }
+
+    if(['iPad Simulator','iPhone Simulator','iPod Simulator','iPad','iPhone','iPod'].includes(navigator.platform)||(navigator.userAgent.includes("Mac") && "ontouchend" in document)){
+      $('select').val('ios');
+      changeView('ios');
+    } else if(navigator.userAgent.toLowerCase().indexOf("android") > -1){
+      $('select').val('android');
+      changeView('android');
+    } else {
+      $('select').val('other');
+      changeView('other');
+    }
+
+
+  </script>
+</body>
+</html>
