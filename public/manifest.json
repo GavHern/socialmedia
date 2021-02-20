@@ -1,7 +1,7 @@
 {
   "name": "Social Media",
   "short_name": "Social Media",
-  "start_url": "/#",
+  "start_url": "/?pwa#",
   "icons": [
     {
       "src": "icons/manifest-icon-192.png",

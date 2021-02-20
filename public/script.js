@@ -4,10 +4,10 @@ if('serviceWorker' in navigator){
 }
 
 
-const dev = (new URL(window.location.href)).searchParams.get("dev") !== null;
+const pwa = (new URL(window.location.href)).searchParams.get("pwa") !== null;
 
 
-if((!window.matchMedia('(display-mode: standalone)').matches) && (!dev)){
+if(!pwa){
   window.location.href = "install.html"
 }
 
