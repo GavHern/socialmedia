@@ -1131,17 +1131,29 @@ const app = {
             },
             {
               tag: 'div',
-              classes: ["mx-4","my-6"].concat((data.recent.length == 0) ? ['hidden'] : []),
+              classes: ["my-6"].concat((data.recent.length == 0) ? ['hidden'] : []),
               children: [
                 {
                   tag: 'h1',
-                  classes: ["font-semibold","text-xl","dark:text-white"],
+                  classes: ["mx-4","font-semibold","text-xl","dark:text-white"],
                   text: "Recently Viewed"
                 },
                 {
                   tag: 'div',
-                  classes: ["flex","flex-row","overflow-auto","space-x-2","mt-2","mb-4"],
-                  children: recentlyViewed
+                  classes: ["mt-2","mb-4","px-4","overflow-auto"],
+                  children: [
+                    {
+                      tag: 'div',
+                      classes: ["w-min","inline-block"],
+                      children: [
+                        {
+                          tag: 'div',
+                          classes: ["flex","flex-row","space-x-2","w-min"],
+                          children: recentlyViewed
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
