@@ -108,7 +108,7 @@
       let res = await response.json();
       if(res.success){
         window.localStorage.setItem("session", res['session_token']);
-        window.location.href = "/#";
+        window.location.href = "/?pwa#";
       } else {
         alert(res.message)
       }
