@@ -18,7 +18,8 @@ include 'tools/utils.php';
 // Get all nessisary parameters and sanitize them
 $values = array(
     "user" => get_session(),
-    "profile" => $_GET['user']
+    "profile" => $_GET['user'],
+    "timestamp" => time() // Get current timestamp
 );
 
 // Check for pagination checkpoint, otherwise create one
@@ -26,6 +27,9 @@ if(isset($_GET['checkpoint'])){
     $values['checkpoint'] = sanitize($_GET['checkpoint']);
 } else {
     $values['checkpoint'] = sanitize(base_convert(time(),10,36)."-25-0");
+    
+    // Log visit to visits table
+    db("INSERT INTO `visits`(`page`, `user`, `data`, `timestamp`) VALUES ('profile',{$values['user']},{$values['profile']},{$values['timestamp']})", false);
 }
 
 // Parse pagination checkpoint (split at every hyphen)

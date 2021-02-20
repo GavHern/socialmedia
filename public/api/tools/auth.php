@@ -7,23 +7,27 @@ function session_to_user_id($session_token){
 
 // Pull session from cookies and find corrosponding user id
 function get_session(){
-    return 10; // FOR TESTING!!!!!!!!
     
     
-    if(!isset($_COOKIE["session"])){
+    if(!isset($_COOKIE["session"]) and !isset(apache_request_headers()['authentication'])){
         die(json_encode(array(
             "success" => false,
-            "message" => "Missing login session"
+            "message" => "Missing login session",
+            "data" => $_SERVER
         )));
     }
     
     $id = session_to_user_id(sanitize($_COOKIE["session"]));
 
     if($id == ""){
-        die(json_encode(array(
-            "success" => false,
-            "message" => "Invalid login session"
-        )));
+        $id = session_to_user_id(sanitize(apache_request_headers()['authentication']));
+        
+        if($id == ""){
+            die(json_encode(array(
+                "success" => false,
+                "message" => "Invalid login session"
+            )));
+        }
     }
     
     return $id;

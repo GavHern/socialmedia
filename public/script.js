@@ -30,7 +30,12 @@ if(getCookie("session") === undefined){
 }
 
 // Function to make a request (fetch api but creates a dialogue on error)
-async function makeRequest(uri, data){
+async function makeRequest(uri, data = {}){
+
+  let requestHeaders = new Headers();
+  requestHeaders.append("Authentication",window.localStorage.getItem('session'))
+  data.headers = requestHeaders;
+
   let res = await fetch(uri, data);
   resParsed = await res.json();
 
@@ -42,7 +47,7 @@ async function makeRequest(uri, data){
 }
 
 
-var currentUser = window.localStorage.getItem('session').split('-')[0];
+const currentUser = window.localStorage.getItem('session').split('-')[0];
 var profileEdited = false;
 
 
@@ -185,6 +190,14 @@ const app = {
 
       return res;
     },
+    async getExplorePage(){ // Get the explore page
+      let res = await makeRequest(`https://socialmedia.gavhern.com/api/explore.php`, {
+        method: 'GET',
+        redirect: 'follow'
+      });
+
+      return res;
+    },
     async getActivity(){ // Get the activity page
       let res = await makeRequest(`https://socialmedia.gavhern.com/api/activity.php`, {
         method: 'GET',
@@ -291,7 +304,7 @@ const app = {
   // DOM related methods
   dom: {
 
-    // Components (made with custom element building library. elembuilder.js)
+    // Components (made with custom element building library (made by me). elembuilder.js)
     components: {
       postElement(data, isInFeed){
         let body;
@@ -1023,6 +1036,120 @@ const app = {
                 }
               },
               html: '<svg class="text-gray-700 dark:text-gray-300 w-6 h-6" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>'
+            }
+          ]
+        });
+      },
+      explorePage(data){
+        let recentlyViewed = [];
+        let userCards = [];
+
+        for(const i of data.following){
+          userCards.push(app.dom.components.userCard(i));
+        }
+
+        for(const i of data.recent){
+          recentlyViewed.push({
+            tag: 'a',
+            href: '#',
+            classes: ["flex-none","border","border-gray-200","dark:border-gray-700","bg-white","dark:bg-gray-800","rounded","p-4","w-48"],
+            children: [
+              {
+                tag: 'img',
+                src: i.profile_picture,
+                classes: ["w-12","h-12","rounded-full","mb-2"]
+              },
+              {
+                tag: 'h1',
+                classes: ["dark:text-white","font-semibold","truncate"],
+                text: i.name
+              },
+              {
+                tag: 'h1',
+                classes: ["text-gray-600","dark:text-gray-400","truncate"],
+                text: '@' + i.username
+              }
+            ]
+          });
+        }
+
+        return elem.create({
+          tag: 'div',
+          children: [
+            {
+              tag: 'div',
+              classes: ["h-12","m-4","rounded","ring-2","ring-gray-300","dark:ring-gray-700"],
+              children: [
+                {
+                  tag: 'form',
+                  eventListeners: {
+                    submit: function(e){
+                      e.preventDefault(); // Prevent default form submit (to keep the page from refreshing)
+                      let input = $(this).find('input');
+                      let value = $(input).val();
+
+                      if(value.length != 0){ // Only create the page if the input field has a value (isn't empty)
+                        app.dom.page.create('search', value);
+                        $(input).val(''); // Empty the field
+                        $(input).blur(); // Unfocus element to make sure on-screen keyboards are hidden
+                      }
+                    }
+                  },
+                  children: [
+                    {
+                      tag: 'input',
+                      classes: ["w-full","h-full","bg-none","rounded","outline-none","bg-gray-100","dark:bg-gray-900","focus:bg-white","dark:focus:bg-gray-800","dark:text-white","px-4","transition"],
+                      attributes: {
+                        type: "search",
+                        placeholder: "Search..."
+                      }
+                    }, 
+                    { // Submit button for screen readers
+                      tag: 'input',
+                      classes: ["sr-only"],
+                      attributes: {
+                        type: "submit",
+                        value: "Search"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              tag: 'div',
+              classes: ["mx-4","my-6"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["font-semibold","text-xl","dark:text-white"],
+                  text: "Recently Viewed"
+                },
+                {
+                  tag: 'div',
+                  classes: ["flex","flex-row","overflow-auto","space-x-2","mt-2","mb-4"],
+                  children: recentlyViewed
+                }
+              ]
+            },
+            {
+              tag: 'div',
+              classes: ["mx-4","my-6"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["font-semibold","text-xl","dark:text-white"],
+                  text: "Following"
+                },
+                {
+                  tag: 'div',
+                  attributes: {
+                    "data-following": JSON.stringify(data.following)
+                  },
+                  classes: ["flex","flex-col","space-y-2","mt-2","mb-4"],
+                  children: userCards
+                }
+              ]
             }
           ]
         });
@@ -2156,11 +2283,11 @@ for(const i of $('.tab-screen-body')){
 
 $(document).ready(app.dom.loadHomeFeed);
 
-$(".bottom-nav-item[data-page='profile']").one("click", async function(){
-  $('#profile .tab-screen-body.selected').append(app.dom.components.preloader);
-  let data = await app.api.getUser(currentUser);
-  $('#profile .tab-screen-body.selected').html('');
-  $('#profile .tab-screen-body.selected').append(app.dom.components.profilePage(data))
+$(".bottom-nav-item[data-page='explore']").one("click", async function(){
+  $('#explore .tab-screen-body.selected').append(app.dom.components.preloader);
+  let data = await app.api.getExplorePage();
+  $('#explore .tab-screen-body.selected').html('');
+  $('#explore .tab-screen-body.selected').append(app.dom.components.explorePage(data))
 });
 
 $(".bottom-nav-item[data-page='activity']").one("click", async function(){
@@ -2170,10 +2297,9 @@ $(".bottom-nav-item[data-page='activity']").one("click", async function(){
   $('#activity .tab-screen-body.selected').append(app.dom.components.activityPage(data))
 });
 
-$('#search-form').submit(function(e){
-  e.preventDefault();
-  let value = $(this).find('input').val();
-  if(value.length != 0){
-    app.dom.page.create('search', value)
-  }
+$(".bottom-nav-item[data-page='profile']").one("click", async function(){
+  $('#profile .tab-screen-body.selected').append(app.dom.components.preloader);
+  let data = await app.api.getUser(currentUser);
+  $('#profile .tab-screen-body.selected').html('');
+  $('#profile .tab-screen-body.selected').append(app.dom.components.profilePage(data))
 });
