@@ -1060,6 +1060,11 @@ const app = {
           recentlyViewed.push({
             tag: 'a',
             href: '#',
+            eventListeners: {
+              click: _=> {
+                app.dom.page.create('profile', i.id)
+              }
+            },
             classes: ["flex-none","border","border-gray-200","dark:border-gray-700","bg-white","dark:bg-gray-800","rounded","p-4","w-48"],
             children: [
               {
