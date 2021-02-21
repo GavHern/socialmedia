@@ -46,9 +46,9 @@ if(isset($_POST['banner'])){
 
 
 // Rate limiting
-$last_edited = db("SELECT `last_edited` FROM `users` WHERE `id` = {$values['user']}", true);
+$last_edited = db("SELECT `last_edited` FROM `users` WHERE `id` = {$values['user']}", true)[0]['last_edited'];
 
-if($values['timestamp'] - $last_edited < $values['rate_limit'] && (isset($_POST['profile_picture']) || isset($_POST['banner']))){
+if($values['timestamp'] - $last_edited < $values['rate_limit'] and (isset($_POST['profile_picture']) or isset($_POST['banner']))){
     throw_error("You're doing that too much. Please wait 5 minutes in between profile updates.");
 }
 
