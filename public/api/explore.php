@@ -15,10 +15,10 @@ $values = array(
 );
 
 
-$recent = db("SELECT v.page, v.data AS id, u.name, u.username, u.profile_picture, MAX(v.timestamp) AS timestamp FROM `visits` AS v INNER JOIN `users` AS u ON v.data = u.id WHERE v.page = 'profile' AND v.user = 10 GROUP BY id ORDER BY timestamp DESC LIMIT 10;", true);
+$recent = db("SELECT v.page, v.data AS id, u.name, u.username, u.profile_picture, MAX(v.timestamp) AS timestamp FROM `visits` AS v INNER JOIN `users` AS u ON v.data = u.id WHERE v.page = 'profile' AND v.user = {$values['user']} GROUP BY id ORDER BY timestamp DESC", true);
 
 
-$following = db("SELECT f.follow AS id, u.name, u.username, u.profile_picture, '1' AS is_following FROM `follows` AS f INNER JOIN users AS u ON f.follow = u.id WHERE `user` = {$values['user']} ORDER BY u.username DESC;", true);
+$following = db("SELECT f.follow AS id, u.name, u.username, u.profile_picture, '1' AS is_following FROM `follows` AS f INNER JOIN users AS u ON f.follow = u.id WHERE `user` = {$values['user']} ORDER BY u.username ASC;", true);
 
 
 
@@ -45,10 +45,9 @@ FROM
     `visits` AS v
     INNER JOIN `users` AS u
     ON v.data = u.id
-WHERE v.page = 'profile' AND v.user = 10
+WHERE v.page = 'profile' AND v.user = {$values['user']}
 GROUP BY id
 ORDER BY timestamp DESC
-LIMIT 10
 
 
 
@@ -64,7 +63,8 @@ FROM
     INNER JOIN users AS u
     ON f.follow = u.id
 WHERE
-    `user` = 10
+    `user` = {$values['user']}
+ORDER BY u.username ASC
 
 
 */
