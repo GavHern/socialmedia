@@ -31,8 +31,6 @@ if(getCookie("session") === undefined){
 // Function to make a request (fetch api but creates a dialogue on error)
 async function makeRequest(uri, data = {}){
 
-  console.log("making request")
-
   let requestHeaders = new Headers();
   requestHeaders.append("Authentication",window.localStorage.getItem('session'))
   data.headers = requestHeaders;
