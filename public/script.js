@@ -31,6 +31,8 @@ if(getCookie("session") === undefined){
 // Function to make a request (fetch api but creates a dialogue on error)
 async function makeRequest(uri, data = {}){
 
+  console.log("making request")
+
   let requestHeaders = new Headers();
   requestHeaders.append("Authentication",window.localStorage.getItem('session'))
   data.headers = requestHeaders;
@@ -764,6 +766,8 @@ const app = {
                           let res = await app.api.follow(data.info.id, follow);
 
                           if(res.success){
+                            app.dom.updateExploreFollowingList(data.info, follow);
+
                             if(follow){
                               $(`a[data-user-id-follow=${data.info.id}]`).addClass('active');
                             } else {
@@ -961,6 +965,9 @@ const app = {
       userCard(data){
         return elem.create({
           tag: 'div',
+          attributes: {
+            "data-user-card": data.id
+          },
           classes: ["flex","items-center","border","border-gray-200","dark:border-gray-700","bg-white","dark:bg-gray-800","rounded","w-full","shadow-md"],
           children: [
             {
@@ -1016,21 +1023,24 @@ const app = {
                     let res = await app.api.follow(data.id, true);
                         
                     if(res.success) {
+                      app.dom.updateExploreFollowingList(data, follow);
                       $(this).addClass('active');
                     }
                   } else {
-                    app.dom.sheet.create('confirm', app.dom.sheet.create('confirm', {
+                    app.dom.sheet.create('confirm', {
                       text: `Are you sure you want to unfollow ${data.name}?`,
+                      subtext: "",
                       color: "bg-red-500",
                       actionText: "Unfollow",
                       action: async _=>{
                         let res = await app.api.follow(data.id, false);
                         
                         if(res.success) {
+                          app.dom.updateExploreFollowingList(data, follow);
                           $(this).removeClass('active');
                         }
                       }
-                    }))
+                    })
                   }
                 }
               },
@@ -1145,7 +1155,7 @@ const app = {
                 },
                 {
                   tag: 'div',
-                  classes: ["mt-2","mb-4","px-4","overflow-auto"],
+                  classes: ["mt-2","mb-4","px-4","overflow-auto","user-shelf-container"],
                   children: [
                     {
                       tag: 'div',
@@ -1176,7 +1186,7 @@ const app = {
                   attributes: {
                     "data-following": JSON.stringify(data.following)
                   },
-                  classes: ["flex","flex-col","space-y-2","mt-2","mb-4"],
+                  classes: ["flex","flex-col","space-y-2","mt-2","mb-4","explore-following-list"],
                   children: userCards
                 }
               ]
@@ -1374,6 +1384,34 @@ const app = {
           $('.home-layout.layout-compact').removeClass('hidden');
           break;
       }
+    },
+
+    updateExploreFollowingList(user, value){
+      let list = $('.explore-following-list');
+      let data = JSON.parse(list.attr('data-following'));
+
+      if(!value){
+        list.find(`div[data-user-card=${user.id}]`).remove();
+        data = data.filter(function(el){return el.id != user.id;});
+        list.attr('data-following', JSON.stringify(data));
+      } else {
+        list.html('');
+
+        user.is_following = 1;
+
+        data.push(user);
+  
+        for(const i of data.sort(function(a, b){
+          if(a.username < b.username) { return -1; }
+          if(a.username > b.username) { return 1; }
+          return 0;
+        })){
+          list.append(app.dom.components.userCard(i));
+        }
+
+        list.attr('data-following', JSON.stringify(data));
+      }
+
     },
 
     async loadHomeFeed(){
@@ -2013,6 +2051,7 @@ const app = {
           domElement(data){
             $(`.recently-viewed-shelf a[data-recent-card=${data.info.id}]`).remove();
             $(`.recently-viewed-shelf`).prepend(app.dom.components.userShelfCard(data.info));
+            $('.user-shelf-container').scrollLeft(0);
 
             return app.dom.components.profilePage(data);
           }
