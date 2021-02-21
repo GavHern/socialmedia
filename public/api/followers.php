@@ -24,15 +24,15 @@ $values = array(
 
 if($values['feed'] == "mutual"){
     
-    $data = db("SELECT DISTINCT mutual AS id, u.name, u.username, u.profile_picture FROM( SELECT `user` AS `mutual` FROM `follows` WHERE `follow` = {$values['profile']}) AS F1 INNER JOIN ( SELECT `follow` AS `mutual` FROM `follows` WHERE `user` = {$values['user']} ) AS F2 USING(`mutual`) INNER JOIN `users` AS u ON u.id = mutual;", true);
+    $data = db("SELECT DISTINCT mutual AS id, u.name, u.username, u.profile_picture, (SELECT COUNT(*) FROM `follows` AS f WHERE f.follow = u.id AND f.user = {$values['user']}) is_following FROM( SELECT `user` AS `mutual` FROM `follows` WHERE `follow` = {$values['profile']}) AS F1 INNER JOIN ( SELECT `follow` AS `mutual` FROM `follows` WHERE `user` = {$values['user']} ) AS F2 USING(`mutual`) INNER JOIN `users` AS u ON u.id = mutual;", true);
     
 } else if ($values['feed'] == "followers"){
     
-    $data = db("SELECT f.user AS id, u.name, u.username, u.profile_picture FROM `follows` as f INNER JOIN `users` AS u ON u.id = f.user WHERE f.follow = {$values['profile']};", true);
+    $data = db("SELECT f.user AS id, u.name, u.username, u.profile_picture, (SELECT COUNT(*) FROM `follows` AS f WHERE f.follow = u.id AND f.user = {$values['user']}) is_following FROM `follows` as f INNER JOIN `users` AS u ON u.id = f.user WHERE f.follow = {$values['profile']};", true);
     
 } else if ($values['feed'] == "following"){
     
-    $data = db("SELECT f.follow AS id, u.name, u.username, u.profile_picture FROM `follows` as f INNER JOIN `users` AS u ON u.id = f.follow WHERE f.user = {$values['profile']};", true);
+    $data = db("SELECT f.follow AS id, u.name, u.username, u.profile_picture, (SELECT COUNT(*) FROM `follows` AS f WHERE f.follow = u.id AND f.user = {$values['user']}) is_following FROM `follows` as f INNER JOIN `users` AS u ON u.id = f.follow WHERE f.user = {$values['profile']};", true);
     
 }
 
@@ -40,7 +40,7 @@ if($values['feed'] == "mutual"){
 
 
 
-// Echo new account information
+// Echo success and data
 echo json_encode(array(
     "success" => true,
     "feed" => $values['feed'],
@@ -53,7 +53,8 @@ echo json_encode(array(
 Formatted SQL:
 
 SELECT DISTINCT 
-    mutual AS id, u.name, u.username, u.profile_picture
+    mutual AS id, u.name, u.username, u.profile_picture,
+    (SELECT COUNT(*) FROM `follows` AS f WHERE f.follow = u.id AND f.user = {$values['user']}) is_following
 FROM 
     (
         SELECT `user` AS `mutual` FROM `follows` WHERE `follow` = {$values['profile']}
@@ -71,7 +72,8 @@ FROM
     
     
 SELECT
-    f.user AS id, u.name, u.username, u.profile_picture
+    f.user AS id, u.name, u.username, u.profile_picture,
+    (SELECT COUNT(*) FROM `follows` AS f WHERE f.follow = u.id AND f.user = {$values['user']}) is_following
 FROM 
     `follows` as f
 INNER JOIN `users` AS u
@@ -83,7 +85,8 @@ WHERE
 
 
 SELECT
-    f.follow AS id, u.name, u.username, u.profile_picture
+    f.follow AS id, u.name, u.username, u.profile_picture,
+    (SELECT COUNT(*) FROM `follows` AS f WHERE f.follow = u.id AND f.user = {$values['user']}) is_following
 FROM 
     `follows` as f
 INNER JOIN `users` AS u
