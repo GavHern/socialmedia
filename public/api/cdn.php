@@ -28,6 +28,11 @@ if(empty($images)){ // If there are no database records matching the filename, t
 }
 
 
+/*
+
+IMAGE PROXY (COMMENTED OUT DUE TO RATE LIMITING):
+
+
 // Initialize cURL
 $curl = curl_init();
 
@@ -46,13 +51,23 @@ curl_setopt_array($curl, array(
 // Execute cURL command
 $response = curl_exec($curl);
 
+if (curl_errno($curl)) {
+    $error_msg = curl_error($curl);
+}
+
 curl_close($curl);
 
 // If the request failed, return an error
 if($response === false){
     http_response_code(500);
-    die(-1);
+    die($error_msg);
 }
 
-
 echo $response;
+
+*/
+
+
+// Redirect to imgbb
+header('Location: '.$image_url);
+
