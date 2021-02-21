@@ -1205,7 +1205,6 @@ const app = {
               icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
               messageSuffix = "liked your post.";
               action = _=>{
-                console.log(i.link)
                 app.dom.page.create('post', i.link);
               };
               break;
@@ -1213,7 +1212,6 @@ const app = {
               icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
               messageSuffix = "liked your comment.";
               action = _=>{
-                console.log(i.link)
                 app.dom.page.create('post', i.link);
               };
               break;
@@ -1289,7 +1287,8 @@ const app = {
       activityPage(data){
         let elements = [];
 
-        if(data.data.length == 0){
+        if(data.data.day.length==0 && data.data.week.length==0 && data.data.all.length==0){
+          console.log("test");
           elements.push({
             tag: "div",
             classes: ["w-full","flex","justify-center"],
@@ -1834,7 +1833,6 @@ const app = {
         },
 
         edit(data){
-          console.log(data)
           return [
             {
               tag: 'div',
