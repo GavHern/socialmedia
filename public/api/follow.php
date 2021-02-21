@@ -24,6 +24,12 @@ $values = array(
     "timestamp" => time() // Get current timestamp
 );
 
+// Prevent user from following themself
+if($values['user'] == $values['account'] and $values['follow'] == 1){
+    throw_error("You cannot follow yourself");
+}
+
+
 // Checks if user wants to follow or unfollow
 if($values["follow"]){
     
