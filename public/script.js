@@ -6,7 +6,6 @@ if('serviceWorker' in navigator){
 
 const pwa = (new URL(window.location.href)).searchParams.get("pwa") !== null;
 
-
 if(!pwa){
   window.location.href = "install.html"
 }
