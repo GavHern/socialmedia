@@ -71,3 +71,19 @@ function save_image($data){
     return $filename;
     
 }
+
+
+function send_email($recipient, $subject, $message){
+    $headers = "Reply-To: Gav Hern <no-reply@gavhern.com>\r\n"; 
+    $headers .= "Return-Path: <no-reply@gavhern.com>\r\n"; 
+    $headers .= "From: <no-reply@gavhern.com>\r\n";  
+    $headers .= "Organization: Gav Hern\r\n";
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+    $headers .= "X-Priority: 3\r\n";
+    $headers .= "X-Mailer: PHP". phpversion() ."\r\n" ;
+    
+    $mail_success = mail($recipient,$subject,$message,$headers);
+    
+    return $mail_success;
+}
