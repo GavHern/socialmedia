@@ -1660,50 +1660,61 @@ const app = {
                   text: "Report Post"
                 },
                 {
-                  tag: 'select',
-                  classes: ["w-full","bg-gray-100","dark:bg-gray-700","rounded-xl","p-4","my-2"],
+                  tag: 'div',
+                  classes: ["relative"],
                   children: [
                     {
-                      tag: 'option',
-                      attributes: {
-                        value: ''
-                      },
-                      html: '---'
+                      tag: 'select',
+                      classes: ["w-full","bg-gray-100","dark:bg-gray-700","rounded-xl","p-3","my-2","appearance-none"],
+                      children: [
+                        {
+                          tag: 'option',
+                          attributes: {
+                            value: ''
+                          },
+                          html: '---'
+                        },
+                        {
+                          tag: 'option',
+                          attributes: {
+                            value: 'inappropriate'
+                          },
+                          html: 'Innapropriate content'
+                        },
+                        {
+                          tag: 'option',
+                          attributes: {
+                            value: 'hate'
+                          },
+                          html: 'Hateful or abusive content'
+                        },
+                        {
+                          tag: 'option',
+                          attributes: {
+                            value: 'spam'
+                          },
+                          html: 'Spam or unwanted content'
+                        },
+                        {
+                          tag: 'option',
+                          attributes: {
+                            value: 'impersonation'
+                          },
+                          html: 'Impersonation'
+                        },
+                        {
+                          tag: 'option',
+                          attributes: {
+                            value: 'other'
+                          },
+                          html: 'Other'
+                        }
+                      ]
                     },
                     {
-                      tag: 'option',
-                      attributes: {
-                        value: 'inappropriate'
-                      },
-                      html: 'Innapropriate content'
-                    },
-                    {
-                      tag: 'option',
-                      attributes: {
-                        value: 'hate'
-                      },
-                      html: 'Hateful or abusive content'
-                    },
-                    {
-                      tag: 'option',
-                      attributes: {
-                        value: 'spam'
-                      },
-                      html: 'Spam or unwanted content'
-                    },
-                    {
-                      tag: 'option',
-                      attributes: {
-                        value: 'impersonation'
-                      },
-                      html: 'Impersonation'
-                    },
-                    {
-                      tag: 'option',
-                      attributes: {
-                        value: 'other'
-                      },
-                      html: 'Other'
+                      tag: 'div',
+                      classes: ["absolute","right-0","top-0","h-full","flex","items-center","px-4"],
+                      html: '<svg class="h-4 w-4 text-gray-800 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>'
                     }
                   ]
                 },
