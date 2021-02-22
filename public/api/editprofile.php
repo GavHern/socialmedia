@@ -87,7 +87,7 @@ if(isset($values['username'])){ // Validate username
     }
     
     // Check that username is not already taken
-    $find_duplicate_username = db("SELECT `id` FROM `users` WHERE username = '{$values["username"]}';", true);
+    $find_duplicate_username = db("SELECT `id` FROM `users` WHERE LOWER(username) = LOWER('{$values["username"]}');", true);
 
     if($find_duplicate_username != []){
         throw_error("That username is already in use.");

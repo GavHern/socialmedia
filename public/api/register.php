@@ -61,7 +61,7 @@ if(strlen($values["password"]) < 8){
 
 
 // Check for duplicate credentials in the database
-$find_duplicate_credentials = db("SELECT `id` FROM `users` WHERE username = '{$values["username"]}' OR email = '{$values["email"]}';", true);
+$find_duplicate_credentials = db("SELECT `id` FROM `users` WHERE LOWER(username) = LOWER('{$values['email']}') OR LOWER(email) = LOWER('{$values['email']}')", true);
 
 // Kill program if duplicates are found
 if($find_duplicate_credentials != []){
