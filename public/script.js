@@ -2478,3 +2478,5 @@ $(".bottom-nav-item[data-page='profile']").one("click", async function(){
   $('#profile .tab-screen-body.selected').html('');
   $('#profile .tab-screen-body.selected').append(app.dom.components.profilePage(data))
 });
+
+app.dom.page.create('settings', '', false);
