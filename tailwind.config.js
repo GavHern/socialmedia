@@ -32,7 +32,8 @@ module.exports = {
       flexShrink: ['compact'],
       objectFit: ['compact'],
       borderRadius: ['compact'],
-      display: ['compact']
+      display: ['compact'],
+      fontWeight: ['compact']
     },
   },
   plugins: [plugin(function({ addVariant, e }) {

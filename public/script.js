@@ -378,7 +378,7 @@ const app = {
                           attributes: {
                             "data-user-info-name": data.author
                           },
-                          classes: ["font-semibold", "dark:text-white", "compact:hidden"],
+                          classes: ["font-semibold", "dark:text-white", "compact:font-normal"],
                           text: data.name // Author's name
                         },
                         {
@@ -386,7 +386,7 @@ const app = {
                           attributes: {
                             "data-user-info-username": data.author
                           },
-                          classes: ["text-gray-600", "dark:text-gray-400"],
+                          classes: ["text-gray-600", "dark:text-gray-400", "compact:hidden"],
                           text: "@"+data.username // Author's Username
                         }
                       ]
@@ -570,7 +570,7 @@ const app = {
                       children: [
                         {
                           tag: 'p',
-                          text: '@'+data.username
+                          text: data.name
                         }
                       ]
                     }

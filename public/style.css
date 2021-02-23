@@ -969,6 +969,10 @@ video {
   font-weight: 700;
 }
 
+.compact .compact\:font-normal {
+  font-weight: 400;
+}
+
 .h-1 {
   height: 0.25rem;
 }
