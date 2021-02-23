@@ -346,3 +346,15 @@ input[type="search"].my-search {
 input[type="search"].my-search::-webkit-search-cancel-button {
   -webkit-appearance: searchfield-cancel-button;
 }
+
+.switch-container {
+  @apply flex justify-start items-center overflow-hidden w-14 h-8 rounded-full flex-shrink-0;
+}
+
+.switch {
+  @apply appearance-none w-6 h-6 m-1 bg-white rounded-full ring-lg ring-gray-200 outline-none transition-all duration-300;
+}
+
+.switch:checked {
+  @apply ml-7 ring-green-400;
+}

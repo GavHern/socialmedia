@@ -19,6 +19,9 @@ module.exports = {
       },
       spacing: {
         '144': '36rem'
+      },
+      ringWidth: {
+        'lg': '64px'
       }
     }
   },
