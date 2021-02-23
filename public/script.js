@@ -1817,7 +1817,7 @@ const app = {
                         click: async function(){ // Close the sheet and perform the action
                           let text = $(this).parents().eq(1).find('textarea').val();
 
-                          let res = await app.api.comment(data.parent,text);
+                          let res = await app.api.comment(data.parent,encodeURIComponent(text));
 
                           if(res.success){
 
@@ -1887,7 +1887,7 @@ const app = {
                         click: async function(){ // Close the sheet and perform the action
                           let text = $(this).parents().eq(1).find('textarea').val();
 
-                          let res = await app.api.edit(data.id,data.isComment,text);
+                          let res = await app.api.edit(data.id,data.isComment,encodeURIComponent(text));
 
                           if(res.success){
 
