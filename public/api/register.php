@@ -17,7 +17,7 @@ include 'tools/utils.php';
 // Get all nessisary parameters and sanitize them
 $values = array(
     "name" => sanitize($_GET["name"]),
-    "username" => strtolower(sanitize($_GET["username"])),
+    "username" => sanitize($_GET["username"]),
     "email" => sanitize($_GET["email"]),
     "password" => sanitize($_GET["password"]),
     "confirm" => sanitize($_GET["confirm"]),
@@ -61,7 +61,7 @@ if(strlen($values["password"]) < 8){
 
 
 // Check for duplicate credentials in the database
-$find_duplicate_credentials = db("SELECT `id` FROM `users` WHERE LOWER(username) = LOWER('{$values['email']}') OR LOWER(email) = LOWER('{$values['email']}')", true);
+$find_duplicate_credentials = db("SELECT `id` FROM `users` WHERE LOWER(username) = LOWER('{$values['username']}') OR LOWER(email) = LOWER('{$values['email']}')", true);
 
 // Kill program if duplicates are found
 if($find_duplicate_credentials != []){
