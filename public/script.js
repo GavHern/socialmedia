@@ -1970,6 +1970,11 @@ const app = {
     // Page element system
     page: {
       templates: {
+        "blank": {
+          domElement(data){
+            return elem.create(data);
+          }
+        },
         "post": {
           uri(id){return `https://socialmedia.gavhern.com/api/postinfo.php?post=${id}`},
           domElement(data){
@@ -2153,12 +2158,99 @@ const app = {
               ]
             });
           }
+        },
+        "settings": {
+          domElement(data){
+            return elem.create({
+              tag: 'div',
+              classes: ["m-4"],
+              children: [
+                {
+                  tag: 'h1',
+                  classes: ["font-semibold","text-2xl"],
+                  text: "Settings"
+                },
+                {
+                  tag: "div",
+                  classes: ["bg-gray-200","dark:bg-gray-700","flex","flex-col","space-y-0.5","rounded-xl","w-full","shadow-md","mt-4","overflow-hidden"],
+                  children: [
+                    {
+                      tag: 'a',
+                      href: '#',
+                      classes: ["bg-white","dark:bg-gray-800","p-3","flex"],
+                      children: [
+                        {
+                          tag: 'div',
+                          classes: ['mr-4'],
+                          html: '<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>'
+                        },
+                        {
+                          tag: 'div',
+                          classes: ["flex-grow","w-full","dark:text-gray-200"],
+                          children: [
+                            {
+                              tag: 'div',
+                              children: [
+                                {
+                                  tag: 'span',
+                                  classes: ["font-semibold","mr-0.5"],
+                                  text: "Account"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          tag: 'div',
+                          classes: ["flex","justify-center","items-center"],
+                          html: `<svg class="w-4 h-4 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>`
+                        }
+                      ]
+                    },
+                    {
+                      tag: 'a',
+                      href: '#',
+                      classes: ["bg-white","dark:bg-gray-800","p-3","flex"],
+                      children: [
+                        {
+                          tag: 'div',
+                          classes: ['mr-4'],
+                          html: '<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>'
+                        },
+                        {
+                          tag: 'div',
+                          classes: ["flex-grow","w-full","dark:text-gray-200"],
+                          children: [
+                            {
+                              tag: 'div',
+                              children: [
+                                {
+                                  tag: 'span',
+                                  classes: ["font-semibold","mr-0.5"],
+                                  text: "Appearance"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          tag: 'div',
+                          classes: ["flex","justify-center","items-center"],
+                          html: `<svg class="w-4 h-4 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>`
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            });
+          }
         }
       },
 
 
       // Creates a page and adds it to the dom
-      async create(page, data){
+      async create(page, data, executeRequest = true){
         // Ensure that the back button is shown instead of the sidenav trigger
         $('#sidenav-trigger').addClass('hidden');
         $('#page-back-trigger').removeClass('hidden');
@@ -2193,9 +2285,13 @@ const app = {
           }
         });
 
+        let res;
 
-
-        let res = await makeRequest(app.dom.page.templates[page].uri(data));
+        if(executeRequest){
+          res = await makeRequest(app.dom.page.templates[page].uri(data));
+        } else {
+          res = data;
+        }
 
         $(newPage).html('');
 
