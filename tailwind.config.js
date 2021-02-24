@@ -22,7 +22,10 @@ module.exports = {
       },
       ringWidth: {
         'lg': '64px'
-      }
+      },
+      transitionProperty: {
+        'bg': 'backgroundColor, borderColor'
+       }
     }
   },
   variants: {

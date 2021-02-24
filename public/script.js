@@ -293,6 +293,20 @@ const app = {
           app.dom.changeHomeLayout(1)
         }
       })
+    },
+    computeSettings(){
+      let settings = {
+        "dark": JSON.parse(localStorage['dark']),
+        "systemTheme": JSON.parse(localStorage['system-theme'])
+      }
+
+      if(!settings.systemTheme){
+        if(settings.dark){
+          $('body').addClass('dark');
+        } else {
+          $('body').removeClass('dark');
+        }
+      }
     }
   },
 
@@ -1356,7 +1370,7 @@ const app = {
         switch(label, toggled, store){
           return elem.create({
             tag: 'div',
-            classes: ["p-4","border-b","flex","justify-between","items-center"],
+            classes: ["p-4","border-b","dark:border-gray-700","flex","justify-between","items-center","transition-bg","duration-500"],
             children: [
               {
                 tag: 'p',
@@ -1379,7 +1393,8 @@ const app = {
                     ),
                     eventListeners: {
                       change(e){
-                        localStorage[store] = $(this).is(':checked')
+                        localStorage[store] = $(this).is(':checked');
+                        app.methods.computeSettings();
                       }
                     },
                     classes: ['switch']
@@ -2229,7 +2244,7 @@ const app = {
                 children: [
                   {
                     tag: 'h1',
-                    classes: ["font-semibold","text-2xl"],
+                    classes: ["font-semibold","text-2xl","dark:text-white","transition-all","duration-300"],
                     text: i
                   },
                   {
@@ -2238,7 +2253,7 @@ const app = {
                     children: [
                       {
                         tag: 'div',
-                        classes: ["bg-white","dark:bg-gray-800","shadow-xl","rounded-xl"],
+                        classes: ["bg-white","dark:bg-gray-800","shadow-xl","rounded-xl","dark:text-gray-200","overflow-hidden","transition-all","duration-300"],
                         children: items 
                       }
                     ]
