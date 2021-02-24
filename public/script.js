@@ -1351,6 +1351,44 @@ const app = {
             }
           ]
         });
+      },
+      settings: {
+        switch(label, toggled, store){
+          return elem.create({
+            tag: 'div',
+            classes: ["p-4","border-b","flex","justify-between","items-center"],
+            children: [
+              {
+                tag: 'p',
+                classes: [],
+                text: label
+              },
+              {
+                tag: 'label',
+                attributes: {
+                  for: "settings_"+label.replace(/\s+/g, '-')
+                },
+                classes: ["switch-container"],
+                children: [
+                  {
+                    tag: 'input',
+                    id: "settings_"+label.replace(/\s+/g, '-'),
+                    attributes: Object.assign({},
+                      {type: 'checkbox'},
+                      toggled ? {checked: ''} : {}
+                    ),
+                    eventListeners: {
+                      change(e){
+                        localStorage[store] = $(this).is(':checked')
+                      }
+                    },
+                    classes: ['switch']
+                  }
+                ]
+              }
+            ]
+          });
+        }
       }
     },
 
@@ -2161,56 +2199,58 @@ const app = {
         },
         "settings": {
           domElement(data){
+            const settings = {
+              "Appearance": {
+                "Use system theme": {
+                  type: 'switch',
+                  store: 'system-theme'
+                },
+                "Dark Mode": {
+                  type: 'switch',
+                  store: 'dark'
+                }
+              }
+            };
+
+            let sections = [];
+
+            for(const i in settings){
+              let items = [];
+
+              for(const ii in settings[i]){
+                let current = settings[i][ii];
+                items.push(
+                  app.dom.components.settings[current.type](ii, localStorage[current.store]=="true", current.store)
+                );
+              }
+
+              sections.push({
+                tag: 'div',
+                children: [
+                  {
+                    tag: 'h1',
+                    classes: ["font-semibold","text-2xl"],
+                    text: i
+                  },
+                  {
+                    tag: 'div',
+                    classes: ["m-4"],
+                    children: [
+                      {
+                        tag: 'div',
+                        classes: ["bg-white","dark:bg-gray-800","shadow-xl","rounded-xl"],
+                        children: items 
+                      }
+                    ]
+                  }
+                ]
+              })
+            }
+
             return elem.create({
               tag: 'div',
               classes: ["m-4"],
-              children: [
-                {
-                  tag: 'h1',
-                  classes: ["font-semibold","text-2xl"],
-                  text: "Appearance"
-                },
-                {
-                  tag: 'div',
-                  classes: ["m-4"],
-                  children: [
-                    {
-                      tag: 'div',
-                      classes: ["bg-white","dark:bg-gray-800","shadow-xl","rounded-xl"],
-                      children: [
-                        {
-                          tag: 'div',
-                          classes: ["p-4","border-b","flex","justify-between","items-center"],
-                          children: [
-                            {
-                              tag: 'p',
-                              classes: [],
-                              text: 'Dark Mode'
-                            },
-                            {
-                              tag: 'label',
-                              attributes: {
-                                for: "settings_dark-mode"
-                              },
-                              classes: ["switch-container"],
-                              children: [
-                                {
-                                  tag: 'input',
-                                  id: 'settings_dark-mode',
-                                  attributes: {
-                                    type: "checkbox"
-                                  },
-                                  classes: ['switch']
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
+              children: sections
             });
           }
         }
@@ -2446,5 +2486,3 @@ $(".bottom-nav-item[data-page='profile']").one("click", async function(){
   $('#profile .tab-screen-body.selected').html('');
   $('#profile .tab-screen-body.selected').append(app.dom.components.profilePage(data))
 });
-
-app.dom.page.create('settings', '', false);
