@@ -24,10 +24,6 @@ html, body {
   -ms-touch-action: none;
 }
 
-body.dark {
-  @apply bg-gray-900;
-}
-
 .safe-area-bottom {
   padding-bottom: var(--safe-area-bottom);
 }
