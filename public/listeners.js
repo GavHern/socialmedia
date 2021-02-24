@@ -155,6 +155,7 @@ if(systemDarkTheme && ['true', undefined].includes(localStorage['system-theme'])
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
   if(['true', undefined].includes(localStorage['system-theme'])){
     $('body').toggleClass('dark', e.currentTarget.matches);
-    systemDarkTheme = e.currentTarget.matches
   }
+
+  systemDarkTheme = e.currentTarget.matches;
 });
