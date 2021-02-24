@@ -148,7 +148,7 @@ $(".bottom-nav-item[data-page='profile']").one("click", async function(){
 
 var systemDarkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-if(systemDarkTheme){
+if(systemDarkTheme && ['true', undefined].includes(localStorage['system-theme'])){
   $('body').addClass('dark');
 }
 

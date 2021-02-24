@@ -2220,12 +2220,10 @@ const app = {
               "Appearance": {
                 "Use system theme": {
                   type: 'switch',
-                  default: true,
                   store: 'system-theme'
                 },
                 "Dark Mode": {
                   type: 'switch',
-                  default: false,
                   store: 'dark'
                 }
               }
@@ -2238,8 +2236,16 @@ const app = {
 
               for(const ii in settings[i]){
                 let current = settings[i][ii];
+                let defaultValue;
+
+                if(typeof current.default !== 'undefined'){
+                  defaultValue = current.default;
+                } else {
+                  defaultValue = localStorage[current.store]=="true";
+                }
+
                 items.push(
-                  app.dom.components.settings[current.type](ii, localStorage[current.store]=="true" || current.default, current.store)
+                  app.dom.components.settings[current.type](ii, defaultValue, current.store)
                 );
               }
 
