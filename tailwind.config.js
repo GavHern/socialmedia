@@ -45,7 +45,7 @@ module.exports = {
   plugins: [plugin(function({ addVariant, e }) {
     addVariant('compact', ({ modifySelectors, separator }) => {
       modifySelectors(({ className }) => {
-        return `.${e(`compact`)} .compact${e(separator)}${e(className)}`
+        return `.${e(`compact`)} .compact${e(separator)}${e(className)}:not(.ignore-compact *)`
       })
     })
   })],

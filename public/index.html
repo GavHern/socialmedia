@@ -158,7 +158,7 @@
   <!--Sidenav-->
   <div class="sidenav">
     <div class="flex flex-col h-full w-full relative">
-      <a href="#" onclick="app.dom.page.create('settings', '', false)" class="block p-6 w-full border-b dark:border-gray-700 sidenav-button">
+      <a href="#" onclick="app.dom.page.create('settings', '', false); app.methods.computeSettings();" class="block p-6 w-full border-b dark:border-gray-700 sidenav-button">
         Settings
       </a>
       <a href="#" onclick="app.dom.page.create('saved','')" class="block p-6 w-full border-b dark:border-gray-700 sidenav-button">
@@ -311,11 +311,6 @@
 
   </div>
 
-  <script defer>
-    if(JSON.parse(localStorage.dark) && !JSON.parse(localStorage['system-theme'])){
-      document.body.classList.add('dark');
-    }
-  </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="/lib/elembuilder.js"></script>
   <script src="/lib/hammer.js"></script>

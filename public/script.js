@@ -287,17 +287,18 @@ const app = {
     homeLayoutSelect(){ // Change the layout of the home screen (normal or compact)
       app.dom.sheet.create('options', {
         "Normal": _=>{
-          app.dom.changeHomeLayout(0)
+          app.dom.changeFeedLayout(0)
         },
         "Compact": _=>{
-          app.dom.changeHomeLayout(1)
+          app.dom.changeFeedLayout(1)
         }
       })
     },
     computeSettings(){
       let settings = {
         "dark": JSON.parse(localStorage['dark']),
-        "systemTheme": JSON.parse(localStorage['system-theme'])
+        "systemTheme": JSON.parse(localStorage['system-theme']),
+        "compact": JSON.parse(localStorage['compact'])
       }
 
       if(!settings.systemTheme){
@@ -310,6 +311,12 @@ const app = {
       } else {
         $('body').toggleClass('dark', systemDarkTheme);
         $('#settings_Dark-Mode').prop('disabled', true);
+      }
+      
+      if(!settings.compact){
+        app.dom.changeFeedLayout(0);
+      } else {
+        app.dom.changeFeedLayout(1);
       }
     }
   },
@@ -359,7 +366,7 @@ const app = {
       
         return elem.create({
           tag: "div",
-          classes: ["bg-white","dark:bg-gray-800","flex","flex-col","mb-4"],
+          classes: ["bg-white","dark:bg-gray-800","flex","flex-col","mb-4"].concat(!isInFeed ? ['ignore-compact'] : []),
           attributes: { // Add post id and like count as attributes so liking/ saving can update all post element across the app
             'data-post-id': data.id,
             'data-likes': data.likes
@@ -1424,17 +1431,19 @@ const app = {
       }
     },
 
-    changeHomeLayout(layout){
+    changeFeedLayout(layout){
       switch(layout) {
         case 0:
-          $('#home-feed').removeClass('compact');
+          $('body').removeClass('compact');
           $('.home-layout').addClass('hidden');
           $('.home-layout.layout-normal').removeClass('hidden');
+          localStorage['compact'] = false;
           break;
         case 1:
-          $('#home-feed').addClass('compact');
+          $('body').addClass('compact');
           $('.home-layout').addClass('hidden');
           $('.home-layout.layout-compact').removeClass('hidden');
+          localStorage['compact'] = true;
           break;
       }
     },
@@ -2227,6 +2236,10 @@ const app = {
                 "Dark Mode": {
                   type: 'switch',
                   store: 'dark'
+                },
+                "Compact Mode": {
+                  type: 'switch',
+                  store: 'compact'
                 }
               }
             };

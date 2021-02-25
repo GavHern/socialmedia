@@ -159,3 +159,5 @@ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e =
 
   systemDarkTheme = e.currentTarget.matches;
 });
+
+$(document).ready(app.methods.computeSettings);

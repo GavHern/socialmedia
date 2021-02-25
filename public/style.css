@@ -834,7 +834,7 @@ video {
   border-top-right-radius: 1.5rem;
 }
 
-.compact .compact\:rounded-xl {
+.compact .compact\:rounded-xl:not(.ignore-compact *) {
   border-radius: 0.75rem;
 }
 
@@ -898,7 +898,7 @@ video {
   display: none;
 }
 
-.compact .compact\:hidden {
+.compact .compact\:hidden:not(.ignore-compact *) {
   display: none;
 }
 
@@ -914,7 +914,7 @@ video {
   flex-direction: column;
 }
 
-.compact .compact\:flex-row {
+.compact .compact\:flex-row:not(.ignore-compact *) {
   flex-direction: row;
 }
 
@@ -942,7 +942,7 @@ video {
   justify-content: space-evenly;
 }
 
-.compact .compact\:justify-between {
+.compact .compact\:justify-between:not(.ignore-compact *) {
   justify-content: space-between;
 }
 
@@ -958,7 +958,7 @@ video {
   flex-shrink: 0;
 }
 
-.compact .compact\:flex-shrink {
+.compact .compact\:flex-shrink:not(.ignore-compact *) {
   flex-shrink: 1;
 }
 
@@ -978,7 +978,7 @@ video {
   font-weight: 700;
 }
 
-.compact .compact\:font-normal {
+.compact .compact\:font-normal:not(.ignore-compact *) {
   font-weight: 400;
 }
 
@@ -1054,11 +1054,11 @@ video {
   height: 100vh;
 }
 
-.compact .compact\:h-6 {
+.compact .compact\:h-6:not(.ignore-compact *) {
   height: 1.5rem;
 }
 
-.compact .compact\:h-24 {
+.compact .compact\:h-24:not(.ignore-compact *) {
   height: 6rem;
 }
 
@@ -1230,11 +1230,11 @@ video {
   margin-bottom: -3rem;
 }
 
-.compact .compact\:mr-2 {
+.compact .compact\:mr-2:not(.ignore-compact *) {
   margin-right: 0.5rem;
 }
 
-.compact .compact\:mr-3 {
+.compact .compact\:mr-3:not(.ignore-compact *) {
   margin-right: 0.75rem;
 }
 
@@ -1252,7 +1252,7 @@ video {
      object-fit: cover;
 }
 
-.compact .compact\:object-cover {
+.compact .compact\:object-cover:not(.ignore-compact *) {
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -1786,15 +1786,15 @@ video {
   width: min-content;
 }
 
-.compact .compact\:w-6 {
+.compact .compact\:w-6:not(.ignore-compact *) {
   width: 1.5rem;
 }
 
-.compact .compact\:w-32 {
+.compact .compact\:w-32:not(.ignore-compact *) {
   width: 8rem;
 }
 
-.compact .compact\:w-full {
+.compact .compact\:w-full:not(.ignore-compact *) {
   width: 100%;
 }
 
