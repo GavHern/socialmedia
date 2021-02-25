@@ -1265,6 +1265,10 @@ video {
   opacity: 0.2;
 }
 
+.opacity-30 {
+  opacity: 0.3;
+}
+
 .opacity-100 {
   opacity: 1;
 }
@@ -2857,6 +2861,11 @@ input[type="search"].my-search::-webkit-search-cancel-button {
   margin-left: 1.75rem;
   --tw-ring-opacity: 1;
   --tw-ring-color: rgba(52, 211, 153, var(--tw-ring-opacity));
+}
+
+.switch:disabled {
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 @media (min-width: 640px) {

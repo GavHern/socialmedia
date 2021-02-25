@@ -301,6 +301,7 @@ const app = {
       }
 
       if(!settings.systemTheme){
+        $('#settings_Dark-Mode').prop('disabled', false);
         if(settings.dark){
           $('body').addClass('dark');
         } else {
@@ -308,6 +309,7 @@ const app = {
         }
       } else {
         $('body').toggleClass('dark', systemDarkTheme);
+        $('#settings_Dark-Mode').prop('disabled', true);
       }
     }
   },
