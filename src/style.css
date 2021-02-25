@@ -366,5 +366,5 @@ input[type="search"].my-search::-webkit-search-cancel-button {
 }
 
 .switch:disabled {
-  @apply ring-opacity-30 bg-opacity-50 pointer-events-none rounded-full !important;
+  @apply ring-opacity-30 bg-opacity-50 pointer-events-none !important;
 }
