@@ -2865,6 +2865,7 @@ input[type="search"].my-search::-webkit-search-cancel-button {
 
 .switch:disabled {
   --tw-bg-opacity: 0.5 !important;
+  border-radius: 9999px !important;
   pointer-events: none !important;
   --tw-ring-opacity: 0.3 !important;
 }
