@@ -26,7 +26,7 @@ $values = array(
 
 
 // Adds comment to database
-db("INSERT INTO `comments`(`parent`,`author`,`body`,`timestamp`) VALUES ({$values["parent"]}, {$values["user"]}, '{$values["body"]}', {$values["timestamp"]})", false);
+db("INSERT INTO `comments`(`parent`,`author`,`body`,`edited`,`timestamp`) VALUES ({$values["parent"]}, {$values["user"]}, '{$values["body"]}', 0, {$values["timestamp"]})", false);
 
 
 

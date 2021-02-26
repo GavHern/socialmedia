@@ -52,7 +52,7 @@ switch ($values['type']) {
 }
 
 // Add post to database
-db("INSERT INTO `posts`(`title`, `author`, `type`, `body`, `timestamp`) VALUES ('{$values['title']}',{$values['user']},'{$values['type']}','{$values['body']}',{$values['timestamp']})", false);
+db("INSERT INTO `posts`(`title`, `author`, `type`, `body`, `edited`, `timestamp`) VALUES ('{$values['title']}',{$values['user']},'{$values['type']}','{$values['body']}',0,{$values['timestamp']})", false);
 
 
 // Get the user's newest post (the one they just created)

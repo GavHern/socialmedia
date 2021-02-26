@@ -35,7 +35,7 @@ if(!$values['is_comment']){ // Delete a post
             throw_error("You can only edit text posts.");
         }
         
-        db("UPDATE `posts` SET `body`='{$values['body']}' WHERE `id`={$values['id']}", false); // Delete post
+        db("UPDATE `posts` SET `body`='{$values['body']}',`edited`=1 WHERE `id`={$values['id']}", false); // Delete post
     } else {
         throw_error("You don't have permission to edit that post.");
     }
@@ -45,7 +45,7 @@ if(!$values['is_comment']){ // Delete a post
     
     // If the user has permission, delete the comment.
     if($can_edit == 1){
-        db("UPDATE `comments` SET `body`='{$values['body']}' WHERE `id`={$values['id']}", false); // Delete post
+        db("UPDATE `comments` SET `body`='{$values['body']}',`edited`=1 WHERE `id`={$values['id']}", false); // Delete post
     } else {
         throw_error("You don't have permission to edit that comment.");
     }
@@ -56,5 +56,6 @@ if(!$values['is_comment']){ // Delete a post
 
 // Echo success
 echo json_encode(array(
-    "success" => true
+    "success" => true,
+    "data" => $values['body']
 ));

@@ -46,7 +46,7 @@ Formatted SQL at the bottom of this file
 
 */
 
-$data = db("SELECT p.id, p.title, p.author, p.type, p.body, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = p.id AND `likes`.`is_comment` = false) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = p.id AND `likes`.`is_comment` = false) liked, (SELECT COUNT(*) FROM `saved` WHERE `saved`.`user` = {$values['user']} AND `saved`.`post` = p.id) saved, (SELECT IF(p.author = {$values['user']}, 1, 0)) AS is_author, p.timestamp FROM `posts` AS p INNER JOIN `users` AS u ON u.id = p.author WHERE p.author = {$values['user']} OR p.author IN( SELECT `follow` FROM `follows` WHERE `user` = {$values['user']} AND `timestamp` < {$values['timestamp']}) AND p.timestamp < {$values['timestamp']} ORDER BY p.timestamp DESC LIMIT {$values['page_length']} OFFSET {$values['post_number']};", true);
+$data = db("SELECT p.id, p.title, p.author, p.type, p.body, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = p.id AND `likes`.`is_comment` = false) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = p.id AND `likes`.`is_comment` = false) liked, (SELECT COUNT(*) FROM `saved` WHERE `saved`.`user` = {$values['user']} AND `saved`.`post` = p.id) saved, (SELECT IF(p.author = {$values['user']}, 1, 0)) AS is_author, p.edited, p.timestamp FROM `posts` AS p INNER JOIN `users` AS u ON u.id = p.author WHERE p.author = {$values['user']} OR p.author IN( SELECT `follow` FROM `follows` WHERE `user` = {$values['user']} AND `timestamp` < {$values['timestamp']}) AND p.timestamp < {$values['timestamp']} ORDER BY p.timestamp DESC LIMIT {$values['page_length']} OFFSET {$values['post_number']};", true);
 
 
 $next_checkpoint = base_convert($values['timestamp'],10,36)."-".$values['page_length']."-".($values['page_number']+1);
@@ -71,6 +71,7 @@ SELECT
     (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = p.id AND `likes`.`is_comment` = false) liked,
     (SELECT COUNT(*) FROM `saved` WHERE `saved`.`user` = {$values['user']} AND `saved`.`post` = p.id) saved,
     (SELECT IF(p.author = {$values['user']}, 1, 0)) AS is_author,
+    p.edited,
     p.timestamp
 FROM
     `posts` AS p
