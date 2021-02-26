@@ -1,3 +1,4 @@
+// Bottom navigation
 $('.bottom-nav-item').click(function(e){
   $('.bottom-nav-item').removeClass('active');
   $(this).addClass('active');
@@ -13,18 +14,14 @@ $('.bottom-nav-item').click(function(e){
   }
 });
 
-$('.projector-trigger').click(function(e){
-  $('#projector-img').attr('src',this.querySelector('img').src);
-  $('#projector').addClass('active');
-  $('#fab').addClass('scale-0');
-});
-
+// Close button on image projector
 $('#projector-close').click(e=>{
   $('#projector-img').attr('src','');
   $('#projector').removeClass('active');
   $('#fab').removeClass('scale-0');
 });
 
+// Share button on image projector
 $('#projector-share').click(e=>{
   if(navigator.share){ // Check if user agent supports the share api
     navigator.share({
@@ -35,32 +32,38 @@ $('#projector-share').click(e=>{
   }
 });
 
+// Top navigation sidenav trigger
 $('#sidenav-trigger').click(e=>{
   app.dom.sidenav(true);
 });
 
+// Top navigation page back button
 $('#page-back-trigger').click(e=>{
   app.dom.page.back();
 });
 
-
+// Open post modal
 $('#fab, #compose-post').click(e=>{
   $('#fab').addClass('active');
   $('.film').addClass('active');
 });
 
+// Close sidenav
 $('.film, .sidenav-button').on('click', e=>{
   app.dom.sidenav(false);
 });
 
+// Swipeleft gesture on film to close sidenav
 new Hammer($('.film')[0]).on('swipeleft', function(ev) {
 	app.dom.sidenav(false);
 });
 
+// Swipeleft gesture on sidenav to close
 new Hammer($('.sidenav')[0]).on('swipeleft', function(ev) {
 	app.dom.sidenav(false);
 });
 
+// Close post modal
 $('.post-form-button.post-form-cancel').click(e=>{
   setTimeout(function(){ // workaround for jquery bug
     $('#fab').removeClass('active');
@@ -69,15 +72,18 @@ $('.post-form-button.post-form-cancel').click(e=>{
   app.dom.clearPostForm();
 });
 
+// Submit post form
 $('.post-form-button.post-form-submit').click(e=>{
   app.methods.submitForm();
 });
 
+// Submit profile edit form
 $('.edit-profile-modal .edit-profile-submit').click(e=>{
   app.dom.submitProfileEdit();
 });
 
 
+// Listen for user to change the type of post (text, image)
 $('.post-body-type-select').click(function(e){
   $('.post-body-type-select').removeClass('active');
   $(this).addClass('active');
@@ -86,7 +92,7 @@ $('.post-body-type-select').click(function(e){
   $('#'+$(this).attr('trigger')).addClass('active');
 })
 
-
+// Update image preview on post form when a new image is uploaded
 $('#file-upload').change(async function(e){
   const result = await app.methods.toBase64(this.files[0]);
   if(!(result instanceof Error)){ // Error catching
@@ -94,6 +100,7 @@ $('#file-upload').change(async function(e){
   }
 })
 
+// Update banner upload preview when a new image is uploaded
 $('#banner-upload').change(async function(e){
   const result = await app.methods.toBase64(this.files[0]);
   if(!(result instanceof Error)){ // Error catching
@@ -102,6 +109,7 @@ $('#banner-upload').change(async function(e){
   }
 })
 
+// Update profile picture upload preview when a new image is uploaded
 $('#profile-picture-upload').change(async function(e){
   const result = await app.methods.toBase64(this.files[0]);
   if(!(result instanceof Error)){ // Error catching
@@ -109,6 +117,7 @@ $('#profile-picture-upload').change(async function(e){
   }
 })
 
+// Gesture for when user swipes right on the left edge of the screen (open sidenav or navigate back 1 page)
 for(const i of $('.tab-screen-body')){
   new Hammer(i).on('swiperight', function(ev) {
     let touchPos = ev.changedPointers[0].screenX-ev.deltaX;
@@ -122,9 +131,10 @@ for(const i of $('.tab-screen-body')){
   });
 }
 
-
+// Load home feed when the application fully renders
 $(document).ready(app.dom.loadHomeFeed);
 
+// Load explore tab the first time it is navigated to
 $(".bottom-nav-item[data-page='explore']").one("click", async function(){
   $('#explore .tab-screen-body.selected').append(app.dom.components.preloader);
   let data = await app.api.getExplorePage();
@@ -132,6 +142,7 @@ $(".bottom-nav-item[data-page='explore']").one("click", async function(){
   $('#explore .tab-screen-body.selected').append(app.dom.components.explorePage(data))
 });
 
+// Load activity tab the first time it is navigated to
 $(".bottom-nav-item[data-page='activity']").one("click", async function(){
   $('#activity .tab-screen-body.selected').append(app.dom.components.preloader);
   let data = await app.api.getActivity();
@@ -139,6 +150,7 @@ $(".bottom-nav-item[data-page='activity']").one("click", async function(){
   $('#activity .tab-screen-body.selected').append(app.dom.components.activityPage(data))
 });
 
+// Load profile tab the first time it is navigated to
 $(".bottom-nav-item[data-page='profile']").one("click", async function(){
   $('#profile .tab-screen-body.selected').append(app.dom.components.preloader);
   let data = await app.api.getUser(currentUser);
@@ -146,12 +158,15 @@ $(".bottom-nav-item[data-page='profile']").one("click", async function(){
   $('#profile .tab-screen-body.selected').append(app.dom.components.profilePage(data))
 });
 
+// Check if user has system dark theme enabled. Initialize variable to track system theme
 var systemDarkTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+// If the user has system dark theme enabled, enable dark mode on the body element
 if(systemDarkTheme && ['true', undefined].includes(localStorage['system-theme'])){
   $('body').addClass('dark');
 }
 
+// Listen for system theme change
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
   if(['true', undefined].includes(localStorage['system-theme'])){
     $('body').toggleClass('dark', e.currentTarget.matches);
@@ -160,4 +175,5 @@ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e =
   systemDarkTheme = e.currentTarget.matches;
 });
 
+// Compute settings on page load
 $(document).ready(app.methods.computeSettings);
