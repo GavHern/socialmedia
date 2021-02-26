@@ -2,10 +2,11 @@ const plugin = require('tailwindcss/plugin')
 
 module.exports = {
   purge: {
-    enabled: true,
+    enabled: false,
     content: [
       './public/*.html',
       './public/*.js',
+      './public/js/*.js',
       './src/*.css'
     ],
   },

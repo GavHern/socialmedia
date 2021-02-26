@@ -54,7 +54,7 @@ app.dom.components = {
                   app.dom.page.create('profile', data.author)
                 }
               },
-              classes: ["flex","flex-row","p-4","w-full"],
+              classes: ["flex","flex-row","p-4","w-full","truncate"],
               children: [
                 {
                   tag: "img",
@@ -66,23 +66,33 @@ app.dom.components = {
                 },
                 {
                   tag: "div",
-                  classes: ["h-12","compact:h-6"],
+                  classes: ["h-12","compact:h-6", "compact:flex"],
                   children: [
                     {
                       tag: "p",
                       attributes: {
                         "data-user-info-name": data.author
                       },
-                      classes: ["font-semibold", "dark:text-white", "compact:font-normal"],
+                      classes: ["font-semibold", "dark:text-white", "compact:font-normal", "mr-1"],
                       text: data.name // Author's name
                     },
                     {
-                      tag: "p",
-                      attributes: {
-                        "data-user-info-username": data.author
-                      },
-                      classes: ["text-gray-600", "dark:text-gray-400", "compact:hidden"],
-                      text: "@"+data.username // Author's Username
+                      tag: 'p',
+                      children: [
+                        {
+                          tag: "span",
+                          attributes: {
+                            "data-user-info-username": data.author
+                          },
+                          classes: ["text-gray-600", "dark:text-gray-400", "compact:hidden"],
+                          text: "@"+data.username // Author's Username
+                        },
+                        {
+                          tag: "span",
+                          classes: ["text-gray-400", "dark:text-gray-600"],
+                          text: ` • ${app.methods.dateToTimeAgo(data.timestamp)}` + (data.edited==1 ? ` • edited` : '')
+                        }
+                      ]
                     }
                   ]
                 }
@@ -261,11 +271,21 @@ app.dom.components = {
                 },
                 {
                   tag: 'div',
-                  classes: ['font-semibold'],
                   children: [
                     {
                       tag: 'p',
-                      text: data.name
+                      children: [
+                        {
+                          tag: 'span',
+                          classes: ['font-semibold'],
+                          text: data.name + ' '
+                        },
+                        {
+                          tag: 'span',
+                          classes: ['text-gray-400', 'dark:text-gray-600'],
+                          text: ` • ${app.methods.dateToTimeAgo(data.timestamp)}` + (data.edited==1 ? ` • edited` : '')
+                        }
+                      ]
                     }
                   ]
                 }
