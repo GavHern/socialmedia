@@ -654,7 +654,9 @@ app.dom.components = {
 
                   let nextPage = await makeRequest(uri);
 
-                  $(preloader).remove()
+                  $(preloader).remove();
+
+                  $(this).parents().eq(1).find('.feed').attr('data-checkpoint', nextPage.checkpoint);
 
                   for(const i of nextPage[postObj]){ // Iterate JSON and append a post element
                     $(postContainer).append(app.dom.components.postElement(i, true))
