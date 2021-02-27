@@ -4,10 +4,10 @@
   "description": "Gavin Hernandez's performance task for the AP Computer Science Principals course. This software is the frontend for a social media application thats run through a web browser via a progressive web application. This uses the tailwindcss utility library.",
   "main": "index.js",
   "dependencies": {
-    "autoprefixer": "^10.1.0",
+    "autoprefixer": "^10.2.4",
     "css-minify": "^1.1.0",
-    "postcss": "^8.2.2",
-    "tailwindcss": "^2.0.2"
+    "postcss": "^8.2.6",
+    "tailwindcss": "^2.0.3"
   },
   "devDependencies": {},
   "scripts": {
