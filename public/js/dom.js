@@ -1,7 +1,5 @@
-// DOM related methods
 app.dom = {
-
-  sidenav(state){
+  sidenav(state){ // Set state (open/closed) of sidenav
     if(state){
       $('.sidenav').addClass('active');
       $('.film').addClass('active');
@@ -14,7 +12,7 @@ app.dom = {
     }
   },
 
-  changeFeedLayout(layout){
+  changeFeedLayout(layout){ // Change the layout of all feeds on the application
     switch(layout) {
       case 0:
         $('body').removeClass('compact');
@@ -31,7 +29,7 @@ app.dom = {
     }
   },
 
-  updateExploreFollowingList(user, value){
+  updateExploreFollowingList(user, value){ // Update the following list on the explore tab (when a user is followed or unfollowed)
     let list = $('.explore-following-list');
     let data = JSON.parse(list.attr('data-following'));
 
@@ -59,7 +57,7 @@ app.dom = {
 
   },
 
-  async loadHomeFeed(){
+  async loadHomeFeed(){ // Load the home feed. Called on page load
     $('#home-feed').html(app.dom.components.preloader()); // Append preloader
 
     const feedData = await app.api.getFeed(); // Request feed from server
@@ -97,7 +95,7 @@ app.dom = {
     $('#image-upload-preview').attr('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=');
   },
 
-  editProfileModal(data){
+  editProfileModal(data){ // Toggle state of the profile edit modal (to change name, username, profile picture, etc.)
     let info; 
     if(!profileEdited){
       $('.edit-profile-modal').attr('data-user', JSON.stringify(data));
@@ -134,7 +132,7 @@ app.dom = {
 
   },
 
-  async submitProfileEdit(){
+  async submitProfileEdit(){ // Called when the submit button is pressed on the profile edit modal
     let oldData = JSON.parse($('.edit-profile-modal').attr('data-user'));
 
     $('.edit-profile-modal .edit-profile-submit .label').addClass('hidden');
@@ -192,7 +190,7 @@ app.dom = {
     }
   },
 
-  closeProfileEdit(){
+  closeProfileEdit(){ // Called when the close button on the edit profile modal is clicked
     let elems = {
       banner: $('.edit-profile-modal-container .edit-profile-banner'),
       profilePicture: $('.edit-profile-modal-container .edit-profile-profile-picture'),
@@ -214,8 +212,8 @@ app.dom = {
 
   // Sheet modals
   sheet: {
-    templates: {
-      confirm(data){
+    templates: { // List of sheet components
+      confirm(data){ // Prompts user to confirm if they wish to perform an action. Provides a cancel button and a action button with a callback
         return [
           {
             tag: 'div',
@@ -271,7 +269,7 @@ app.dom = {
         ]
       },
 
-      options(data){
+      options(data){ // Prompts user with a list of actions
         opt = [];
 
         for(const i in data){
@@ -297,7 +295,7 @@ app.dom = {
         return opt;
       },
 
-      report(data){
+      report(data){ // Prompts user to report a post or comment with a reason and an optional message
         return [
           {
             tag: 'div',
@@ -422,7 +420,7 @@ app.dom = {
         ]
       },
 
-      comment(data){
+      comment(data){ // Prompts user to compose a comment
         return [
           {
             tag: 'div',
@@ -491,7 +489,7 @@ app.dom = {
         ]
       },
 
-      edit(data){
+      edit(data){ // Prompts user to edit an existing post or comment
         return [
           {
             tag: 'div',
@@ -565,7 +563,7 @@ app.dom = {
       }
 
     },
-    create(sheet, data){
+    create(sheet, data){ // Method to create a new sheet element using a template
       let element = elem.create({
         tag: 'div',
         classes: ["z-60", "absolute", "w-full", "h-full", "left-0", "top-0", "action-sheet-container"],

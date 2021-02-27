@@ -1,13 +1,11 @@
-
-// Page element system
 app.dom.page = {
   templates: {
-    "blank": {
+    "blank": { // Blank page with a provided component structure
       domElement(data){
         return elem.create(data);
       }
     },
-    "post": {
+    "post": { // Page displaying additional information for a post
       uri(id){return `https://socialmedia.gavhern.com/api/postinfo.php?post=${id}`},
       domElement(data){
         let commentArray=[];
@@ -89,7 +87,7 @@ app.dom.page = {
         })
       }
     },
-    "profile": {
+    "profile": { // Page displaying a user's profile and posts
       uri(user){return `https://socialmedia.gavhern.com/api/profile.php?user=${user}`},
       domElement(data){
         $(`.recently-viewed-shelf a[data-recent-card=${data.info.id}]`).remove();
@@ -99,7 +97,7 @@ app.dom.page = {
         return app.dom.components.profilePage(data);
       }
     },
-    "follows": {
+    "follows": { // Page showing a user's mutual, follower, or following list
       uri(data){return `https://socialmedia.gavhern.com/api/followers.php?user=${data.user}&feed=${data.feed}`},
       domElement(data){
         let userCards=[];
@@ -137,7 +135,7 @@ app.dom.page = {
         });
       }
     },
-    "saved": {
+    "saved": { // Page displaying a feed of posts saved by the user
       uri(data){return `https://socialmedia.gavhern.com/api/savedfeed.php`},
       domElement(data){
         let postArray=[];
@@ -160,7 +158,7 @@ app.dom.page = {
         });
       }
     },
-    "search": {
+    "search": { // Page displaying search results
       uri(data){return `https://socialmedia.gavhern.com/api/search.php?q=${data}`},
       domElement(data){
         let userCards = [];
@@ -191,7 +189,7 @@ app.dom.page = {
         });
       }
     },
-    "settings": {
+    "settings": { // Settings page
       domElement(data){
         const settings = {
           "Appearance": {

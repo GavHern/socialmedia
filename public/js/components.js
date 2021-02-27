@@ -61,7 +61,7 @@ app.dom.components = {
                   attributes: {
                     "data-user-info-profile-picture": data.author
                   },
-                  src: (data.profile_picture == "") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb" : "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+data.profile_picture, // Author pfp
+                  src: app.methods.profilePicture(data.profile_picture), 
                   classes: ["w-12","h-12","compact:w-6","compact:h-6","rounded-full","mr-4","compact:mr-3"]
                 },
                 {
@@ -265,7 +265,7 @@ app.dom.components = {
                     {
                       tag: 'img',
                       classes: ['h-8','w-8','rounded-full'],
-                      src: (data.profile_picture=="") ? `https://socialmedia.gavhern.com/api/cdn.php?thumb&f=default` : `https://socialmedia.gavhern.com/api/cdn.php?thumb&f=${data.profile_picture}`
+                      src: app.methods.profilePicture(data.profile_picture)
                     }
                   ]
                 },
@@ -700,7 +700,7 @@ app.dom.components = {
                 "data-user-info-profile-picture": data.id
               },
               classes: ["w-12","h-12","rounded-full","mr-3"],
-              src: (data.profile_picture == "") ? "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb" : "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+data.profile_picture
+              src: app.methods.profilePicture(data.profile_picture)
             },
             {
               tag: 'div',
@@ -779,7 +779,7 @@ app.dom.components = {
       children: [
         {
           tag: 'img',
-          src: (data.profile_picture=="") ? `https://socialmedia.gavhern.com/api/cdn.php?thumb&f=default` : `https://socialmedia.gavhern.com/api/cdn.php?thumb&f=${data.profile_picture}`,
+          src: app.methods.profilePicture(data.profile_picture),
           classes: ["w-12","h-12","rounded-full","mb-2"]
         },
         {

@@ -2,7 +2,7 @@
 app.methods = {
   signOut(){ // Sign the user out of thier account
     window.localStorage.removeItem("session");
-    document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); }); // Clear cookies
+    document.cookie.split(";").forEach(function(c){document.cookie=c.replace(/^ +/,"").replace(/=.*/,"=;expires="+new Date().toUTCString()+";path=/");}); // Clear cookies (stackoverflow one liner)
     window.location.href="/login.html#"; // Redirect to the login screen
   },
   dialogue(msg, success){ // Build a dialogue message
@@ -83,7 +83,7 @@ app.methods = {
       }
     })
   },
-  computeSettings(){
+  computeSettings(){ // Reads settings from localstorage and configurates the page accordingly
     let settings = {
       "dark": JSON.parse(localStorage['dark']),
       "systemTheme": JSON.parse(localStorage['system-theme']),
@@ -108,7 +108,7 @@ app.methods = {
       app.dom.changeFeedLayout(1);
     }
   },
-  dateToTimeAgo(time){
+  dateToTimeAgo(time){ // Calculates the time passed since a timestamp and returns a value in plain english (Such as 30 minutes ago, yesterday, last week, etc.)
     time = time*1000;
     
     switch (typeof time) {
@@ -162,5 +162,12 @@ app.methods = {
           return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
       }
     return time;
+  },
+  profilePicture(id){ // Takes an image id and returns a url for a corrosponding profile picture
+    return (id == "")
+    ?
+    "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb"
+    :
+    "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+id
   }
 }
