@@ -90,7 +90,7 @@ $('.post-body-type-select').click(function(e){
 
   $('.post-body').removeClass('active');
   $('#'+$(this).attr('trigger')).addClass('active');
-})
+});
 
 // Update image preview on post form when a new image is uploaded
 $('#file-upload').change(async function(e){
@@ -98,7 +98,7 @@ $('#file-upload').change(async function(e){
   if(!(result instanceof Error)){ // Error catching
     $('#image-upload-preview').attr('src', result);
   }
-})
+});
 
 // Update banner upload preview when a new image is uploaded
 $('#banner-upload').change(async function(e){
@@ -107,7 +107,7 @@ $('#banner-upload').change(async function(e){
     $('.edit-profile-banner').attr('src', result);
     $('.edit-profile-banner').removeClass('hidden');
   }
-})
+});
 
 // Update profile picture upload preview when a new image is uploaded
 $('#profile-picture-upload').change(async function(e){
@@ -115,13 +115,13 @@ $('#profile-picture-upload').change(async function(e){
   if(!(result instanceof Error)){ // Error catching
     $('.edit-profile-profile-picture').attr('src', result);
   }
-})
+});
 
 // Gesture for when user swipes right on the left edge of the screen (open sidenav or navigate back 1 page)
 for(const i of $('.tab-screen-body')){
   new Hammer(i).on('swiperight', function(ev) {
     let touchPos = ev.changedPointers[0].screenX-ev.deltaX;
-    if(touchPos <= 45){
+    if(touchPos <= 45){ // Checks that gesture occured within 45 pixels of the left edge of the screen
       if($('#sidenav-trigger').hasClass('hidden')){
         app.dom.page.back();
       } else {
@@ -129,7 +129,7 @@ for(const i of $('.tab-screen-body')){
       }
     }
   });
-}
+};
 
 // Load home feed when the application fully renders
 $(document).ready(app.dom.loadHomeFeed);
@@ -164,7 +164,7 @@ var systemDarkTheme = window.matchMedia && window.matchMedia('(prefers-color-sch
 // If the user has system dark theme enabled, enable dark mode on the body element
 if(systemDarkTheme && ['true', undefined].includes(localStorage['system-theme'])){
   $('body').addClass('dark');
-}
+};
 
 // Listen for system theme change
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
