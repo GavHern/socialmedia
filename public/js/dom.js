@@ -268,6 +268,89 @@ app.dom = {
           }
         ]
       },
+      
+      text(data){ // Prompts user to enter information into a text field
+        let inputs = [];
+
+        for(const i of data.inputs){
+          inputs.push({
+            tag: 'div',
+            classes: [],
+            children: [
+              {
+                tag: 'h1',
+                classes: ["text-gray-600", "dark:text-gray-400","text-lg","font-semibold","mb-2","mt-4"],
+                text: i.label
+              },
+              {
+                tag: 'input',
+                classes: ["w-full","h-12","dark:text-gray-200","dark:bg-gray-900","border-2","px-3","rounded-xl","transition","duration-300","border-gray-200","focus:border-green-400","dark:border-gray-700","dark:focus:border-green-400","focus:ring-1","focus:ring-green-400","outline-none","mb-2"],
+                attributes: {
+                  "type": i.type,
+                  "placeholder": i.placeholder,
+                  "value": i.value
+                }
+              }
+            ]
+          });
+        }
+
+        return [
+          {
+            tag: 'div',
+            classes: ["mx-4"],
+            children: [
+              {
+                tag: 'h1',
+                classes: ["text-2xl","font-semibold","my-1"],
+                text: data.text
+              },
+              {
+                tag: 'div',
+                children: inputs
+              },
+              {
+                tag: 'div',
+                classes: ["flex","space-x-2","mt-6","mb-4"],
+                children: [
+                  {
+                    tag: 'button',
+                    classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","ring-2","ring-gray-200","dark:ring-gray-700","ring-inset"],
+                    text: "Cancel",
+                    eventListeners:{
+                      click: function(){ // Close the sheet
+                        $(this).parents().eq(4).removeClass('active');
+
+                        setTimeout(_=>{
+                          $(this).parents().eq(4).remove();
+                        },300)
+                      }
+                    }
+                  },
+                  {
+                    tag: 'button',
+                    classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl",data.color,"text-white"],
+                    text: data.actionText,
+                    eventListeners: {
+                      click: function(){ // Close the sheet and perform the action
+                        data.action(
+                          $(this).parents().eq(1).find('input')
+                        );
+
+                        $(this).parents().eq(4).removeClass('active');
+
+                        setTimeout(_=>{
+                          $(this).parents().eq(4).remove();
+                        },300)
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
 
       options(data){ // Prompts user with a list of actions
         opt = [];

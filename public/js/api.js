@@ -160,5 +160,14 @@ app.api = {
     });
 
     return res;
+  },
+  
+  async deleteAccount(password){
+    let res = await makeRequest(`https://socialmedia.gavhern.com/api/deleteaccount.php?password=${password}`, {
+      method: 'GET',
+      redirect: 'follow'
+    });
+
+    return res;
   }
 }

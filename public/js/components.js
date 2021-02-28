@@ -1070,7 +1070,7 @@ app.dom.components = {
     });
   },
   settings: {
-    switch(label, toggled, store){
+    switch(label, store, toggled){
       return elem.create({
         tag: 'div',
         classes: ["p-4","border-b","dark:border-gray-700","flex","justify-between","items-center","transition-bg","duration-500"],
@@ -1103,6 +1103,22 @@ app.dom.components = {
                 classes: ['switch']
               }
             ]
+          }
+        ]
+      });
+    },
+    button(label, data){
+      return elem.create({
+        tag: 'div',
+        classes: ["m-4"],
+        children: [
+          {
+            tag: 'button',
+            eventListeners: {
+              click: data.action
+            },
+            classes: ["w-full","p-2","rounded-lg"].concat(data.danger ? ["bg-red-500","text-white"] : ["bg-gray-100","dark:bg-gray-700","dark:text-white"]),
+            text: label
           }
         ]
       });

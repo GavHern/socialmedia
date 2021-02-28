@@ -195,15 +195,76 @@ app.dom.page = {
           "Appearance": {
             "Use system theme": {
               type: 'switch',
-              store: 'system-theme'
+              data: 'system-theme'
             },
             "Dark Mode": {
               type: 'switch',
-              store: 'dark'
+              data: 'dark'
             },
             "Compact Mode": {
               type: 'switch',
-              store: 'compact'
+              data: 'compact'
+            }
+          },
+          "Account": {
+            "Change email": {
+              type: 'button',
+              data: {
+                danger: false,
+                action: _=> {
+                  app.methods.dialogue("Change email callback", true);
+                }
+              }
+            },
+            "Change password": {
+              type: 'button',
+              data: {
+                danger: false,
+                action: _=> {
+                  app.methods.dialogue("Change password callback", true);
+                }
+              }
+            },
+            "Delete account": {
+              type: 'button',
+              data: {
+                danger: true,
+                action: _=> {
+                  app.dom.sheet.create('confirm', {
+                    text: "Are you sure you want to delete your account?",
+                    subtext: "This action cannot be undone and all your acount data will be permanently deleted",
+                    color: "bg-red-500",
+                    actionText: "I Understand",
+                    action: async _=>{
+
+
+                      app.dom.sheet.create('text', {
+                        inputs: [
+                          {
+                            type: "password",
+                            label: "Password",
+                            value: "",
+                            placeholder: ""
+                          }
+                        ],
+                        text: "Please confirm your password to delete your account",
+                        color: "bg-red-500",
+                        actionText: "Delete Forever",
+                        action: async function(values){
+                          let res = await app.api.deleteAccount($(values[0]).val());
+
+                          if(res.success){
+                            app.methods.dialogue("Account successfully deleted. Redirecting to login page shortly.", true);
+                            setTimeout(_=>{window.location.href="login.html"}, 1000);
+                          }
+                        }
+                      });
+
+
+                    }
+                  });
+                }
+              }
             }
           }
         };
@@ -220,11 +281,11 @@ app.dom.page = {
             if(typeof current.default !== 'undefined'){
               defaultValue = current.default;
             } else {
-              defaultValue = localStorage[current.store]=="true";
+              defaultValue = localStorage[current.data]=="true";
             }
 
             items.push(
-              app.dom.components.settings[current.type](ii, defaultValue, current.store)
+              app.dom.components.settings[current.type](ii, current.data, defaultValue)
             );
           }
 
