@@ -48,6 +48,8 @@ db("DELETE FROM `saved` WHERE `user` = {$values['user']}", false); // Delete use
 
 db("DELETE FROM `likes` WHERE `user` = {$values['user']}", false); // Delete user's liked posts and comments
 
+db("SELECT * FROM `visits` WHERE `page` = 'profile' AND (`user` = {$values['user']} OR `data` = {$values['user']})", false); // Delete user from visits table
+
 
 
 
