@@ -1016,7 +1016,7 @@ app.dom.components = {
 
         switch(i){
           case 'day':
-            heading = 'Today';
+            heading = 'Recent';
             break;
           case 'week':
             heading = 'This Week';
