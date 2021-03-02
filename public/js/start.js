@@ -3,7 +3,6 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/sw.js')
 }
 
-
 const pwa = (new URL(window.location.href)).searchParams.get("pwa") !== null;
 
 if(!pwa){

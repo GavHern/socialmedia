@@ -1,3 +1,5 @@
+/*! tailwindcss v2.0.3 | MIT License | https://tailwindcss.com */
+
 /*! modern-normalize v1.0.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
 
 /*
@@ -412,15 +414,18 @@ textarea {
 }
 
 input::-moz-placeholder, textarea::-moz-placeholder {
+  opacity: 1;
   color: #9ca3af;
 }
 
 input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+  opacity: 1;
   color: #9ca3af;
 }
 
 input::placeholder,
 textarea::placeholder {
+  opacity: 1;
   color: #9ca3af;
 }
 
@@ -4099,6 +4104,7 @@ input[type="search"].my-search::-webkit-search-cancel-button {
   .switch:disabled {
     --tw-ring-opacity: 0.3 !important;
   }
+  /*! tailwindcss v2.0.3 | MIT License | https://tailwindcss.com */
   /*! modern-normalize v1.0.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
   /*
 Document
@@ -4439,13 +4445,16 @@ ul {
     resize: vertical;
   }
   input::-moz-placeholder, textarea::-moz-placeholder {
+    opacity: 1;
     color: #9ca3af;
   }
   input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    opacity: 1;
     color: #9ca3af;
   }
   input::placeholder,
 textarea::placeholder {
+    opacity: 1;
     color: #9ca3af;
   }
   button {

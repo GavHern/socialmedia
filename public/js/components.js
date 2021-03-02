@@ -37,7 +37,7 @@ app.dom.components = {
     return elem.create({
       tag: "div",
       classes: ["bg-white","dark:bg-gray-800","flex","flex-col","mb-4"].concat(!isInFeed ? ['ignore-compact'] : []),
-      attributes: { // Add post id and like count as attributes so liking/ saving can update all post element across the app
+      attributes: { // Add post id and like count as attributes so liking and saving can update all post element across the app
         'data-post-id': data.id,
         'data-likes': data.likes
       },
@@ -170,7 +170,7 @@ app.dom.components = {
             {
               tag: "a",
               href: "#",
-              classes: ((data.liked==1) ? ["post-action", "like",  "active"] : ["post-action", "like"]),
+              classes: ["post-action", "like"].concat((data.liked==1) ? ["active"] : []),
               eventListeners: {
                 click: async function(){
                   let likePost = !$(this).hasClass('active');
@@ -729,7 +729,7 @@ app.dom.components = {
         {
           tag: 'a',
           href: '#',
-          classes: ["p-4","user-card-follow"].concat((data.is_following == 1) ? ["active"] : []),
+          classes: ["p-4","user-card-follow"].concat((data.is_following == 1) ? ["active"] : []).concat(data.id==currentUser ? ["hidden"] : []),
           eventListeners: {
             click: async function(){
               let follow = !$(this).hasClass('active')
