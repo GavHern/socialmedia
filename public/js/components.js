@@ -36,7 +36,7 @@ app.dom.components = {
   
     return elem.create({
       tag: "div",
-      classes: ["bg-white","dark:bg-gray-800","flex","flex-col","mb-4"].concat(!isInFeed ? ['ignore-compact'] : []),
+      classes: ["bg-white","dark:bg-gray-800","flex","flex-col","mb-4", ...(!isInFeed ? ['ignore-compact'] : [])],
       attributes: { // Add post id and like count as attributes so liking and saving can update all post element across the app
         'data-post-id': data.id,
         'data-likes': data.likes
@@ -170,7 +170,7 @@ app.dom.components = {
             {
               tag: "a",
               href: "#",
-              classes: ["post-action", "like"].concat((data.liked==1) ? ["active"] : []),
+              classes: ["post-action", "like", ...(data.liked==1) ? ["active"] : []],
               eventListeners: {
                 click: async function(){
                   let likePost = !$(this).hasClass('active');
@@ -729,7 +729,7 @@ app.dom.components = {
         {
           tag: 'a',
           href: '#',
-          classes: ["p-4","user-card-follow"].concat((data.is_following == 1) ? ["active"] : []).concat(data.id==currentUser ? ["hidden"] : []),
+          classes: ["p-4","user-card-follow", ...(data.is_following == 1) ? ["active"] : [], ...data.id==currentUser ? ["hidden"] : []],
           eventListeners: {
             click: async function(){
               let follow = !$(this).hasClass('active')
@@ -860,7 +860,7 @@ app.dom.components = {
         },
         {
           tag: 'div',
-          classes: ["my-6"].concat((data.recent.length == 0) ? ['hidden'] : []),
+          classes: ["my-6", ...(data.recent.length == 0) ? ['hidden'] : []],
           children: [
             {
               tag: 'h1',
@@ -1117,7 +1117,7 @@ app.dom.components = {
             eventListeners: {
               click: data.action
             },
-            classes: ["w-full","p-2","rounded-lg"].concat(data.danger ? ["bg-red-500","text-white"] : ["bg-gray-100","dark:bg-gray-700","dark:text-white"]),
+            classes: ["w-full","p-2","rounded-lg", ...data.danger ? ["bg-red-500","text-white"] : ["bg-gray-100","dark:bg-gray-700","dark:text-white"]],
             text: label
           }
         ]
