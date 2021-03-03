@@ -21,8 +21,18 @@ $values = array(
     "user" => get_session(),
     "parent" => sanitize($_GET["parent"]),
     "body" => sanitize($_GET["body"]),
+    "rate_limit" => 15,
     "timestamp" => time() // Get current timestamp
 );
+
+
+// Get the timestap of the user's previous comment
+$previous_comment_timestamp = db("SELECT `timestamp` FROM `comments` WHERE `author` = {$values['user']} ORDER BY `timestamp` DESC;", true)[0]['timestamp'];
+
+// Check if it was within the past 5 minutes (300 seconds), and rate limit if necessary
+if($values['timestamp'] - $previous_comment_timestamp < $values['rate_limit']){
+    throw_error("You're doing that too much. Try again later.");
+}
 
 
 // Check for mentions
