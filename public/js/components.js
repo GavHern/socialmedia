@@ -6,7 +6,7 @@ app.dom.components = {
         tag: isInFeed ? "a" : "p", // If the post is in a feed, make the body a link.
         href: "#",
         classes: ["flex-shrink-0","dark:text-gray-300","w-full","px-4","compact:hidden","post-body-text"],
-        text: data.body, // Body text
+        html: app.methods.sanitize(data.body), // Body text
         eventListeners: isInFeed ? { // Adds event listener for posts in a feed
           click: function(e){
             app.dom.page.create('post', data.id);
@@ -334,7 +334,7 @@ app.dom.components = {
         {
           tag: 'div',
           classes: ["mt-2","text-gray-800","dark:text-gray-300","comment-body-text"],
-          text: data.body
+          html: app.methods.sanitize(data.body)
         },
         {
           tag: 'div',

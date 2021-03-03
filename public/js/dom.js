@@ -589,7 +589,7 @@ app.dom = {
                 attributes:{
                   'placeholder': 'New text...'
                 },
-                text: data.text
+                html: data.text
               },
               {
                 tag: 'div',
@@ -624,9 +624,9 @@ app.dom = {
                           app.methods.dialogue(((data.isComment) ? 'Comment' : 'Post') + ' was successfully edited!', true);
 
                           if(!data.isComment){
-                            $(`div[data-post-id=${data.id}] .post-body-text`).text(text);
+                            $(`div[data-post-id=${data.id}] .post-body-text`).html(app.methods.sanitize(text));
                           } else {
-                            $(`div[data-comment-id=${data.id}] .comment-body-text`).text(text);
+                            $(`div[data-comment-id=${data.id}] .comment-body-text`).html(app.methods.sanitize(text));
                           }
 
                           $(this).parents().eq(4).removeClass('active');

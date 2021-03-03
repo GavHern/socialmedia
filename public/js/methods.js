@@ -169,5 +169,8 @@ app.methods = {
     "https://socialmedia.gavhern.com/api/cdn.php?f=default&thumb"
     :
     "https://socialmedia.gavhern.com/api/cdn.php?thumb&f="+id
+  },
+  sanitize(unsanitizedString){
+    return $('<div>').text(unsanitizedString).html().replaceAll('\n','<br>');
   }
 }
