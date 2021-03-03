@@ -19,8 +19,7 @@ function get_session(){
     if(!isset($_COOKIE["session"]) and !isset(apache_request_headers()['authentication'])){
         die(json_encode(array(
             "success" => false,
-            "message" => "Missing login session",
-            "data" => $_SERVER
+            "message" => "Missing login session"
         )));
     }
     
