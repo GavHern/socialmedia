@@ -589,7 +589,10 @@ app.dom = {
                 attributes:{
                   'placeholder': 'New text...'
                 },
-                html: data.text
+                html: data.text.replaceAll(/\<@[a-zA-Z0-9]+\:[a-zA-Z0-9]+\>/g, match => {
+                  let username = match.split(':')[1].split('>')[0];
+                  return `@${username}`;
+                })
               },
               {
                 tag: 'div',
@@ -624,9 +627,19 @@ app.dom = {
                           app.methods.dialogue(((data.isComment) ? 'Comment' : 'Post') + ' was successfully edited!', true);
 
                           if(!data.isComment){
-                            $(`div[data-post-id=${data.id}] .post-body-text`).html(app.methods.sanitize(text));
+                            $(`div[data-post-id=${data.id}] .post-body-text`).html(app.methods.parseMentions( // Parse new text to have mention links
+                              text.replaceAll(/([@][a-zA-Z0-9]{3,})/g, match => {
+                                match = match.replace('@','');
+                                return `<@${match}:${match}>`;
+                              })
+                            ));
                           } else {
-                            $(`div[data-comment-id=${data.id}] .comment-body-text`).html(app.methods.sanitize(text));
+                            $(`div[data-comment-id=${data.id}] .comment-body-text`).html(app.methods.parseMentions( // Parse new text to have mention links
+                              text.replaceAll(/([@][a-zA-Z0-9]{3,})/g, match => {
+                                match = match.replace('@','');
+                                return `<@${match}:${match}>`;
+                              })
+                            ));
                           }
 
                           $(this).parents().eq(4).removeClass('active');

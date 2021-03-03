@@ -172,5 +172,22 @@ app.methods = {
   },
   sanitize(unsanitizedString){
     return $('<div>').text(unsanitizedString).html().replaceAll('\n','<br>');
-  }
+  },
+  parseMentions(string, displayContext = 'link'){
+    string = app.methods.sanitize(string);
+    return string.replaceAll(/\&lt;@[a-zA-Z0-9]+\:[a-zA-Z0-9]+\&gt;/g, match => {
+      let id = match.split(':')[0].split('&lt;@')[1];
+      let username = match.split(':')[1].split('&gt;')[0];
+
+      // Display mention differently depending on context
+      switch(displayContext) {
+        case 'link':
+          return `<a href="#" class="mention-link font-semibold text-green-500" onclick="app.dom.page.create('profile', '${id}')">@${username}</a>`;
+        case 'standard':
+          return `<span>@${username}</span>`;
+      }
+
+    });
+  },
+  
 }

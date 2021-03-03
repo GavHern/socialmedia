@@ -6,7 +6,7 @@ app.dom.components = {
         tag: isInFeed ? "a" : "p", // If the post is in a feed, make the body a link.
         href: "#",
         classes: ["flex-shrink-0","dark:text-gray-300","w-full","px-4","compact:hidden","post-body-text"],
-        html: app.methods.sanitize(data.body), // Body text
+        html: app.methods.parseMentions(data.body, 'link'), // Body text
         eventListeners: isInFeed ? { // Adds event listener for posts in a feed
           click: function(e){
             app.dom.page.create('post', data.id);
@@ -334,7 +334,7 @@ app.dom.components = {
         {
           tag: 'div',
           classes: ["mt-2","text-gray-800","dark:text-gray-300","comment-body-text"],
-          html: app.methods.sanitize(data.body)
+          html: app.methods.parseMentions(data.body, 'link')
         },
         {
           tag: 'div',
@@ -945,6 +945,20 @@ app.dom.components = {
             app.dom.page.create('post', i.link);
           };
           break;
+        case 'post_mention':
+          icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>`;
+          messageSuffix = "mentioned you in their post.";
+          action = _=>{
+            app.dom.page.create('post', i.link);
+          };
+          break;
+        case 'comment_mention':
+          icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>`;
+          messageSuffix = "mentioned you in their comment.";
+          action = _=>{
+            app.dom.page.create('post', i.link);
+          };
+          break;
       }
 
       items.push({
@@ -979,7 +993,7 @@ app.dom.components = {
                   {
                     tag: 'p',
                     classes: ["text-gray-600","dark:text-gray-400","mt-2", (i.meta.length == 0) ? 'hidden' : 'block'],
-                    text: i.meta 
+                    html: app.methods.parseMentions(i.meta, 'standard')
                   }
                 ]
               }
