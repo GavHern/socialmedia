@@ -478,13 +478,13 @@ app.dom.components = {
                       let res = await app.api.follow(data.info.id, follow);
 
                       if(res.success){
-                        app.dom.updateExploreFollowingList(data.info, follow);
-
                         if(follow){
                           $(`a[data-user-id-follow=${data.info.id}]`).addClass('active');
                         } else {
                           $(`a[data-user-id-follow=${data.info.id}]`).removeClass('active');
                         }
+
+                        app.dom.updateExploreFollowingList(data.info, follow);
                       }
                     }
                   },
