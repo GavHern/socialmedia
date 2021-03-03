@@ -22,6 +22,10 @@ $values = array(
     "timestamp" => time() // Get current timestamp
 );
 
+if(!ctype_digit($values['profile'])){
+    $values['profile'] = db("SELECT id FROM `users` WHERE username = '{$values['profile']}'", true)[0]['id'];
+}
+
 $profile_exists = db("SELECT COUNT(*) AS `exists` FROM users WHERE id = {$values['profile']}", true)[0]['exists'] != 0;
 
 if(!$profile_exists){

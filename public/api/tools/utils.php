@@ -90,7 +90,9 @@ function send_email($recipient, $subject, $message){
 
 
 
-function parseMentionsWithUsername($matches){
+
+
+function parseMentionsWithUsername($matches){ // Function that parses <@id> ino <@id:username>
     $mention_id = preg_replace('/[\<\>\@]/', '', $matches[0]);
     $mention_username = db("SELECT username FROM `users` WHERE id = {$mention_id};",true)[0]['username'];
     return "<@{$mention_id}:{$mention_username}>";
@@ -101,4 +103,25 @@ function parseMentions($string){
     $pattern = '/\<@[0-9]+\>/';
     
     return preg_replace_callback($pattern, 'parseMentionsWithUsername', $string);
+}
+
+
+function parseMentionsToId($matches){// Function that parses @username into <@id>
+    $mention_username = explode('@',$matches[0])[1];
+    $mention_id = db("SELECT id FROM `users` WHERE LOWER(username) = LOWER('{$mention_username}');", true)[0]['id'];
+    
+    // If no user matches the username, don't mention anyone
+    if(!isset($mention_id)){
+        return $matches[0];
+    }
+    
+    $id_tag = "<@{$mention_id}>";
+    
+    return $id_tag;
+}
+
+
+function stringToMentions($string){
+    $pattern = '/([@][a-zA-Z0-9]{3,})/';
+    return preg_replace_callback($pattern, 'parseMentionsToId', $string);
 }
