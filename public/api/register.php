@@ -21,8 +21,20 @@ $values = array(
     "email" => sanitize($_GET["email"]),
     "password" => sanitize($_GET["password"]),
     "confirm" => sanitize($_GET["confirm"]),
+    "ip_address" => $_SERVER['REMOTE_ADDR'],
+    "rate_limit" => 3600,
     "timestamp" => time() // Get current timestamp
 );
+
+
+// Find accounts created with the same IP address
+$last_time_ip_was_used = db("SELECT `timestamp` FROM `users` WHERE `created_ip` = '{$values['ip_address']}' ORDER BY `timestamp` DESC;", true)[0]['timestamp'];
+
+
+// Check if the client's IP has been used to create an account during the rate limit period
+if($values['timestamp'] - $last_time_ip_was_used < $values['rate_limit']){
+    throw_error("You're doing this too fast!");
+}
 
 
 
@@ -77,7 +89,7 @@ $values["password"] = password_hash($values["password"], PASSWORD_DEFAULT);
 
 
 // Insert credentials into the database
-db("INSERT INTO `users`(`name`,`username`,`email`,`password`,`timestamp`,`last_edited`) VALUES ('{$values["name"]}','{$values["username"]}','{$values["email"]}','{$values["password"]}',{$values["timestamp"]},{$values["timestamp"]});", false);
+db("INSERT INTO `users`(`name`,`username`,`email`,`password`,`created_ip`,`timestamp`,`last_edited`) VALUES ('{$values["name"]}','{$values["username"]}','{$values["email"]}','{$values["password"]}','{$values['ip_address']}',{$values["timestamp"]},{$values["timestamp"]});", false);
 
 
 // Find the user ID
