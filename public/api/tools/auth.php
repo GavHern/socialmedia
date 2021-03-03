@@ -2,7 +2,14 @@
 
 // Looks up a session token to find the User ID associated with it
 function session_to_user_id($session_token){
-    return db("SELECT id FROM users WHERE session = '{$session_token}'", true)[0]['id'];
+    $session_parts = explode('-', $session_token);
+    $db_session = db("SELECT session FROM users WHERE id = '{$session_parts[0]}'", true)[0]['session'];
+    
+    if($session_token = $db_session){
+        return $session_parts[0];
+    } else {
+        return '';
+    }
 }
 
 // Pull session from cookies and find corrosponding user id
