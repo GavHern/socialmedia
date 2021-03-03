@@ -29,8 +29,9 @@ if(!$values['is_comment']){ // Delete a post
     // If the user has permission, delete the post.
     if($can_delete == 1){
         db("DELETE FROM `posts` WHERE `id` = {$values['id']}", false); // Delete post
-        db("DELETE FROM `likes` WHERE `user`={$values['user']} AND `id`={$values['id']} AND `is_comment`=0", false); // Remove likes
-        db("DELETE FROM `saved` WHERE `user`={$values['user']} AND `post`={$values['id']}", false); // Remove saves
+        db("DELETE FROM `likes` WHERE `id`={$values['id']} AND `is_comment`=0", false); // Remove likes
+        db("DELETE FROM `saved` WHERE `post`={$values['id']}", false); // Remove saves
+        db("DELETE FROM `comments` WHERE `parent`={$values['id']}", false); // Remove comments
     } else {
         throw_error("You don't have permission to delete that post.");
     }
@@ -41,7 +42,7 @@ if(!$values['is_comment']){ // Delete a post
     // If the user has permission, delete the comment.
     if($can_delete == 1){
         db("DELETE FROM `comments` WHERE `id` = {$values['id']}", false); // Delete post
-        db("DELETE FROM `likes` WHERE `user`={$values['user']} AND `id`={$values['id']} AND `is_comment`=1", false); // Remove likes
+        db("DELETE FROM `likes` WHERE `id`={$values['id']} AND `is_comment`=1", false); // Remove likes
     } else {
         throw_error("You don't have permission to delete that comment.");
     }
