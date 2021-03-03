@@ -1070,7 +1070,7 @@ app.dom.components = {
       children: [
         {
           tag: "div",
-          classes: ["mr-2","p-1",success?"bg-green-500":"bg-yellow-500","bg-opacity-30",success?"text-green-200":"text-yellow-200","rounded-full"],
+          classes: ["mr-2","p-1",success?"bg-green-500":"bg-yellow-500","bg-opacity-30","rounded-full", ...success?"text-green-200":"text-yellow-200"],
           html: success ?
           '<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>'
           :'<svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>'
