@@ -22,6 +22,14 @@ $values = array(
     "timestamp" => time() // Get current timestamp
 );
 
+$profile_exists = db("SELECT COUNT(*) AS `exists` FROM users WHERE id = {$values['profile']}", true)[0]['exists'] != 0;
+
+if(!$profile_exists){
+    throw_error("That user doesn't exist");
+}
+
+
+
 // Check for pagination checkpoint, otherwise create one
 if(isset($_GET['checkpoint'])){
     $values['checkpoint'] = sanitize($_GET['checkpoint']);
@@ -43,6 +51,8 @@ $values['post_number'] = $pagination_data[2] * $values['page_length'];
 
 if($values['page_number']==0){
     $info = db("SELECT `id`,`name`,`username`,`profile_picture`,`banner`,`bio`, `timestamp` AS created,( SELECT DISTINCT COUNT(*) FROM (SELECT `user` AS `users` FROM `follows` WHERE `follow`={$values['profile']}) AS F1 INNER JOIN (SELECT `follow` AS `users` FROM `follows` WHERE `user`={$values['user']}) AS F2 USING(`users`)) mutual, (SELECT COUNT(*) FROM `follows` WHERE `follow` = {$values['profile']}) followers, (SELECT COUNT(*) FROM `follows` WHERE `user` = {$values['profile']}) following, (SELECT COUNT(*) FROM `follows` WHERE `user` = {$values['user']} AND `follow` = {$values['profile']}) AS is_following, (SELECT IF(users.id = {$values['user']}, 1, 0)) AS is_owner FROM `users` WHERE `id` = {$values['profile']};", true)[0];
+
+    $info['bio'] = parseMentions($info['bio']);
 } else {
     $info = -1;
 }
@@ -58,6 +68,19 @@ Formatted SQL at the bottom of this file
 */
 
 $posts = db("SELECT p.id, p.title, p.author, p.type, p.body, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = p.id) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = p.id AND `likes`.`is_comment` = false) liked, (SELECT COUNT(*) FROM `saved` WHERE `saved`.`user` = {$values['user']} AND `saved`.`post` = p.id) saved, (SELECT IF(p.author = {$values['user']}, 1, 0)) AS is_author, p.timestamp FROM `posts` AS p INNER JOIN `users` AS u ON u.id = p.author WHERE p.author = {$values['profile']} ORDER BY p.timestamp DESC LIMIT {$values['page_length']} OFFSET {$values['post_number']};", true);
+
+
+// Parse all text posts for mentions
+$iterator = 0;
+
+foreach ($posts as $i) {
+    if($i['body'] != ''){
+        $posts[$iterator]['body'] = parseMentions($i['body']);
+    }
+    
+    $iterator++;
+}
+
 
 
 $next_checkpoint = base_convert($values['timestamp'],10,36)."-".$values['page_length']."-".($values['page_number']+1);

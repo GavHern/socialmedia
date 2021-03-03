@@ -49,6 +49,19 @@ Formatted SQL at the bottom of this file
 $data = db("SELECT p.id, p.title, p.author, p.type, p.body, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = p.id) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = p.id AND `likes`.`is_comment` = false) liked, (1) saved, (SELECT IF(p.author = {$values['user']}, 1, 0)) AS is_author, p.edited, p.timestamp FROM `posts` AS p INNER JOIN `users` AS u ON u.id = p.author INNER JOIN `saved` AS s ON s.user = {$values['user']} AND s.post = p.id ORDER BY s.timestamp DESC LIMIT {$values['page_length']} OFFSET {$values['post_number']};", true);
 
 
+// Parse all text posts for mentions
+$iterator = 0;
+
+foreach ($data as $i) {
+    if($i['body'] != ''){
+        $data[$iterator]['body'] = parseMentions($i['body']);
+    }
+    
+    $iterator++;
+}
+
+
+
 $next_checkpoint = base_convert($values['timestamp'],10,36)."-".$values['page_length']."-".($values['page_number']+1);
 
 

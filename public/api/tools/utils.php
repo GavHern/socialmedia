@@ -87,3 +87,18 @@ function send_email($recipient, $subject, $message){
     
     return $mail_success;
 }
+
+
+
+function parseMentionsWithUsername($matches){
+    $mention_id = preg_replace('/[\<\>\@]/', '', $matches[0]);
+    $mention_username = db("SELECT username FROM `users` WHERE id = {$mention_id};",true)[0]['username'];
+    return "<@{$mention_id}:{$mention_username}>";
+}
+
+
+function parseMentions($string){
+    $pattern = '/\<@[0-9]+\>/';
+    
+    return preg_replace_callback($pattern, 'parseMentionsWithUsername', $string);
+}

@@ -24,6 +24,22 @@ $values = array(
 
 $data = db("SELECT * FROM( SELECT 'follow' AS type, u.name AS data, '' AS meta, f.user AS link, f.timestamp AS timestamp FROM follows AS f INNER JOIN users AS u ON f.user = u.id WHERE follow = {$values['user']} UNION ALL SELECT 'post_like' AS type, u.name AS data, '' AS meta, l.id AS link, l.timestamp AS timestamp FROM likes AS l INNER JOIN posts AS p ON l.id = p.id INNER JOIN users AS u ON l.user = u.id WHERE p.author = {$values['user']} AND l.user != {$values['user']} AND is_comment = 0 UNION ALL SELECT 'comment_like' AS type, u.name AS data, '' AS meta, p.id AS link, l.timestamp AS timestamp FROM likes AS l INNER JOIN comments AS c ON l.id = c.id INNER JOIN users AS u ON l.user = u.id INNER JOIN posts AS p ON p.id = c.parent WHERE c.author = {$values['user']} AND l.user != {$values['user']} AND is_comment = 1 UNION ALL SELECT 'comment' AS type, u.name AS data, c.body AS meta, c.parent AS link, c.timestamp AS timestamp FROM comments AS c INNER JOIN users AS u ON c.author = u.id INNER JOIN posts AS p ON p.id = c.parent WHERE p.author = {$values['user']} AND c.author != {$values['user']}) AS q ORDER BY timestamp DESC LIMIT 50 OFFSET 0", true);
 
+
+
+// Parse all activity metadata posts for mentions
+$iterator = 0;
+
+foreach ($data as $i) {
+    if($i['meta'] != ''){
+        $data[$iterator]['meta'] = parseMentions($i['meta']);
+    }
+    
+    $iterator++;
+}
+
+
+
+
 $time_frames = array(
     "day" => [],
     "week" => [],

@@ -51,6 +51,33 @@ switch ($values['type']) {
     throw_error("Unknown type of post.");
 }
 
+// Check for mentions
+if($values['type']){
+    // Function that parses @username into <@id>
+    function parseMentionsToId($matches){
+        $mention_username = explode('@',$matches[0])[1];
+        $mention_id = db("SELECT id FROM `users` WHERE LOWER(username) = LOWER('{$mention_username}');", true)[0]['id'];
+        
+        // If no user matches the username, don't mention anyone
+        if(!isset($mention_id)){
+            return $matches[0];
+        }
+        
+        $id_tag = "<@{$mention_id}>";
+        
+        if(substr($matches[0],0,1) == " "){ // Append leading space if matched
+            $id_tag = ' '.$id_tag;
+        }
+        
+        return $id_tag;
+    }
+    
+    $pattern = '/(^|[ ])([@][a-zA-Z0-9]{3,})/';
+    
+    $values['body'] = preg_replace_callback($pattern, 'parseMentionsToId', $values['body']);
+}
+
+
 // Add post to database
 db("INSERT INTO `posts`(`title`, `author`, `type`, `body`, `edited`, `timestamp`) VALUES ('{$values['title']}',{$values['user']},'{$values['type']}','{$values['body']}',0,{$values['timestamp']})", false);
 

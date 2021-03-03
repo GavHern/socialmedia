@@ -21,6 +21,12 @@ $values = array(
     "post" => $_GET['post']
 );
 
+$post_exists = db("SELECT COUNT(*) AS `exists` FROM posts WHERE id = {$values['post']}", true)[0]['exists'] != 0;
+
+if(!$post_exists){
+    throw_error("That post doesn't exist");
+}
+
 
 // Check for pagination checkpoint, otherwise create one
 if(isset($_GET['checkpoint'])){
@@ -51,11 +57,23 @@ Formatted SQL at the bottom of this file
 
 if($values['page_number']==0){
     $data = db("SELECT p.id, p.title, p.author, p.type, p.body, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = p.id AND `likes`.`is_comment` = false) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = p.id AND `likes`.`is_comment` = false) liked, (SELECT COUNT(*) FROM `saved` WHERE `saved`.`user` = {$values['user']} AND `saved`.`post` = p.id) saved, (SELECT IF(p.author = {$values['user']}, 1, 0)) AS is_author, p.edited, p.timestamp FROM `posts` AS p INNER JOIN `users` AS u ON u.id = p.author WHERE p.id = {$values['post']};", true)[0];
+
+    $data['body'] = parseMentions($data['body']);
 } else {
     $data = -1;
 }
 
 $comments = db("SELECT c.id, c.body, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, c.edited, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} ORDER BY c.timestamp DESC LIMIT {$values['page_length']} OFFSET {$values['post_number']}", true);
+
+
+// Parse all comments for mentions
+$iterator = 0;
+
+foreach ($comments as $i) {
+    $comments[$iterator]['body'] = parseMentions($i['body']);
+    $iterator++;
+}
+
 
 
 $next_checkpoint = base_convert($values['timestamp'],10,36)."-".$values['page_length']."-".($values['page_number']+1);

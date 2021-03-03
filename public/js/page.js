@@ -85,6 +85,13 @@ app.dom.page = {
             }
           ]
         })
+      },
+      errorElement(){
+        return elem.create({
+          tag: "div",
+          classes: ["w-full","flex","justify-center","px-4"],
+          html: '<div class="flex flex-col justify-center"><div class="flex justify-center mt-4 mb-1"><svg class="w-24 h-24 text-gray-300 dark:text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></div><div class="font-semibold text-xl text-gray-400 dark:text-gray-500 text-center mb-2">The post you were looking for may have been deleted</div></div>'
+        })
       }
     },
     "profile": { // Page displaying a user's profile and posts
@@ -95,6 +102,13 @@ app.dom.page = {
         $('.user-shelf-container').scrollLeft(0);
 
         return app.dom.components.profilePage(data);
+      },
+      errorElement(){
+        return elem.create({
+          tag: "div",
+          classes: ["w-full","flex","justify-center","px-4"],
+          html: '<div class="flex flex-col justify-center"><div class="flex justify-center mt-4 mb-1"><svg class="w-24 h-24 text-gray-300 dark:text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></div><div class="font-semibold text-xl text-gray-400 dark:text-gray-500 text-center mb-2">The account you were looking doesn\'t exist, or may have been deleted</div></div>'
+        })
       }
     },
     "follows": { // Page showing a user's mutual, follower, or following list
@@ -368,7 +382,11 @@ app.dom.page = {
 
     $(newPage).html('');
 
-    $(newPage).append(app.dom.page.templates[page].domElement(res));
+    if(res.success !== false){
+      $(newPage).append(app.dom.page.templates[page].domElement(res));
+    } else {
+      $(newPage).append(app.dom.page.templates[page].errorElement(res));
+    }
   },
   
   // Removes the current page, going back by 1
