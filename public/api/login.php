@@ -25,7 +25,7 @@ $values = array(
 
 
 // Find the id and password of a user with the provided email or password
-$account_data = db("SELECT `id`, `password`, `session` FROM `users` WHERE username = '{$values["login"]}' OR email = '{$values["login"]}';", true)[0];
+$account_data = db("SELECT `id`, `password`, `session` FROM `users` WHERE LOWER(username) = LOWER('{$values["login"]}') OR email = '{$values["login"]}';", true)[0];
 
 
 
