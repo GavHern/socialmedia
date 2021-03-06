@@ -369,6 +369,6 @@ input[type="search"].my-search::-webkit-search-cancel-button {
   @apply ring-opacity-30 bg-opacity-50 pointer-events-none !important;
 }
 
-.feed .mention-link {
+.feed .mention-link, .feed .body-hyperlink {
   @apply pointer-events-none;
 }

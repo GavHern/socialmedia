@@ -175,7 +175,7 @@ app.methods = {
   },
   parseMentions(string, displayContext = 'link'){
     string = app.methods.sanitize(string);
-    return string.replaceAll(/\&lt;@[a-zA-Z0-9]+\:[a-zA-Z0-9]+\&gt;/g, match => {
+    string = string.replaceAll(/\&lt;@[a-zA-Z0-9]+\:[a-zA-Z0-9]+\&gt;/g, match => {
       let id = match.split(':')[0].split('&lt;@')[1];
       let username = match.split(':')[1].split('&gt;')[0];
 
@@ -188,6 +188,14 @@ app.methods = {
       }
 
     });
+
+    if(displayContext == 'link'){
+      string = string.replaceAll(/\bhttps?:\/\/\S+\..{2,}/ig, match => {
+        return `<a href="${match}" class="body-hyperlink text-green-500">${match}</a>`;
+      });
+    }
+
+    return string;
   },
   
 }

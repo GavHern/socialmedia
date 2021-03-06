@@ -2878,7 +2878,7 @@ input[type="search"].my-search::-webkit-search-cancel-button {
   --tw-ring-opacity: 0.3 !important;
 }
 
-.feed .mention-link {
+.feed .mention-link, .feed .body-hyperlink {
   pointer-events: none;
 }
 
