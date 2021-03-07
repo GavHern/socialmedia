@@ -226,7 +226,42 @@ app.dom.page = {
               data: {
                 danger: false,
                 action: _=> {
-                  app.methods.dialogue("Change email callback", true);
+                  app.dom.sheet.create('text', {
+                    inputs: [
+                      {
+                        type: "email",
+                        label: "New email",
+                        value: "",
+                        placeholder: ""
+                      },
+                      {
+                        type: "email",
+                        label: "Confirm email",
+                        value: "",
+                        placeholder: ""
+                      },
+                      {
+                        type: "password",
+                        label: "Password",
+                        value: "",
+                        placeholder: ""
+                      }
+                    ],
+                    text: "Change email",
+                    color: "bg-green-400",
+                    actionText: "Change email",
+                    action: async function(values){
+                      let res = await app.api.changeEmail(
+                        $(values[0]).val(), // New email
+                        $(values[1]).val(), // Confirm email
+                        $(values[2]).val() // Password
+                      );
+
+                      if(res.success){
+                        app.methods.dialogue("Your email was successfully edited.", true);
+                      }
+                    }
+                  });
                 }
               }
             },

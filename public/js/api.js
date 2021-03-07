@@ -169,5 +169,14 @@ app.api = {
     });
 
     return res;
+  },
+
+  async changeEmail(email, confirm, password){
+    let res = await makeRequest(`https://socialmedia.gavhern.com/api/reset/email.php?email=${email}&confirm=${confirm}&password=${password}`, {
+      method: 'GET',
+      redirect: 'follow'
+    });
+
+    return res;
   }
 }
