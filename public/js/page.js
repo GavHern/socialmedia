@@ -250,7 +250,7 @@ app.dom.page = {
                     text: "Change email",
                     color: "bg-green-400",
                     actionText: "Change email",
-                    action: async function(values){
+                    action: async function(values, closeSheet){
                       let res = await app.api.changeEmail(
                         $(values[0]).val(), // New email
                         $(values[1]).val(), // Confirm email
@@ -259,6 +259,7 @@ app.dom.page = {
 
                       if(res.success){
                         app.methods.dialogue("Your email was successfully edited.", true);
+                        closeSheet();
                       }
                     }
                   });

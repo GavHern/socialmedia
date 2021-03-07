@@ -334,14 +334,15 @@ app.dom = {
                     eventListeners: {
                       click: function(){ // Close the sheet and perform the action
                         data.action(
-                          $(this).parents().eq(1).find('input')
+                          $(this).parents().eq(1).find('input'),
+                          _=> {
+                            $(this).parents().eq(4).removeClass('active');
+
+                            setTimeout(_=>{
+                              $(this).parents().eq(4).remove();
+                            },300)
+                          }
                         );
-
-                        $(this).parents().eq(4).removeClass('active');
-
-                        setTimeout(_=>{
-                          $(this).parents().eq(4).remove();
-                        },300)
                       }
                     }
                   }
