@@ -647,7 +647,7 @@ app.dom.components = {
                       postObj = 'data';
                       break;
                     case 'profile':
-                      uri = `https://socialmedia.gavhern.com/api/savedfeed.php?user=${feedInfo.user}&checkpoint=${checkpoint}`;
+                      uri = `https://socialmedia.gavhern.com/api/profile.php?user=${feedInfo.user}&checkpoint=${checkpoint}`;
                       postObj = 'posts';
                       break;
                   }
