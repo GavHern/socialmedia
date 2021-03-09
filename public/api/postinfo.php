@@ -2,7 +2,7 @@
 
 /*
 
-Parameters for this file: post
+Parameters for this file: post (id of the post)
 
 */
 
@@ -63,14 +63,23 @@ if($values['page_number']==0){
     $data = -1;
 }
 
-$comments = db("SELECT c.id, c.body, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, c.edited, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} ORDER BY c.timestamp DESC LIMIT {$values['page_length']} OFFSET {$values['post_number']}", true);
+$comments = db("SELECT c.id, c.body, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = 0 ORDER BY c.timestamp DESC LIMIT {$values['page_length']} OFFSET {$values['post_number']}", true);
 
 
-// Parse all comments for mentions
+// Parse all comments data for mentions and replies
 $iterator = 0;
 
 foreach ($comments as $i) {
     $comments[$iterator]['body'] = parseMentions($i['body']);
+    
+    if($i['replies'] > 0) {
+        $reply_list = db("SELECT c.id, c.body, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = 0 ORDER BY c.timestamp DESC LIMIT 5 OFFSET 0", true);
+        
+        $comments[$iterator]['replies'] = $reply_list;
+    } else {
+        $comments[$iterator]['replies'] = array();
+    }
+    
     $iterator++;
 }
 
@@ -103,8 +112,6 @@ FROM
     `posts` AS p
     INNER JOIN `users` AS u
     ON u.id = p.author
-
-    
 WHERE
     id = {$values['post']}
     
@@ -116,14 +123,16 @@ SELECT
     (SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes,
     (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked,
     (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author,
+    (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies,
     c.edited,
+    c.thread,
     c.timestamp
 FROM
     `comments` AS c 
     INNER JOIN `users` AS u
     ON u.id = c.author
 WHERE
-    c.parent = {$values['post']}
+    c.parent = {$values['post']} AND c.thread = 0
 ORDER BY c.timestamp DESC
 LIMIT {$values['page_length']} OFFSET {$values['post_number']}
 
