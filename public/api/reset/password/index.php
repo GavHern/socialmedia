@@ -1,3 +1,22 @@
+<?php
+    // Requires (header information, database functions, authentication functions, utility functions)
+    include '../../tools/db.php';
+    include '../../tools/auth.php';
+    include '../../tools/utils.php';
+    
+    
+    // Get all nessisary parameters and sanitize them
+    $values = array(
+        "reset_key" => sanitize($_GET['key']),
+        "token" => sanitize($_GET['token']),
+        "timestamp" => time(),
+        "expiration_time" => 600 // 10 minutes
+    );
+    
+    // Get information surrounding the reset token
+    $token_data = db("SELECT * from reset_tokens WHERE reset_key = '{$values['reset_key']}' AND `used` = 0 AND timestamp > {$values['timestamp']} - {$values['expiration_time']} ORDER BY timestamp DESC LIMIT 1;", true)[0];
+    $token_is_valid = isset($token_data['token']) && password_verify($values['token'], $token_data['token']);
+?>
 <html lang="en" class="overflow-hidden overscroll-none relative">
 <head>
   <meta charset="UTF-8">
@@ -22,7 +41,7 @@
         </svg>
       </div>
 
-      <div id="new-credentials" class="mx-auto w-4/5 form-section">
+      <div id="new-credentials" class="mx-auto w-4/5 form-section<?php echo $token_is_valid ? '' : ' hidden';?>">
         <h1 class="dark:text-white text-3xl font-bold text-center mt-2 mb-6">Reset Password</h1>
 
         <label class="text-gray-500 dark:text-gray-300">New password</label>
@@ -34,7 +53,7 @@
         <button onclick="resetPassword()" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-green-400 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Change password</button>
       </div>
 
-      <div id="invalid-token" class="mx-auto w-4/5 form-section hidden">
+      <div id="invalid-token" class="mx-auto w-4/5 form-section <?php echo !$token_is_valid ? '' : ' hidden';?>">
         <h1 class="dark:text-white text-3xl font-bold text-center mt-2 mb-6">Invalid Token</h1>
 
         <p class="text-center">This link has either expired or is invalid</p>
@@ -56,16 +75,21 @@
     }
 
     async function resetPassword(){
-      let [newPassword, confirmPassword] = [$('#new-password').val(), $('#confirm-password').val()];
-
-      let res = await fetch(`https://socialmedia.gavhern.com/api/reset/password/reset.php?token=abc&password=${newPassword}&confirm=${confirmPassword}`);
-      let resParsed = await res.json();
-      
-      if(resParsed.success) {
-        showPanel('success-panel');
-      } else {
-        alert('There was an error');
-      }
+        let newPassword = $('#new-password').val();
+        let confirmPassword = $('#confirm-password').val();
+        let key = new URL(window.location.href).searchParams.get("key");
+        let token = new URL(window.location.href).searchParams.get("token");
+        
+        console.log(`https://socialmedia.gavhern.com/api/reset/password/reset.php?key=${key}&token=${token}&password=${newPassword}&confirm=${confirmPassword}`)
+        
+        let res = await fetch(`https://socialmedia.gavhern.com/api/reset/password/reset.php?key=${key}&token=${token}&password=${newPassword}&confirm=${confirmPassword}`);
+        let resParsed = await res.json();
+        
+        if(resParsed.success) {
+            showPanel('success-panel');
+        } else {
+            alert(resParsed.message);
+        }
     }
   </script>
 </body>

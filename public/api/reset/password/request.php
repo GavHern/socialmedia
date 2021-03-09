@@ -28,13 +28,13 @@ $values = array(
 $new_token = bin2hex(random_bytes(32));
 $reset_key = bin2hex(random_bytes(4)).base_convert($values['account'],10,32);
 
-$reset_url = "https://socialmedia.gavhern.com/api/reset/password/?token=".urlencode($new_token)."&key=".urlencode($reset_key);
+$reset_url = "https://socialmedia.gavhern.com/api/reset/password/?key=".urlencode($reset_key)."&token=".urlencode($new_token);
 
 $token_hashed = password_hash($new_token, PASSWORD_DEFAULT);
 
 
 // Insert new token into the database
-db("INSERT INTO `reset_tokens`(`account`, `reset_key`, `token`, `timestamp`, `ip_address`) VALUES ({$values['user']}, '{$reset_key}', {$token_hashed}', {$values['timestamp']}, '{$values['ip_address']}');", false);
+db("INSERT INTO `reset_tokens`(`account`, `reset_key`, `token`, `timestamp`, `ip_address`) VALUES ({$values['user']}, '{$reset_key}', '{$token_hashed}', {$values['timestamp']}, '{$values['ip_address']}');", false);
 
 
 // Get the email record from the users account
