@@ -2,7 +2,7 @@
 
 /*
 
-Parameters for this file: account
+Parameters for this file: email
 
 */
 
@@ -17,11 +17,18 @@ include '../../tools/utils.php';
 
 // Get all nessisary parameters and sanitize them
 $values = array(
-    "user" => sanitize($_GET['account']),
+    "email" => sanitize($_GET['email']),
     "ip_address" => sanitize($_SERVER['REMOTE_ADDR']),
     "timestamp" => time() // Get current timestamp
 );
 
+
+// Lookup user based on email
+$values['user'] = db("SELECT id FROM users WHERE email = '{$values['email']}'", true)[0]['id'];
+
+if(!isset($values['user']) OR !isset($_GET['email'])){
+    throw_error("Invalid email address");
+}
 
 
 // Generate new reset token
