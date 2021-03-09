@@ -178,5 +178,13 @@ app.api = {
     });
 
     return res;
+  }, 
+  async resetPassword(email){
+    let res = await makeRequest(`https://socialmedia.gavhern.com/api/reset/password/request.php?email=${email}`, {
+      method: 'GET',
+      redirect: 'follow'
+    });
+
+    return res;
   }
 }

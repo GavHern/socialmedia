@@ -271,7 +271,29 @@ app.dom.page = {
               data: {
                 danger: false,
                 action: _=> {
-                  app.methods.dialogue("Change password callback", true);
+                  app.dom.sheet.create('text', {
+                    inputs: [
+                      {
+                        type: "email",
+                        label: "Email",
+                        value: "",
+                        placeholder: ""
+                      }
+                    ],
+                    text: "Send reset",
+                    color: "bg-green-400",
+                    actionText: "Send reset",
+                    action: async function(values, closeSheet){
+                      let res = await app.api.resetPassword(
+                        $(values[0]).val(), // Email Address
+                      );
+
+                      if(res.success){
+                        closeSheet();
+                        app.dom.sheet.create('resetPasswordSuccess');
+                      }
+                    }
+                  });
                 }
               }
             },
@@ -317,7 +339,7 @@ app.dom.page = {
               }
             }
           }
-        };
+        }
 
         let sections = [];
 

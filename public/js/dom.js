@@ -657,6 +657,62 @@ app.dom = {
             ]
           }
         ]
+      },
+
+      resetPasswordSuccess(){
+        return [
+          {
+            tag: 'div',
+            classes: ['p-4', 'w-64', 'text-center', 'mx-auto'],
+            html: `
+              <div class="margin-auto flex justify-center items-center mb-4">
+              <div class="flex justify-center items-center w-32 h-32 bg-green-300 bg-opacity-20 rounded-full">
+                <div class="w-20 h-20 relative">
+                  <svg class="w-full h-full text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <div class="absolute w-full h-full top-0 left-0">
+                    <svg class="absolute w-4 h-4 text-yellow-300 transform translate-x-2 -translate-y-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <svg class="absolute w-4 h-4 text-pink-300 transform translate-x-20 translate-y-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <svg class="absolute w-4 h-4 text-blue-300 transform translate-x-12 translate-y-20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <svg class="absolute w-4 h-4 text-green-300 transform -translate-x-6 translate-y-8 mt-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <h1 class="dark:text-white text-2xl font-semibold mb-2">Reset sent!</h1>
+              <p class="text-gray-700 dark:text-gray-300 mb-1">A password reset email has been sent to your email!</p>
+            `
+          },
+          {
+            tag: 'div',
+            classes: ['p-4'],
+            children: [
+              {
+                tag: 'button',
+                classes: ["w-full","h-12","flex","justify-center","items-center","rounded-xl","bg-green-400","text-white"],
+                text: "Okay",
+                eventListeners: {
+                  click(){
+                    $(this).parents().eq(3).removeClass('active');
+    
+                    setTimeout(_=>{
+                      $(this).parents().eq(3).remove();
+                    },300)
+                  }
+                }
+              }
+            ]
+          }
+        ]
       }
 
     },
