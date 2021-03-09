@@ -72,13 +72,62 @@
         <input id="login-login" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="text">
         
         <label class="text-gray-500 dark:text-gray-300">Password</label>
-        <input id="login-password" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="password">
-      
+        <input id="login-password" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mt-1" type="password">
+        <div class="mb-4 mt-1">
+          <a href="#" onclick="navigate('reset-password')" class="text-green-400">Forgot password?</a>
+        </div>
+
+
         <button onclick="login()" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-green-400 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Log In</button>
         
         <p class="w-full text-center text-gray-600 dark:text-gray-500 mt-2">Need an account? <a href="#" onclick="navigate('signup1')" class="text-green-500">Sign Up</a>.</p>
       </div>
 
+
+      <!--Reset Password-->
+      <div id="reset-password" class="mx-auto w-4/5 hidden form-section">
+        <h1 class="dark:text-white text-3xl font-bold text-center mt-2 mb-6">Reset Password</h1>
+
+        <label class="text-gray-500 dark:text-gray-300">Email</label>
+        <input id="reset-email" class="w-full h-12 dark:text-gray-200 dark:bg-gray-900 border-2 px-3 rounded-xl shadow-sm transition duration-300 border-gray-200 focus:border-green-400 dark:border-gray-700 dark:focus:border-green-400 focus:ring-1 focus:ring-green-400 outline-none mb-4 mt-1" type="email">
+        
+        <div class="flex justify-between space-x-2">
+          <button onclick="navigate('login')" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-gray-300 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Back</button>
+          <button onclick="sendReset()" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-green-400 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Send reset</button>
+        </div>
+      </div>
+
+      <!--Reset Password Success-->
+      <div id="reset-password-success" class="mx-auto w-4/5 hidden form-section">
+        <div class="p-4 w-64 text-center mx-auto mt-4">
+          <div class="margin-auto flex justify-center items-center mb-4">
+            <div class="flex justify-center items-center w-32 h-32 bg-green-300 bg-opacity-20 rounded-full">
+              <div class="w-20 h-20 relative">
+                <svg class="w-full h-full text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <div class="absolute w-full h-full top-0 left-0">
+                  <svg class="absolute w-4 h-4 text-yellow-300 transform translate-x-2 -translate-y-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <svg class="absolute w-4 h-4 text-pink-300 transform translate-x-20 translate-y-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <svg class="absolute w-4 h-4 text-blue-300 transform translate-x-12 translate-y-20" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <svg class="absolute w-4 h-4 text-green-300 transform -translate-x-6 translate-y-8 mt-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h1 class="dark:text-white text-2xl font-semibold mb-2">Reset sent!</h1>
+          <p class="text-gray-700 dark:text-gray-300 mb-1">A password reset email has been sent to your email!</p>
+        </div>
+        <button onclick="navigate('login')" class="flex items-center justify-center w-full h-12 mt-1 rounded-xl ring-2 ring-green-400 ring-inset focus:outline-none focus:bg-green-400 focus:text-white dark:text-white transition">Back to login</button>
+      </div>
 
 
 
@@ -109,6 +158,17 @@
       if(res.success){
         window.localStorage.setItem("session", res['session_token']);
         window.location.href = "/?pwa#";
+      } else {
+        alert(res.message)
+      }
+    }
+
+    async function sendReset(){
+      let response = await fetch(`https://socialmedia.gavhern.com/api/reset/password/request.php?email=${encodeURIComponent(document.getElementById('reset-email').value)}`);
+      let res = await response.json();
+      if(res.success){
+        document.getElementById('reset-email').value = "";
+        navigate('reset-password-success');
       } else {
         alert(res.message)
       }
