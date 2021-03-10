@@ -236,9 +236,15 @@ app.dom.components = {
     })
   },
   commentElement(data){
+    let threadReplies = [];
+
+    for (const i of data.replies) {
+      threadReplies.push(app.dom.components.commentElement(i));
+    }
+
     return elem.create({
       tag: 'div',
-      classes: ["bg-white","dark:bg-gray-800","dark:text-gray-200","mb-2","px-4","py-2","flex","flex-col"],
+      classes: ["bg-white","dark:bg-gray-800","dark:text-gray-200","mb-2","pt-2","flex","flex-col"],
       attributes: {
         "data-comment-id": data.id,
         "data-comment-likes": data.likes
@@ -246,7 +252,7 @@ app.dom.components = {
       children: [
         {
           tag: 'div',
-          classes: ["flex","justify-between","items-center","mt-1"],
+          classes: ["flex","justify-between","items-center","mt-1","ml-4","pr-4"],
           children: [
             {
               tag: 'a',
@@ -333,17 +339,17 @@ app.dom.components = {
         },
         {
           tag: 'div',
-          classes: ["mt-2","text-gray-800","dark:text-gray-300","comment-body-text"],
+          classes: ["mt-2","text-gray-800","dark:text-gray-300","comment-body-text", "ml-4"],
           html: app.methods.parseMentions(data.body, 'link')
         },
         {
           tag: 'div',
-          classes: ["mt-2","text-gray-800","dark:text-gray-300","flex","flex-row-reverse","p-1"],
+          classes: ["mt-2","text-gray-800","dark:text-gray-300","flex","flex-row-reverse","space-x-4","space-x-reverse","p-1", "ml-4", "pr-4", ...(threadReplies.length > 0) ? [] : ["mb-2"]],
           children: [
             {
               tag: 'a',
               href: '#',
-              classes: (data.liked==1) ? ['flex', 'items-center', 'comment-like', 'active'] : ['flex', 'items-center', 'comment-like'],
+              classes: ['flex', 'items-center', 'comment-like', ...(data.liked==1) ? ['active'] : []],
               eventListeners:{
                 click: async function(){
                   let likeComment = !$(this).hasClass('active');
@@ -368,8 +374,24 @@ app.dom.components = {
                 }
               },
               html: `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg><p>${data.likes}</p>`
+            },
+            {
+              tag: 'a',
+              href: '#',
+              classes: ['flex', 'items-center', 'comment-reply'],
+              eventListeners:{
+                click: async function(){
+                  app.methods.dialogue("Replying coming soon", false);
+                }
+              },
+              html: `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg><p>Reply</p>`
             }
           ]
+        },
+        {
+          tag: 'div',
+          classes: ["ml-4","border-l", ...(threadReplies.length > 0) ? [] : ['hidden']],
+          children: threadReplies
         }
       ]
     });
