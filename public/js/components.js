@@ -390,7 +390,7 @@ app.dom.components = {
         },
         {
           tag: 'div',
-          classes: ["ml-4","border-l", ...(threadReplies.length > 0) ? [] : ['hidden']],
+          classes: ["ml-4","border-l","dark:border-gray-700", ...(threadReplies.length > 0) ? [] : ['hidden']],
           children: threadReplies
         }
       ]
