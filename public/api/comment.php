@@ -26,6 +26,18 @@ $values = array(
 );
 
 
+// Append thread parameter if defined
+if(isset($_GET['thread'])){
+    $thread_exists = db("SELECT COUNT(*) AS `exists` FROM comments WHERE id = {$_GET['thread']} AND parent = {$values['parent']} AND thread = 0", true)[0]['exists'] > 0;
+    
+    if(!$thread_exists) throw_error("That thread doesn't exist");
+    
+    $values['thread'] = $_GET['thread'];
+} else {
+    $values['thread'] = 0;
+}
+
+
 // Get the timestap of the user's previous comment
 $previous_comment_timestamp = db("SELECT `timestamp` FROM `comments` WHERE `author` = {$values['user']} ORDER BY `timestamp` DESC;", true)[0]['timestamp'];
 
@@ -41,7 +53,7 @@ $values['body'] = stringToMentions($values['body']);
 
 
 // Adds comment to database
-db("INSERT INTO `comments`(`parent`,`author`,`body`,`thread`,`edited`,`timestamp`) VALUES ({$values["parent"]}, {$values["user"]}, '{$values["body"]}', 0, 0, {$values["timestamp"]})", false);
+db("INSERT INTO `comments`(`parent`,`author`,`body`,`thread`,`edited`,`timestamp`) VALUES ({$values["parent"]}, {$values["user"]}, '{$values["body"]}', {$values['thread']}, 0, {$values["timestamp"]})", false);
 
 
 

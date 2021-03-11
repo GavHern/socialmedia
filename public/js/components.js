@@ -390,6 +390,9 @@ app.dom.components = {
         },
         {
           tag: 'div',
+          attributes: {
+            "data-comment-thread": data.id
+          },
           classes: ["ml-4","border-l","dark:border-gray-700", ...(threadReplies.length > 0) ? [] : ['hidden']],
           children: threadReplies
         }
