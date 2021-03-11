@@ -18,7 +18,7 @@ include 'tools/utils.php';
 // Get all nessisary parameters and sanitize them
 $values = array(
     "user" => get_session(),
-    "post" => $_GET['post']
+    "post" => sanitize($_GET['post'])
 );
 
 $post_exists = db("SELECT COUNT(*) AS `exists` FROM posts WHERE id = {$values['post']}", true)[0]['exists'] != 0;

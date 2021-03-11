@@ -17,7 +17,7 @@ include 'tools/utils.php';
 // Get all nessisary parameters and sanitize them
 $values = array(
     "login" => sanitize($_GET["login"]),
-    "password" => sanitize($_GET["password"])
+    "password" => $_GET["password"]
 );
 
 

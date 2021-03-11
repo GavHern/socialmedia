@@ -18,7 +18,7 @@ include 'tools/utils.php';
 // Get all nessisary parameters and sanitize them
 $values = array(
     "user" => get_session(),
-    "profile" => $_GET['user'],
+    "profile" => sanitize($_GET['user']),
     "timestamp" => time() // Get current timestamp
 );
 
