@@ -380,8 +380,16 @@ app.dom.components = {
               href: '#',
               classes: ['flex', 'items-center', 'comment-reply'],
               eventListeners:{
-                click: async function(){
-                  app.methods.dialogue("Replying coming soon", false);
+                click: function(){
+                  let threadParent;
+                  
+                  if(data.thread == 0){
+                    threadParent = data.id
+                  } else {
+                    threadParent = data.thread
+                  }
+
+                  app.dom.sheet.create('comment',{parent:data.parent, defaultValue: `@${data.username} `, thread: threadParent});
                 }
               },
               html: `<svg class="w-4 h-4 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg><p>Reply</p>`

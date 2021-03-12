@@ -39,7 +39,7 @@ app.dom.page = {
                     }
                   },
                   classes: ["flex","items-center","bg-white","dark:bg-gray-700","text-gray-400","h-10","w-full","rounded-xl","px-4"],
-                  text: "Write comment..."
+                  text: "Write a comment..."
                 }
               ]
             },

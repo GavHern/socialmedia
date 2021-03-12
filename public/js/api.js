@@ -70,8 +70,8 @@ app.api = {
     return res;
   },
 
-  async comment(parent, text){ // Create a comment
-    let res = await makeRequest(`https://socialmedia.gavhern.com/api/comment.php?parent=${parent}&body=${text}`, {
+  async comment(parent, text, thread = 0){ // Create a comment
+    let res = await makeRequest(`https://socialmedia.gavhern.com/api/comment.php?parent=${parent}&body=${text}&thread=${thread}`, {
       method: 'GET',
       redirect: 'follow'
     });
