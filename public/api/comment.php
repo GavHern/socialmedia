@@ -29,8 +29,9 @@ $values = array(
 // Append thread parameter if defined
 if(isset($_GET['thread'])){
     $thread_sanitized = sanitize($_GET['thread']);
-
-    $thread_exists = db("SELECT COUNT(*) AS `exists` FROM comments WHERE id = {$thread_sanitized} AND parent = {$values['parent']} AND thread = 0", true)[0]['exists'] > 0;
+    
+    if($_GET['thread'] == 0) $thread_exists = 1;
+    else $thread_exists = db("SELECT COUNT(*) AS `exists` FROM comments WHERE id = {$thread_sanitized} AND parent = {$values['parent']} AND thread = 0", true)[0]['exists'] > 0;
     
     if(!$thread_exists) throw_error("That thread doesn't exist");
     
