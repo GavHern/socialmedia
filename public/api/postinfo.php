@@ -21,11 +21,19 @@ $values = array(
     "post" => sanitize($_GET['post'])
 );
 
+
 $post_exists = db("SELECT COUNT(*) AS `exists` FROM posts WHERE id = {$values['post']}", true)[0]['exists'] != 0;
 
 if(!$post_exists){
     throw_error("That post doesn't exist");
 }
+
+
+if(isset($_GET["thread"]))
+    $values['thread'] = $_GET['thread'];
+else
+    $values['thread'] = 0;
+
 
 
 // Check for pagination checkpoint, otherwise create one
@@ -63,35 +71,35 @@ if($values['page_number']==0){
     $data = -1;
 }
 
-$comments = db("SELECT c.id, c.body, c.parent, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = 0 ORDER BY c.timestamp DESC LIMIT {$values['page_length']} OFFSET {$values['post_number']}", true);
 
-
-// Parse all comments data for mentions and replies
-$iterator = 0;
-
-foreach ($comments as $i) {
-    $comments[$iterator]['body'] = parseMentions($i['body']);
+function getCommentThread($thread_id, $thread_checkpoint){
+    global $values;
     
-    if($i['replies'] > 0) {
-        $reply_list = db("SELECT c.id, c.body, c.parent, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = {$comments[$iterator]['id']} ORDER BY c.timestamp ASC LIMIT 5 OFFSET 0", true);
+    $list_sort = $thread_id == 0 ? 'DESC' : 'ASC'; // Make comments sort newest first for the parent thread and oldest first within child threads.
+    
+    $comments = db("SELECT c.id, c.body, c.parent, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = {$thread_id} ORDER BY c.timestamp {$list_sort} LIMIT {$values['page_length']} OFFSET {$values['post_number']}", true);
+    
+    $i = 0; // Initialize iterator
+    
+    foreach($comments as $comment){
+        $comments[$i]['body'] = parseMentions($comment['body']);
         
-        $iterator2 = 0;
+        if($comment['replies'] > 0)
+            $reply_list = getCommentThread($comment['id'], base_convert(time(),10,36)."-5-0");
+        else
+            $reply_list = array();
         
-        foreach ($reply_list as $ii) {
-            $reply_list[$iterator2]['replies'] = array();
-            
-            $reply_list[$iterator2]['body'] = parseMentions($ii['body']);
-            
-            $iterator2++;
-        }
         
-        $comments[$iterator]['replies'] = $reply_list;
-    } else {
-        $comments[$iterator]['replies'] = array();
+        $comments[$i]['replies'] = $reply_list;
+        
+        $i++;
     }
     
-    $iterator++;
+    return $comments;
 }
+
+
+$comments = getCommentThread(0, $values['checkpoint']);
 
 
 
