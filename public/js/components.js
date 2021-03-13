@@ -8,7 +8,7 @@ app.dom.components = {
         classes: ["flex-shrink-0","dark:text-gray-300","w-full","px-4","compact:hidden","post-body-text"],
         html: app.methods.parseMentions(data.body, 'link'), // Body text
         eventListeners: isInFeed ? { // Adds event listener for posts in a feed
-          click: function(e){
+          click: function(){
             app.dom.page.create('post', data.id);
           }
         } : {}
@@ -24,7 +24,7 @@ app.dom.components = {
             classes: ["bg-black","w-full","max-h-144","compact:w-32","compact:h-24","object-contain","compact:object-cover","compact:mr-2","compact:rounded-xl"],
             src: "https://socialmedia.gavhern.com/api/cdn.php?f="+data.body, // Body image
             eventListeners: {
-              click: ()=>{app.dom.openProjector("https://socialmedia.gavhern.com/api/cdn.php?f="+data.body)} // Body image
+              click: _=>{app.dom.openProjector("https://socialmedia.gavhern.com/api/cdn.php?f="+data.body)} // Body image
             },
             attributes: {
               "loading": "lazy"
@@ -123,9 +123,9 @@ app.dom.components = {
                         let res = await app.api.delete(data.id, false);
                         if(res.success){
                           app.methods.dialogue('Post successfully deleted', true);
-                          if(!isInFeed){
-                            app.dom.page.back();
-                          }
+                          
+                          if (!isInFeed) app.dom.page.back();
+
                           $(`div[data-post-id=${data.id}]`).remove();
                         }
                       }
@@ -211,7 +211,7 @@ app.dom.components = {
             {
               tag: "a",
               href: "#",
-              classes: ((data.saved==1) ? ["post-action", "save", "active"] : ["post-action", "save"]),
+              classes: ["post-action", "save", ...(data.saved==1) ? ['active']:[]],
               eventListeners: {
                 click: async function(){
                   let savePost = !$(this).hasClass('active');
@@ -236,11 +236,10 @@ app.dom.components = {
     })
   },
   commentElement(data){
-    let threadReplies = [];
 
-    for (const i of data.replies) {
-      threadReplies.push(app.dom.components.commentElement(i));
-    }
+    let threadReplies = data.replies.map(comment => {
+      return app.dom.components.commentElement(comment);
+    });
 
     return elem.create({
       tag: 'div',
@@ -304,7 +303,7 @@ app.dom.components = {
                 "click": _=>{
                   app.dom.sheet.create('options', (data.is_author != 1) ? {
                     "Report": _=>{
-                      app.dom.sheet.create('report', {id:data.id,isComment:1})
+                      app.dom.sheet.create('report', {id:data.id, isComment:1})
                     },
                     "Cancel": _=>{}
                   } : {
@@ -381,14 +380,8 @@ app.dom.components = {
               classes: ['flex', 'items-center', 'comment-reply'],
               eventListeners:{
                 click: function(){
-                  let threadParent;
+                  let threadParent = data.thread == 0 ? data.id : data.thread;
                   
-                  if(data.thread == 0){
-                    threadParent = data.id
-                  } else {
-                    threadParent = data.thread
-                  }
-
                   app.dom.sheet.create('comment',{parent:data.parent, defaultValue: `@${data.username} `, thread: threadParent});
                 }
               },
@@ -470,7 +463,7 @@ app.dom.components = {
                       src: "https://socialmedia.gavhern.com/api/cdn.php?f=" + data.info.banner
                     } : {
                       tag: 'div',
-                      classes: ["w-full","h-full","bg-gradient-to-br","from-red-300","to-purple-300"]
+                      classes: ["w-full","h-full","bg-gradient-to-br","from-red-300","to-purple-300"] // Default banner style
                     }
                   ]
                 },
@@ -488,7 +481,7 @@ app.dom.components = {
                     }
                   ]
                 },
-                (data.info.is_owner == 1) ? {
+                data.info.is_owner == 1 ? {
                   tag: 'a',
                   href: '#',
                   eventListeners: {
@@ -521,7 +514,7 @@ app.dom.components = {
                       }
                     }
                   },
-                  classes: (data.info.is_following == 1) ? ["follow-button", "active"] : ["follow-button"]
+                  classes: ["follow-button", ...data.info.is_following == 1 ? ["active"]:[]]
                 }
               ]
             },
@@ -635,13 +628,11 @@ app.dom.components = {
     });
   },
   postFeed(postData, feedInfo){
-    let postarray = [];
-
-    for(const i of postData){ // Iterate JSON and append a post element
-      postarray.push(app.dom.components.postElement(i, true))
-    }
-
-
+    let postarray = postData.map(post => {
+      return app.dom.components.postElement(post, true);
+    }); 
+    
+   
     return elem.create({
       tag: 'div',
       children: [
@@ -829,13 +820,12 @@ app.dom.components = {
     });
   },
   explorePage(data){
-    let recentlyViewed = [];
     let userCards = [];
 
     if(data.following.length != 0){
-      for(const i of data.following){
-        userCards.push(app.dom.components.userCard(i));
-      }
+      userCards = data.following.map(userInformation => {
+        return app.dom.components.userCard(userInformation);
+      });
     } else {
       userCards.push({
         tag: "div",
@@ -844,10 +834,10 @@ app.dom.components = {
       });
     }
 
-    for(const i of data.recent){
-      recentlyViewed.push(app.dom.components.userShelfCard(i));
-    }
-
+    let recentlyViewed = data.recent.map(userInformation => {
+      return app.dom.components.userShelfCard(userInformation);
+    })
+    
     return elem.create({
       tag: 'div',
       children: [
@@ -942,59 +932,57 @@ app.dom.components = {
     });
   },
   activityItems(data){
-    let items = [];
-    
-    for(const i of data){
+    let items = data.map(activityItem => {
       let icon;
       let messageSuffix;
       let action;
 
-      switch(i.type){
+      switch(activityItem.type){
         case 'post_like':
           icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
           messageSuffix = "liked your post.";
           action = _=>{
-            app.dom.page.create('post', i.link);
+            app.dom.page.create('post', activityItem.link);
           };
           break;
         case 'comment_like':
           icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`;
           messageSuffix = "liked your comment.";
           action = _=>{
-            app.dom.page.create('post', i.link);
+            app.dom.page.create('post', activityItem.link);
           };
           break;
         case 'follow':
           icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>`;
           messageSuffix = "followed you.";
           action = _=>{
-            app.dom.page.create('profile', i.link);
+            app.dom.page.create('profile', activityItem.link);
           };
           break;
         case 'comment':
           icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>`;
           messageSuffix = "commented on your post.";
           action = _=>{
-            app.dom.page.create('post', i.link);
+            app.dom.page.create('post', activityItem.link);
           };
           break;
         case 'post_mention':
           icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>`;
           messageSuffix = "mentioned you in their post.";
           action = _=>{
-            app.dom.page.create('post', i.link);
+            app.dom.page.create('post', activityItem.link);
           };
           break;
         case 'comment_mention':
           icon = `<svg class="w-6 h-6 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>`;
           messageSuffix = "mentioned you in their comment.";
           action = _=>{
-            app.dom.page.create('post', i.link);
+            app.dom.page.create('post', activityItem.link);
           };
           break;
       }
 
-      items.push({
+      return {
         tag: 'a',
         href: '#',
         eventListeners: {
@@ -1017,7 +1005,7 @@ app.dom.components = {
                   {
                     tag: 'span',
                     classes: ["font-semibold","mr-0.5"],
-                    text: i.data
+                    text: activityItem.data
                   },
                   {
                     tag: 'span',
@@ -1025,8 +1013,8 @@ app.dom.components = {
                   },
                   {
                     tag: 'p',
-                    classes: ["text-gray-600","dark:text-gray-400","mt-2", (i.meta.length == 0) ? 'hidden' : 'block'],
-                    html: app.methods.parseMentions(i.meta, 'standard')
+                    classes: ["text-gray-600","dark:text-gray-400","mt-2", ...activityItem.meta.length == 0 ? ['hidden'] : []],
+                    html: app.methods.parseMentions(activityItem.meta, 'standard')
                   }
                 ]
               }
@@ -1038,8 +1026,8 @@ app.dom.components = {
             html: `<svg class="w-4 h-4 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>`
           }
         ]
-      });
-    }
+      }
+    });
 
     return {
       tag: 'div',
@@ -1051,7 +1039,6 @@ app.dom.components = {
     let elements = [];
 
     if(data.data.day.length==0 && data.data.week.length==0 && data.data.all.length==0){
-      console.log("test");
       elements.push({
         tag: "div",
         classes: ["w-full","flex","justify-center"],
@@ -1124,7 +1111,6 @@ app.dom.components = {
         children: [
           {
             tag: 'p',
-            classes: [],
             text: label
           },
           {
