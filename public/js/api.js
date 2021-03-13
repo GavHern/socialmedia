@@ -9,7 +9,7 @@ app.api = {
   },
 
   async like(post, value, isComment){ // Like a post or comment
-    if(value){value=1}else{value=0} // Format binary int as boolean
+    value = value == 1 ? true : false; // Parse binary int as bool
     let res = await makeRequest(`https://socialmedia.gavhern.com/api/like.php?value=${value}&comment=${isComment}&post=${post}`, {
       method: 'GET',
       redirect: 'follow'
@@ -19,7 +19,7 @@ app.api = {
   },
 
   async save(post, value){ // Save a post
-    if(value){value=1}else{value=0} // Format binary int as boolean
+    value = value == 1 ? true : false; // Parse binary int as bool
     let res = await makeRequest(`https://socialmedia.gavhern.com/api/save.php?value=${value}&post=${post}`, {
       method: 'GET',
       redirect: 'follow'
@@ -29,7 +29,7 @@ app.api = {
   },
 
   async follow(user, value){ // Follow a user
-    if(value){value=1}else{value=0} // Format binary int as boolean
+    value = value == 1 ? true : false; // Parse binary int as bool
     let res = await makeRequest(`https://socialmedia.gavhern.com/api/follow.php?value=${value}&account=${user}`, {
       method: 'GET',
       redirect: 'follow'
@@ -80,7 +80,7 @@ app.api = {
   },
 
   async edit(id, isComment, body){ // Edit a post or comment
-    if(isComment){isComment=1}else{isComment=0} // Format binary int as boolean
+    value = value == 1 ? true : false; // Parse binary int as bool
     let res = await makeRequest(`https://socialmedia.gavhern.com/api/edit.php?id=${id}&is_comment=${isComment}&body=${body}`, {
       method: 'GET',
       redirect: 'follow'
@@ -90,7 +90,7 @@ app.api = {
   },
 
   async delete(id, isComment){ // Delete a post or comment
-    if(isComment){isComment=1}else{isComment=0} // Format binary int as boolean
+    value = value == 1 ? true : false; // Parse binary int as bool
     let res = await makeRequest(`https://socialmedia.gavhern.com/api/delete.php?id=${id}&is_comment=${isComment}`, {
       method: 'GET',
       redirect: 'follow'
