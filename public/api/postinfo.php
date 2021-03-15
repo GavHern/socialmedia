@@ -83,6 +83,7 @@ function getCommentThread($thread_id, $thread_checkpoint){
     
     foreach($comments as $comment){
         $comments[$i]['body'] = parseMentions($comment['body']);
+        $comments[$i]['checkpoint'] = base_convert(time(),10,36)."-5-0";
         
         if($comment['replies'] > 0)
             $reply_list = getCommentThread($comment['id'], base_convert(time(),10,36)."-5-0");
