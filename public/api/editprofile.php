@@ -29,7 +29,7 @@ if(isset($_POST['name'])){
 }
 
 if(isset($_POST['username'])){
-    $values['username'] = strtolower(sanitize($_POST['username']));
+    $values['username'] = sanitize($_POST['username']);
 }
 
 if(isset($_POST['bio'])){

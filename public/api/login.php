@@ -54,5 +54,5 @@ setcookie("session", $account_data["session"], time()+30*24*60*60);
 echo json_encode(array(
     "success" => true,
     "user_id" => $account_data["id"],
-    "session_token" => $account_data["session"]
+    "session_token" => decrypt_message($account_data["session"])
 ));

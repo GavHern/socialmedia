@@ -17,9 +17,11 @@ $values = array(
 // Make a new session token
 $new_session = generate_session_token($values["user"]);
 
+$session_encrypted = encrypt_message($new_session);
+
 
 // Override existing session token with the new one
-db("UPDATE `users` SET `session`='{$new_session}' WHERE `id`={$values["user"]}", true);
+db("UPDATE `users` SET `session`='{$session_encrypted}' WHERE `id`={$values["user"]}", true);
 
 
 // Echo new account information

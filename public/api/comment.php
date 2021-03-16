@@ -15,7 +15,6 @@ include 'tools/auth.php';
 include 'tools/utils.php';
 
 
-
 // Get all nessisary parameters and sanitize them
 $values = array(
     "user" => get_session(),

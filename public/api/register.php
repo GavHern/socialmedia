@@ -99,9 +99,11 @@ $user_id = db("SELECT `id` FROM `users` WHERE username = '{$values["username"]}'
 // Generate a session token
 $session_token = generate_session_token($user_id);
 
+$session_encrypted = encrypt_message($session_token);
+
 
 // Add the session token to the user's database entry
-db("UPDATE `users` SET `session`='{$session_token}' WHERE id = {$user_id}", false);
+db("UPDATE `users` SET `session`='{$session_encrypted}' WHERE id = {$user_id}", false);
 
 
 
