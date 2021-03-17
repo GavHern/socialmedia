@@ -338,7 +338,7 @@ app.dom.components = {
         },
         {
           tag: 'div',
-          classes: ["mt-2","text-gray-800","dark:text-gray-300","comment-body-text", "ml-4"],
+          classes: ["mt-2","text-gray-800","dark:text-gray-300","comment-body-text", "ml-4", "pr-4"],
           html: app.methods.parseMentions(data.body, 'link')
         },
         {
