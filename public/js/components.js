@@ -392,10 +392,46 @@ app.dom.components = {
         {
           tag: 'div',
           attributes: {
-            "data-comment-thread": data.id
+            "data-comment-thread": data.id,
+            "data-thread-checkpoint": data.checkpoint
           },
           classes: ["ml-4","border-l","dark:border-gray-700", ...(threadReplies.length > 0) ? [] : ['hidden']],
-          children: threadReplies
+          children: [
+            {
+              tag: 'div',
+              classes: ['comment-thread-container'],
+              children: threadReplies
+            },
+            {
+              tag: 'div',
+              classes: ["p-4", "pt-0"],
+              children: [
+                {
+                  tag: 'a',
+                  href: '#',
+                  eventListeners: {
+                    click: async function(){
+                      let commentThreadContainer = $(this).parents().eq(1);
+                      let threadId = $(commentThreadContainer).attr('data-comment-thread');
+                      let threadCheckpoint = $(commentThreadContainer).attr('data-thread-checkpoint');
+
+                      let nextPage = await app.api.getPostInformation(data.parent, threadCheckpoint, threadId);
+
+                      nextPage.comments.forEach(comment => {
+                        $(commentThreadContainer).find('.comment-thread-container').append(app.dom.components.commentElement(comment))
+                      });
+
+                      $(commentThreadContainer).attr('data-thread-checkpoint', nextPage.checkpoint);
+
+                      if(nextPage.comments.length < 5) $(this).addClass('hidden');
+                    }
+                  },
+                  classes: ['w-full','text-center','p-2','rounded-xl','dark:text-white','bg-white','dark:bg-gray-900','ring-2','ring-gray-200','dark:ring-gray-700', (threadReplies.length >= 5) ? 'block' : 'hidden'],
+                  text: 'Load more'
+                }
+              ]
+            }
+          ]
         }
       ]
     });

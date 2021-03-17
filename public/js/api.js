@@ -101,8 +101,8 @@ app.api = {
     return res;
   },
 
-  async getPostInformation(id){ // Get the details of a post
-    let res = await makeRequest(`https://socialmedia.gavhern.com/api/postinfo.php?post=${id}`, {
+  async getPostInformation(id, checkpoint = false, thread = 0){ // Get the details of a post
+    let res = await makeRequest(`https://socialmedia.gavhern.com/api/postinfo.php?post=${id}&thread=${thread}` + (checkpoint !== false ? `&checkpoint=${checkpoint}` : ``), {
       method: 'GET',
       redirect: 'follow'
     });

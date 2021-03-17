@@ -43,15 +43,6 @@ if(isset($_GET['checkpoint'])){
     $values['checkpoint'] = sanitize(base_convert(time(),10,36)."-25-0");
 }
 
-// Parse pagination checkpoint (split at every hyphen)
-$pagination_data = explode("-",$values['checkpoint']);
-
-// Set values from pagination data
-$values['timestamp'] = base_convert($pagination_data[0],36,10);
-$values['page_length'] = $pagination_data[1];
-$values['page_number'] = $pagination_data[2];
-$values['post_number'] = $pagination_data[2] * $values['page_length'];
-
 
 
 /*
@@ -75,18 +66,28 @@ if($values['page_number']==0){
 function getCommentThread($thread_id, $thread_checkpoint){
     global $values;
     
+    // Parse pagination checkpoint (split at every hyphen)
+    $pagination_data = explode("-",$thread_checkpoint);
+    
+    // Set values from pagination data
+    $timestamp = base_convert($pagination_data[0],36,10);
+    $page_length = $pagination_data[1];
+    $page_number = $pagination_data[2];
+    $post_number = $pagination_data[2] * $page_length;
+    
+    
     $list_sort = $thread_id == 0 ? 'DESC' : 'ASC'; // Make comments sort newest first for the parent thread and oldest first within child threads.
     
-    $comments = db("SELECT c.id, c.body, c.parent, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = {$thread_id} AND c.timestamp < {$values['timestamp']} ORDER BY c.timestamp {$list_sort} LIMIT {$values['page_length']} OFFSET {$values['post_number']}", true);
+    $comments = db("SELECT c.id, c.body, c.parent, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = {$thread_id} AND c.timestamp < {$timestamp} ORDER BY c.timestamp {$list_sort} LIMIT {$page_length} OFFSET {$post_number}", true);
     
     $i = 0; // Initialize iterator
     
     foreach($comments as $comment){
         $comments[$i]['body'] = parseMentions($comment['body']);
-        $comments[$i]['checkpoint'] = base_convert(time(),10,36)."-5-0";
+        $comments[$i]['checkpoint'] = base_convert($timestamp,10,36)."-5-1";
         
         if($comment['replies'] > 0)
-            $reply_list = getCommentThread($comment['id'], base_convert(time(),10,36)."-5-0");
+            $reply_list = getCommentThread($comment['id'], base_convert($timestamp,10,36)."-5-0");
         else
             $reply_list = array();
         
@@ -103,8 +104,12 @@ function getCommentThread($thread_id, $thread_checkpoint){
 $comments = getCommentThread($values["thread"], $values['checkpoint']);
 
 
+// Parse pagination checkpoint (split at every hyphen)
+$pagination_data = explode("-",$values['checkpoint']);
 
-$next_checkpoint = base_convert($values['timestamp'],10,36)."-".$values['page_length']."-".($values['page_number']+1);
+$timestamp = base_convert($pagination_data[0],36,10);
+
+$next_checkpoint = base_convert($timestamp,10,36)."-".$pagination_data[1]."-".($pagination_data[2]+1);
 
 
 // Echo post information and its comments
