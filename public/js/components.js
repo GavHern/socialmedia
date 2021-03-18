@@ -241,7 +241,7 @@ app.dom.components = {
       return app.dom.components.commentElement(comment);
     });
 
-    return elem.create({
+    let thing = ({
       tag: 'div',
       classes: ["bg-white","dark:bg-gray-800","dark:text-gray-200","mb-2","pt-2","flex","flex-col"],
       attributes: {
@@ -411,15 +411,16 @@ app.dom.components = {
                   href: '#',
                   eventListeners: {
                     click: async function(){
-                      let commentThreadContainer = $(this).parents().eq(1);
+                      let commentThreadContainer = $(this).parents().eq(1); // Element containing the entire comment thread
+                      let commentReplyListContainer = $(commentThreadContainer).find('> .comment-thread-container'); // Element containing the list of reply comments (no load more button)
                       let threadId = $(commentThreadContainer).attr('data-comment-thread');
                       let threadCheckpoint = $(commentThreadContainer).attr('data-thread-checkpoint');
 
                       let nextPage = await app.api.getPostInformation(data.parent, threadCheckpoint, threadId);
 
-                      nextPage.comments.forEach(comment => {
-                        $(commentThreadContainer).find('.comment-thread-container').append(app.dom.components.commentElement(comment))
-                      });
+                      for(const i of nextPage.comments){
+                        $(commentReplyListContainer).append(app.dom.components.commentElement(i));
+                      }
 
                       $(commentThreadContainer).attr('data-thread-checkpoint', nextPage.checkpoint);
 
@@ -435,6 +436,10 @@ app.dom.components = {
         }
       ]
     });
+
+    console.log(thing)
+
+    return elem.create(thing);
   },
   preloader(){
     return elem.create({
