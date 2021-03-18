@@ -404,7 +404,7 @@ app.dom.components = {
             },
             {
               tag: 'div',
-              classes: ["p-4", "pt-0"],
+              classes: ["px-4"],
               children: [
                 {
                   tag: 'a',
@@ -427,7 +427,7 @@ app.dom.components = {
                       if(nextPage.comments.length < 5) $(this).addClass('hidden');
                     }
                   },
-                  classes: ['w-full','text-center','p-2','rounded-xl','dark:text-white','bg-white','dark:bg-gray-900','ring-2','ring-gray-200','dark:ring-gray-700', (threadReplies.length >= 5) ? 'block' : 'hidden'],
+                  classes: ['w-full','text-center','p-2','rounded-xl','dark:text-white','bg-white','dark:bg-gray-900','ring-2','ring-gray-200','dark:ring-gray-700', 'mb-4', (threadReplies.length >= 5) ? 'block' : 'hidden'],
                   text: 'Load more'
                 }
               ]
