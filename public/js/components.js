@@ -241,7 +241,7 @@ app.dom.components = {
       return app.dom.components.commentElement(comment);
     });
 
-    let thing = ({
+    return elem.create({
       tag: 'div',
       classes: ["bg-white","dark:bg-gray-800","dark:text-gray-200","mb-2","pt-2","flex","flex-col"],
       attributes: {
@@ -436,10 +436,6 @@ app.dom.components = {
         }
       ]
     });
-
-    console.log(thing)
-
-    return elem.create(thing);
   },
   preloader(){
     return elem.create({
