@@ -552,18 +552,16 @@ app.dom = {
                         let res = await app.api.comment(data.parent,encodeURIComponent(text), data.thread);
 
                         if(res.success){
+                          app.methods.dialogue('Comment created!', true);
+
+                          app.dom.page.back();
+                          app.dom.page.create('post', data.parent);
+
+                          $(this).parents().eq(4).removeClass('active');
+
                           setTimeout(_=>{
-                            app.methods.dialogue('Comment created!', true);
-  
-                            app.dom.page.back();
-                            app.dom.page.create('post', data.parent);
-  
-                            $(this).parents().eq(4).removeClass('active');
-  
-                            setTimeout(_=>{
-                              $(this).parents().eq(4).remove();
-                            },300)
-                          }, 50);
+                            $(this).parents().eq(4).remove();
+                          },300)
                         }
                       }
                     }

@@ -78,7 +78,7 @@ function getCommentThread($thread_id, $thread_checkpoint){
     
     $list_sort = $thread_id == 0 ? 'DESC' : 'ASC'; // Make comments sort newest first for the parent thread and oldest first within child threads.
     
-    $comments = db("SELECT c.id, c.body, c.parent, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = {$thread_id} AND c.timestamp < {$timestamp} ORDER BY c.timestamp {$list_sort} LIMIT {$page_length} OFFSET {$post_number}", true);
+    $comments = db("SELECT c.id, c.body, c.parent, c.author, u.name, u.username, u.profile_picture,(SELECT COUNT(*) FROM `likes` WHERE `likes`.id = c.id AND `likes`.`is_comment` = true) likes, (SELECT COUNT(*) FROM `likes` WHERE `likes`.`user` = {$values['user']} AND `likes`.id = c.id AND `likes`.`is_comment` = true) liked, (SELECT IF(c.author = {$values['user']}, 1, 0)) AS is_author, (SELECT COUNT(*) FROM `comments` WHERE `thread` = c.id) replies, c.edited, c.thread, c.timestamp FROM `comments` AS c INNER JOIN `users` AS u ON u.id = c.author WHERE c.parent = {$values['post']} AND c.thread = {$thread_id} AND c.timestamp <= {$timestamp} ORDER BY c.timestamp {$list_sort} LIMIT {$page_length} OFFSET {$post_number}", true);
     
     $i = 0; // Initialize iterator
     
