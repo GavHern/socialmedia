@@ -27,7 +27,15 @@ if(getCookie("session") === undefined)
   window.location.href="/login.html#";
 
 
+// Define default settings if they arent set
+if(localStorage['system-theme'] === undefined)
+  localStorage['system-theme'] = true
 
+if(localStorage['dark'] === undefined)
+  localStorage['dark'] = false
+
+if(localStorage['compact'] === undefined)
+  localStorage['compact'] = false
 
 
 
