@@ -3,11 +3,13 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/sw.js')
 }
 
+// Check if the app is being run as a Progressive Web Application
 const pwa = (new URL(window.location.href)).searchParams.get("pwa") !== null;
 
-if(!pwa){
+// Redirect to the install screen if they are viewing with a browser (and not in the PWA)
+if(!pwa)
   window.location.href = "install.html"
-}
+
 
 // Gets a cookie from its name
 function getCookie(name) {
@@ -17,29 +19,34 @@ function getCookie(name) {
 }
 
 // Pull session from local storage (ios pwa support)
-if(window.localStorage.getItem("session") != null){
-  document.cookie="session="+window.localStorage.getItem("session");
-}
+if(window.localStorage.getItem("session") != null)
+ document.cookie="session="+window.localStorage.getItem("session");
 
 // Redirect to login screen if the session cookie is missing
-if(getCookie("session") === undefined){
+if(getCookie("session") === undefined)
   window.location.href="/login.html#";
-}
+
+
+
+
+
 
 // Function to make a request (fetch api but creates a dialogue on error)
 async function makeRequest(uri, data = {}){
 
+  // Add authentication data to headers
   let requestHeaders = new Headers();
   requestHeaders.append("Authentication",window.localStorage.getItem('session'))
   data.headers = requestHeaders;
 
+  // Fetch to the uri and parse the response as JSON
   let res = await fetch(uri, data);
   resParsed = await res.json();
 
-  if(!resParsed.success){
-    app.methods.dialogue(resParsed.message, false);
-  }
+  // Display error if the request was unsuccessful
+  if(!resParsed.success) app.methods.dialogue(resParsed.message, false);
 
+  // Return the JSON response
   return resParsed;
 }
 
@@ -51,4 +58,4 @@ var profileEdited = false;
 
 
 // App functions
-var app = {};
+var app = {}; // App functions appended in other files
