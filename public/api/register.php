@@ -114,7 +114,7 @@ setcookie("session", $account_data["session"], time()+30*24*60*60);
 
 
 // Email the user alerting about signup
-send_email($_GET["email"], "Welcome to Emerald!", '<!DOCTYPE html><head><style>html,body{margin:0;padding:0;font-family:Roboto}header{width:100%;padding:8px 0;background-color:#6ee7b7;text-align:center;}main{padding:24px;margin:0 10%;font-size:18px}hr{border-style:dashed;border-color:#e5e7eb;margin:16px 0}a{color:#10b981}p{line-height:14px}</style><link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel=stylesheet></head><html><body><header><img src="https://i.ibb.co/SsDFbZk/icon-svg-1.png" alt="Logo"></header><main><p>Hello, '.$values["name"].'.</p><hr><p>Thank you for signing up for Emerald, it\'s great to have you!</p><p>If you believe this was a mistake or have any feedback, be sure to <a href=mailto:contact@gavhern.com>contact us</a>.</p><br><p>Sincerely,</p><p>Gavin</p><p><a href=https://gavhern.com>https://gavhern.com</a></p></main></body></html>');
+send_email($_GET["email"], "Welcome to Emerald!", '<!DOCTYPE html><head><style>html,body{margin:0;padding:0;font-family:Roboto}header{width:100%;padding:8px 0;background-color:#6ee7b7;text-align:center;}main{padding:24px;margin:0 10%;font-size:18px}hr{border-style:dashed;border-color:#e5e7eb;margin:16px 0}a{color:#10b981}p{line-height:14px}</style><link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel=stylesheet></head><html><body><header><img src="https://i.ibb.co/SsDFbZk/icon-svg-1.png" alt="Logo"></header><main><p>Hello, '.$values["name"].'.</p><hr><p>Thank you for signing up for Emerald, it\'s great to have you!</p><p>If you believe this was a mistake or have any feedback, be sure to <a href=mailto:contact@gavhern.com>contact us</a>.</p><br><p>Sincerely,</p><p>The Emerald Team</p><p><a href=https://gavhern.com>https://gavhern.com</a></p></main></body></html>');
 
 // Echo new account information
 echo json_encode(array(
@@ -145,7 +145,7 @@ FORMATTED EMAIL:
             <p>If you believe this was a mistake or have any feedback, be sure to <a href=mailto:contact@gavhern.com>contact us</a>.</p>
             <br>
             <p>Sincerely,</p>
-            <p>Gavin</p>
+            <p>The Emerald Team</p>
             <p><a href=https://gavhern.com>https://gavhern.com</a></p>
         </main>
     </body>
