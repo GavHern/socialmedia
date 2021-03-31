@@ -8,17 +8,15 @@ app.dom.page = {
     "post": { // Page displaying additional information for a post
       uri(id){return `https://socialmedia.gavhern.com/api/postinfo.php?post=${id}`},
       domElement(data){
-        let commentArray=[];
-
-        if(data.comments.length < 1){
+        let commentArray = data.comments.map(comment => {
+          return app.dom.components.commentElement(comment)
+        });
+        
+        if(data.comments.length < 1){ // Filler element if there are no comments
           commentArray.push({
             tag: 'div',
             html: '<div class="flex flex-col justify-center"><div class="flex justify-center mt-4 mb-1"><svg class="w-24 h-24 text-gray-300 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg></div><div class="font-semibold text-xl text-gray-400 dark:text-gray-600 text-center mb-2">This post has no comments</div></div>'
           })
-        } else {
-          for(const i of data.comments){
-            commentArray.push(app.dom.components.commentElement(i))
-          }
         }
 
         return elem.create({
@@ -117,9 +115,9 @@ app.dom.page = {
         let userCards=[];
 
         if(data.data.length != 0 && data.data != null){
-          for(const i of data.data){
-            userCards.push(app.dom.components.userCard(i))
-          }
+          userCards = data.data.map(userInfo => {
+            return app.dom.components.userCard(userInfo);
+          });
         } else {
           userCards = [
             {
@@ -152,9 +150,7 @@ app.dom.page = {
     "saved": { // Page displaying a feed of posts saved by the user
       uri(data){return `https://socialmedia.gavhern.com/api/savedfeed.php`},
       domElement(data){
-        let postArray=[];
-
-        postArray.push(app.dom.components.postFeed(data.data, {page:'saved', checkpoint: data.checkpoint}));
+        let postArray = app.dom.components.postFeed(data.data, {page:'saved', checkpoint: data.checkpoint});
 
         return elem.create({
           tag: 'div',
@@ -166,7 +162,7 @@ app.dom.page = {
             },
             {
               tag: 'div',
-              children: postArray
+              children: [postArray]
             }
           ]
         });
@@ -175,11 +171,9 @@ app.dom.page = {
     "search": { // Page displaying search results
       uri(data){return `https://socialmedia.gavhern.com/api/search.php?q=${data}`},
       domElement(data){
-        let userCards = [];
-
-        for(const i of data.users){
-          userCards.push(app.dom.components.userCard(i));
-        }
+        let userCards = data.users.map(user => {
+          return app.dom.compoents.userCard(user)
+        });
 
         return elem.create({
           tag: 'div',
