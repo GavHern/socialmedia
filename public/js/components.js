@@ -357,17 +357,17 @@ app.dom.components = {
                   
                   if(res.success){ // If request was successful
                     if(likeComment){ // Like comment
-                      $(`div[data-comment-id=${data.id}] .comment-like`).addClass('active'); // Find all instances of the comment
+                      $(`div[data-comment-id=${data.id}] > div > .comment-like`).addClass('active'); // Find all instances of the comment
                       let numLikes = $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes'); // Find the attribute 'data-likes'
                       numLikes++; // Increment like number
                       $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes', numLikes); // Assign mutated value to the attribute
-                      $(`div[data-comment-id=${data.id}] .comment-like p`).text(parseInt(numLikes)); // Make the innertext of the like counter reflect the attribute
+                      $(`div[data-comment-id=${data.id}] > div > .comment-like p`).text(parseInt(numLikes)); // Make the innertext of the like counter reflect the attribute
                     } else { // Unlike comment
-                      $(`div[data-comment-id=${data.id}] .comment-like`).removeClass('active'); // Find all instances of the comment
+                      $(`div[data-comment-id=${data.id}] > div > .comment-like`).removeClass('active'); // Find all instances of the comment
                       let numLikes = $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes'); // Find the attribute 'data-likes'
                       numLikes--; // Decrement like number
                       $(`div[data-comment-id=${data.id}]`).attr('data-comment-likes', numLikes); // Assign mutated value to the attribute
-                      $(`div[data-comment-id=${data.id}] .comment-like p`).text(parseInt(numLikes)); // Make the innertext of the like counter reflect the attribute
+                      $(`div[data-comment-id=${data.id}] > div > .comment-like p`).text(parseInt(numLikes)); // Make the innertext of the like counter reflect the attribute
                     }
                   }
                 }
