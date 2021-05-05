@@ -172,7 +172,7 @@ app.dom.page = {
       uri(data){return `https://socialmedia.gavhern.com/api/search.php?q=${data}`},
       domElement(data){
         let userCards = data.users.map(user => {
-          return app.dom.compoents.userCard(user)
+          return app.dom.components.userCard(user)
         });
 
         return elem.create({
