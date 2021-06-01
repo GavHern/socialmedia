@@ -72,6 +72,12 @@ app.methods = {
     }
 
     $('.post-form-button.post-form-submit').removeClass('loading');
+
+    if(currentUser == 19 && new Date().getDate() == 1){
+      var confettiSettings = {"target":"my-canvas","max":"50","size":"2","animate":true,"props":["square"],"colors":[[165,104,246],[230,61,135],[0,199,228],[253,214,126]],"clock":"50","rotate":false,"width":window.innerWidth,"height":window.innerHeight,"start_from_edge":true,"respawn":false};
+      var confetti = new ConfettiGenerator(confettiSettings);
+      confetti.render();
+    }
   },
   homeLayoutSelect(){ // Change the layout of the home screen (normal or compact)
     app.dom.sheet.create('options', {
